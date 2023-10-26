@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using repo_man.domain;
+using repo_man.domain.Git;
 
 namespace repo_man.console;
 

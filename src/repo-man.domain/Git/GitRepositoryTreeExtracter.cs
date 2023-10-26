@@ -1,6 +1,6 @@
-﻿namespace repo_man.domain
+﻿namespace repo_man.domain.Git
 {
-    public class GitRepositoryTreeExtracter: ITreeExtracter
+    public class GitRepositoryTreeExtracter : ITreeExtracter
     {
         public Tree GetFileTree()
         {
