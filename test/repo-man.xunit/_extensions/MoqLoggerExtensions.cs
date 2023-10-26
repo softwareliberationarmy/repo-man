@@ -1,13 +1,11 @@
 ﻿using Microsoft.Extensions.Logging;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace repo_man.xunit._extensions
 {
+    /// <summary>
+    /// Borrowed from https://adamstorr.azurewebsites.net/blog/mocking-ilogger-with-moq
+    /// </summary>
     internal static class MoqLoggerExtensions
     {
         internal static Mock<ILogger<T>> VerifyErrorWasCalled<T>(this Mock<ILogger<T>> logger, string expectedMessage, Times times)
