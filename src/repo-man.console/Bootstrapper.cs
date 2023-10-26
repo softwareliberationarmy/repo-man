@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Hosting;
 using repo_man.domain;
 using repo_man.domain.Git;
+using repo_man.infrastructure;
 
 namespace repo_man.console;
 
@@ -12,6 +13,7 @@ public static class Bootstrapper
         var host = Host.CreateDefaultBuilder(args)
             .ConfigureServices((hostContext, services) =>
             {
+                services.AddTransient<IGitRepoCrawler, LibGit2SharpGitRepoCrawler>();
                 services.AddTransient<ITreeExtracter, GitRepositoryTreeExtracter>();
                 services.AddTransient<IDiagramRenderer, SvgDiagramRenderer>();
                 services.AddTransient<RepositoryVisualizer>();

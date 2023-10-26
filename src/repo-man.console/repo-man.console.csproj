@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\repo-man.domain\repo-man.domain.csproj" />
+    <ProjectReference Include="..\repo-man.infrastructure\repo-man.infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
