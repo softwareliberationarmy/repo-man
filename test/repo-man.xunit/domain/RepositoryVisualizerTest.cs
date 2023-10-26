@@ -8,33 +8,53 @@ namespace repo_man.xunit.domain
 {
     public class RepositoryVisualizerTest
     {
+        private readonly AutoMocker _mocker = new();
+
         [Fact]
         public async Task ExtractsAndPushesTreeToDiagramRenderer()
         {
-            var mocker = new AutoMocker();
-            var tree = new Tree();
-            
-            mocker.GetMock<ITreeExtracter>().Setup(te => te.GetFileTree()).Returns(tree);
+            //arrange
+            var expected = new Tree();
+            _mocker.GetMock<ITreeExtracter>().Setup(te => te.GetFileTree()).Returns(expected);
 
-            var target = mocker.CreateInstance<RepositoryVisualizer>();
+            //act
+            await WhenIGenerateADiagram();
 
-            await target.GenerateDiagram();
-
-            mocker.Verify<IDiagramRenderer>(r => r.RenderTree(tree), Times.Once);
+            //assert
+            _mocker.Verify<IDiagramRenderer>(r => r.RenderTree(expected), Times.Once);
         }
 
         [Fact]
         public async Task LogsHighLevelSteps()
         {
-            var mocker = new AutoMocker();
+            //arrange
 
-            var target = mocker.CreateInstance<RepositoryVisualizer>();
+            //act
+            await WhenIGenerateADiagram();
 
-            await target.GenerateDiagram();
-
-            mocker.GetMock<ILogger<RepositoryVisualizer>>().VerifyInfoWasCalled("Extracting files from repository", Times.Once());
-            mocker.GetMock<ILogger<RepositoryVisualizer>>().VerifyInfoWasCalled("Creating a diagram of the repository file tree", Times.Once());
-            mocker.GetMock<ILogger<RepositoryVisualizer>>().VerifyInfoWasCalled("Diagram creation complete!", Times.Once());
+            //assert
+            _mocker.GetMock<ILogger<RepositoryVisualizer>>()
+                .VerifyInfoWasCalled("Extracting files from repository", Times.Once())
+                .VerifyInfoWasCalled("Creating a diagram of the repository file tree", Times.Once())
+                .VerifyInfoWasCalled("Diagram creation complete!", Times.Once());
         }
+
+        [Fact]
+        public async Task LogsExceptionAndExitsGracefully()
+        {
+            _mocker.GetMock<ITreeExtracter>().Setup(te => te.GetFileTree()).Throws<FileNotFoundException>();
+
+            await WhenIGenerateADiagram();
+
+            _mocker.GetMock<ILogger<RepositoryVisualizer>>()
+                .VerifyErrorWasCalled((msg) => msg.Contains("Error generating diagram. Exiting."), Times.Once());
+        }
+
+        private async Task WhenIGenerateADiagram()
+        {
+            var target = _mocker.CreateInstance<RepositoryVisualizer>();
+            await target.GenerateDiagram();
+        }
+
     }
 }

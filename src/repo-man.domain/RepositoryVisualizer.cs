@@ -17,10 +17,17 @@ public class RepositoryVisualizer
 
     public async Task GenerateDiagram()
     {
-        _logger.LogInformation("Extracting files from repository");
-        var tree = _extracter.GetFileTree();
-        _logger.LogInformation("Creating a diagram of the repository file tree");
-        await _renderer.RenderTree(tree);
-        _logger.LogInformation("Diagram creation complete!");
+        try
+        {
+            _logger.LogInformation("Extracting files from repository");
+            var tree = _extracter.GetFileTree();
+            _logger.LogInformation("Creating a diagram of the repository file tree");
+            await _renderer.RenderTree(tree);
+            _logger.LogInformation("Diagram creation complete!");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error generating diagram. Exiting.");
+        }
     }
 }
