@@ -30,6 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\repo-man.console\repo-man.console.csproj" />
     <ProjectReference Include="..\..\src\repo-man.domain\repo-man.domain.csproj" />
   </ItemGroup>
 

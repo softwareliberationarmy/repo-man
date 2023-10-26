@@ -1,2 +1,5 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+﻿using repo_man.console;
+using repo_man.domain;
+
+var visualizer = Bootstrapper.InitializeToTopLevelService<RepositoryVisualizer>(args);
+await visualizer.GenerateDiagram();
