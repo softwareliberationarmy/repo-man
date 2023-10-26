@@ -8,13 +8,13 @@ namespace repo_man.xunit._extensions
     /// </summary>
     internal static class MoqLoggerExtensions
     {
-        internal static Mock<ILogger<T>> VerifyErrorWasCalled<T>(this Mock<ILogger<T>> logger, string expectedMessage, Times times)
+        internal static Mock<ILogger<T>> VerifyInfoWasCalled<T>(this Mock<ILogger<T>> logger, string expectedMessage, Times times)
         {
             Func<object, Type, bool> state = (v, t) => String.Compare(v.ToString(), expectedMessage, StringComparison.Ordinal) == 0;
 
             logger.Verify(
                 x => x.Log(
-                    LogLevel.Error,
+                    LogLevel.Information,
                     It.IsAny<EventId>(),
                     It.Is<It.IsAnyType>((v, t) => state(v, t)),
                     It.IsAny<Exception>(),

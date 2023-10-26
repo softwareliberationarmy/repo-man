@@ -9,16 +9,32 @@ namespace repo_man.xunit.domain
     public class RepositoryVisualizerTest
     {
         [Fact]
-        public async Task ExitsEarlyIfRepoPathCannotBeFound()
+        public async Task ExtractsAndPushesTreeToDiagramRenderer()
         {
             var mocker = new AutoMocker();
+            var tree = new Tree();
+            
+            mocker.GetMock<ITreeExtracter>().Setup(te => te.GetFileTree()).Returns(tree);
+
             var target = mocker.CreateInstance<RepositoryVisualizer>();
 
             await target.GenerateDiagram();
 
-            mocker.GetMock<ILogger<RepositoryVisualizer>>()
-                .VerifyErrorWasCalled("Repository path has not been specified. Exiting.", Times.Once());
+            mocker.Verify<IDiagramRenderer>(r => r.RenderTree(tree), Times.Once);
         }
 
-}
+        [Fact]
+        public async Task LogsHighLevelSteps()
+        {
+            var mocker = new AutoMocker();
+
+            var target = mocker.CreateInstance<RepositoryVisualizer>();
+
+            await target.GenerateDiagram();
+
+            mocker.GetMock<ILogger<RepositoryVisualizer>>().VerifyInfoWasCalled("Extracting files from repository", Times.Once());
+            mocker.GetMock<ILogger<RepositoryVisualizer>>().VerifyInfoWasCalled("Creating a diagram of the repository file tree", Times.Once());
+            mocker.GetMock<ILogger<RepositoryVisualizer>>().VerifyInfoWasCalled("Diagram creation complete!", Times.Once());
+        }
+    }
 }
