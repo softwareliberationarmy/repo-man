@@ -3,7 +3,7 @@ using FluentAssertions;
 using Moq.AutoMock;
 using repo_man.domain.Git;
 
-namespace repo_man.xunit.domain
+namespace repo_man.xunit.domain.Git
 {
     public class GitRepositoryTreeExtracterTest
     {

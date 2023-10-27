@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using repo_man.domain.Diagram;
 using repo_man.domain.Git;
 
 namespace repo_man.domain;

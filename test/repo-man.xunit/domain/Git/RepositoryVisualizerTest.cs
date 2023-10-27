@@ -2,10 +2,11 @@
 using Moq;
 using Moq.AutoMock;
 using repo_man.domain;
+using repo_man.domain.Diagram;
 using repo_man.domain.Git;
 using repo_man.xunit._extensions;
 
-namespace repo_man.xunit.domain
+namespace repo_man.xunit.domain.Git
 {
     public class RepositoryVisualizerTest
     {

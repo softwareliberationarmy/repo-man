@@ -3,7 +3,7 @@ using FluentAssertions;
 using repo_man.domain;
 using repo_man.domain.Git;
 
-namespace repo_man.xunit.domain
+namespace repo_man.xunit.domain.Git
 {
     public class TreeTest
     {
@@ -23,7 +23,7 @@ namespace repo_man.xunit.domain
 
             //act
             var target = new Tree();
-            target.AddFile("readme.md", _fixture.Create<long>(),  new[] { new Commit(expectedHash, expectedDate) });
+            target.AddFile("readme.md", _fixture.Create<long>(), new[] { new Commit(expectedHash, expectedDate) });
 
             //assert
             target.Files.Single().Commits.Single().Should()
@@ -37,7 +37,7 @@ namespace repo_man.xunit.domain
 
             //act
             var target = new Tree();
-            target.AddFile(".config/dotnet-tools.json", _fixture.Create<long>(), new []{ new Commit(_fixture.Create<string>(), DateTimeOffset.Now)});
+            target.AddFile(".config/dotnet-tools.json", _fixture.Create<long>(), new[] { new Commit(_fixture.Create<string>(), DateTimeOffset.Now) });
 
             target.Files.Should().BeEmpty();
             var folder = target.Folders.Single();
@@ -49,7 +49,7 @@ namespace repo_man.xunit.domain
         public void ItsTurtlesAllTheWayDown()
         {
             var target = new Tree();
-            target.AddFile("any/way/you/want/it/thats/the/way/you/need/it.txt", _fixture.Create<long>(), new []{ _fixture.Create<Commit>()});
+            target.AddFile("any/way/you/want/it/thats/the/way/you/need/it.txt", _fixture.Create<long>(), new[] { _fixture.Create<Commit>() });
 
             var expectedFolders = new[] { "any", "way", "you", "want", "it", "thats", "the", "way", "you", "need" };
 
