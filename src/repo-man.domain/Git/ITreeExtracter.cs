@@ -1,4 +1,4 @@
-﻿namespace repo_man.domain;
+﻿namespace repo_man.domain.Git;
 
 public interface ITreeExtracter
 {

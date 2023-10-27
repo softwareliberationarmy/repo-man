@@ -1,7 +1,4 @@
-﻿using System.Xml.Serialization;
-using repo_man.domain.Git;
-
-namespace repo_man.domain;
+﻿namespace repo_man.domain.Git;
 
 public class Tree : GitFolder
 {
