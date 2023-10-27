@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "repo-man.console": {
+      "commandName": "Project",
+      "commandLineArgs": "--repo=../../../../../"
+    }
+  }
+}
