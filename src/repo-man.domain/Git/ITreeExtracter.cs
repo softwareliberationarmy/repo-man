@@ -2,5 +2,5 @@
 
 public interface ITreeExtracter
 {
-    Tree GetFileTree();
+    GitTree GetFileTree();
 }

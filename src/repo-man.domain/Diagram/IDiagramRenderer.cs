@@ -4,5 +4,5 @@ namespace repo_man.domain.Diagram;
 
 public interface IDiagramRenderer
 {
-    Task RenderTree(Tree tree);
+    Task CreateDiagram(GitTree tree);
 }

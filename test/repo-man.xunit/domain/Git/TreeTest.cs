@@ -22,7 +22,7 @@ namespace repo_man.xunit.domain.Git
             var expectedDate = DateTimeOffset.Now;
 
             //act
-            var target = new Tree();
+            var target = new GitTree();
             target.AddFile("readme.md", _fixture.Create<long>(), new[] { new Commit(expectedHash, expectedDate) });
 
             //assert
@@ -36,7 +36,7 @@ namespace repo_man.xunit.domain.Git
             //arrange
 
             //act
-            var target = new Tree();
+            var target = new GitTree();
             target.AddFile(".config/dotnet-tools.json", _fixture.Create<long>(), new[] { new Commit(_fixture.Create<string>(), DateTimeOffset.Now) });
 
             target.Files.Should().BeEmpty();
@@ -48,7 +48,7 @@ namespace repo_man.xunit.domain.Git
         [Fact]
         public void ItsTurtlesAllTheWayDown()
         {
-            var target = new Tree();
+            var target = new GitTree();
             target.AddFile("any/way/you/want/it/thats/the/way/you/need/it.txt", _fixture.Create<long>(), new[] { _fixture.Create<Commit>() });
 
             var expectedFolders = new[] { "any", "way", "you", "want", "it", "thats", "the", "way", "you", "need" };

@@ -9,9 +9,9 @@
             _crawler = crawler;
         }
 
-        public Tree GetFileTree()
+        public GitTree GetFileTree()
         {
-            var result = new Tree();
+            var result = new GitTree();
             foreach (var (path, size, commits) in _crawler.GetFilesWithCommits())
             {
                 result.AddFile(path, size, commits);

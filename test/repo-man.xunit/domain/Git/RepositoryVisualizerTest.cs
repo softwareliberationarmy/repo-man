@@ -16,14 +16,14 @@ namespace repo_man.xunit.domain.Git
         public async Task ExtractsAndPushesTreeToDiagramRenderer()
         {
             //arrange
-            var expected = new Tree();
+            var expected = new GitTree();
             _mocker.GetMock<ITreeExtracter>().Setup(te => te.GetFileTree()).Returns(expected);
 
             //act
             await WhenIGenerateADiagram();
 
             //assert
-            _mocker.Verify<IDiagramRenderer>(r => r.RenderTree(expected), Times.Once);
+            _mocker.Verify<IDiagramRenderer>(r => r.CreateDiagram(expected), Times.Once);
         }
 
         [Fact]

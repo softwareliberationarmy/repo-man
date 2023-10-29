@@ -24,7 +24,7 @@ public class RepositoryVisualizer
             _logger.LogInformation("Extracting files from repository");
             var tree = _extracter.GetFileTree();
             _logger.LogInformation("Creating a diagram of the repository file tree");
-            await _renderer.RenderTree(tree);
+            await _renderer.CreateDiagram(tree);
             _logger.LogInformation("Diagram creation complete!");
         }
         catch (Exception ex)

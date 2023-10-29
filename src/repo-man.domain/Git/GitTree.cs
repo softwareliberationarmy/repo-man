@@ -1,8 +1,8 @@
 ﻿namespace repo_man.domain.Git;
 
-public class Tree : GitFolder
+public class GitTree : GitFolder
 {
-    public Tree() : base("")
+    public GitTree() : base("")
     {
     }
 
