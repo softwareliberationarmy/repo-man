@@ -5,11 +5,11 @@ using repo_man.domain.Git;
 
 namespace repo_man.xunit.domain.Git
 {
-    public class TreeTest
+    public class GitTreeTest
     {
         private readonly Fixture _fixture;
 
-        public TreeTest()
+        public GitTreeTest()
         {
             _fixture = new Fixture();
         }
@@ -59,6 +59,18 @@ namespace repo_man.xunit.domain.Git
                 currentFolders.Single().Name.Should().Be(expectedFolders[i]);
                 currentFolders = currentFolders.Single().Folders;
             }
+        }
+
+        [Fact]
+        public void RemembersTheSmallestFileSize()
+        {
+            var expectedSize = 1024;
+            var target = new GitTree();
+            target.AddFile("Program.cs", expectedSize * 3, Array.Empty<Commit>());
+            target.AddFile("src/ImportantFile.cs", expectedSize, Array.Empty<Commit>());
+            target.AddFile("test/Project.Test/MyTestFile.cs", expectedSize * 2, Array.Empty<Commit>());
+
+            target.GetMinFileSize().Should().Be(expectedSize);
         }
     }
 }

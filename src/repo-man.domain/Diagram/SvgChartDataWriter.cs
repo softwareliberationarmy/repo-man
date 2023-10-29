@@ -15,16 +15,22 @@ public class SvgChartDataWriter
     {
         var chartData = new ChartData { Data = "" };
 
+        var minFileSize = tree.GetMinFileSize();
+
+        long x = 10;
         for (int i = 0; i < tree.Files.Count; i++)
         {
             var file = tree.Files.ElementAt(i);
             var color = _colorMapper.Map(Path.GetExtension(file.Name));
-            var x = 20 + (i * 20);
+            var radius = (file.FileSize / minFileSize) * 10;
+            x += radius;
+            long y = 10 + radius;
 
-            chartData.Data += $"<g style=\"fill:{color}\" transform=\"translate({x},20)\">" +
-                              "<circle r=\"10\" />" +
+            chartData.Data += $"<g style=\"fill:{color}\" transform=\"translate({x},{y})\">" +
+                              $"<circle r=\"{radius}\" />" +
                               $"<text style=\"fill:black\" font-size=\"6\" alignment-baseline=\"middle\" text-anchor=\"middle\"/>{file.Name}</text>" +
                               "</g>";
+            x += radius;  
         }
 
         return chartData;

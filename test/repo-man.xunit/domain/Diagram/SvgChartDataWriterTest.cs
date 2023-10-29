@@ -9,10 +9,12 @@ namespace repo_man.xunit.domain.Diagram
     public class SvgChartDataWriterTest
     {
         private readonly AutoMocker _mocker;
+        private readonly Fixture _fixture;
 
         public SvgChartDataWriterTest()
         {
             _mocker = new AutoMocker();
+            _fixture = new Fixture();
         }
 
         [Theory]
@@ -23,16 +25,13 @@ namespace repo_man.xunit.domain.Diagram
         [InlineData("black", ".gitignore", ".gitignore")]
         public void Single_CS_File(string color, string fileName, string fileExtension)
         {
-            var fixture = new Fixture();
 
             GivenTheseColorMappings(new Tuple<string, string>(fileExtension, color));
-
-            var tree = new GitTree();
-            tree.AddFile(fileName, fixture.Create<long>(), Array.Empty<Commit>() );
             
-            var target = _mocker.CreateInstance<SvgChartDataWriter>();
+            var tree = GivenThisFileTree(
+                new Tuple<string, long>(fileName, _fixture.Create<long>()));
 
-            var result = target.WriteChartData(tree);
+            var result = WhenICreateChartData(tree);
 
             result.Data.Should().Be($"<g style=\"fill:{color}\" transform=\"translate(20,20)\">" +
                                     "<circle r=\"10\" />" +
@@ -49,13 +48,12 @@ namespace repo_man.xunit.domain.Diagram
                 new Tuple<string, string>(".md", "blue")
             );
 
-            var tree = new GitTree();
-            tree.AddFile("Program.cs", 100, Array.Empty<Commit>());
-            tree.AddFile("Readme.md", 100, Array.Empty<Commit>());
+            var tree = GivenThisFileTree(
+                new Tuple<string, long>("Program.cs", 100),
+                new Tuple<string, long>("Readme.md", 100)
+            );
 
-            var target = _mocker.CreateInstance<SvgChartDataWriter>();
-
-            var result = target.WriteChartData(tree);
+            var result = WhenICreateChartData(tree);
 
             result.Data.Should().Be("<g style=\"fill:pink\" transform=\"translate(20,20)\">" +
                                     "<circle r=\"10\" />" +
@@ -65,6 +63,44 @@ namespace repo_man.xunit.domain.Diagram
                                     "<circle r=\"10\" />" +
                                     "<text style=\"fill:black\" font-size=\"6\" alignment-baseline=\"middle\" text-anchor=\"middle\"/>Readme.md</text>" +
                                     "</g>");
+        }
+
+        [Fact]
+        public void Two_TopLevel_Files_Different_Sizes()
+        {
+            GivenTheseColorMappings(new Tuple<string, string>(".cs", "#001122"));
+            var tree = GivenThisFileTree(
+                new Tuple<string, long>("Program.cs", 100),
+                new Tuple<string, long>("App.cs", 50));
+
+            var result = WhenICreateChartData(tree);
+
+            result.Data.Should().Be("<g style=\"fill:#001122\" transform=\"translate(30,30)\">" +
+                                    "<circle r=\"20\" />" +
+                                    "<text style=\"fill:black\" font-size=\"6\" alignment-baseline=\"middle\" text-anchor=\"middle\"/>Program.cs</text>" +
+                                    "</g>" +
+                                    "<g style=\"fill:#001122\" transform=\"translate(60,20)\">" +
+                                    "<circle r=\"10\" />" +
+                                    "<text style=\"fill:black\" font-size=\"6\" alignment-baseline=\"middle\" text-anchor=\"middle\"/>App.cs</text>" +
+                                    "</g>");
+        }
+
+        private ChartData WhenICreateChartData(GitTree tree)
+        {
+            var target = _mocker.CreateInstance<SvgChartDataWriter>();
+            var result = target.WriteChartData(tree);
+            return result;
+        }
+
+        private static GitTree GivenThisFileTree(params Tuple<string, long>[] files)
+        {
+            var tree = new GitTree();
+            foreach (var file in files)
+            {
+                tree.AddFile(file.Item1, file.Item2, Array.Empty<Commit>());
+            }
+
+            return tree;
         }
 
         private void GivenTheseColorMappings(params Tuple<string, string>[] mappings)
