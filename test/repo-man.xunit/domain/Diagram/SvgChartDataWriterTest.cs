@@ -1,5 +1,4 @@
-﻿using System.Drawing;
-using AutoFixture;
+﻿using AutoFixture;
 using FluentAssertions;
 using Moq.AutoMock;
 using repo_man.domain.Diagram;
@@ -9,21 +8,29 @@ namespace repo_man.xunit.domain.Diagram
 {
     public class SvgChartDataWriterTest
     {
+        private readonly AutoMocker _mocker;
+
+        public SvgChartDataWriterTest()
+        {
+            _mocker = new AutoMocker();
+        }
+
         [Theory]
-        [InlineData("#0060ac", "Program.cs")]
-        [InlineData("green", "Program.cs")]
-        [InlineData("aliceblue", "Main.cs")]
-        public void Single_CS_File(string color, string fileName)
+        [InlineData("#0060ac", "Program.cs", ".cs")]
+        [InlineData("green", "Program.cs", ".cs")]
+        [InlineData("aliceblue", "Main.cs", ".cs")]
+        [InlineData("#012345", "Readme.md", ".md")]
+        [InlineData("black", ".gitignore", ".gitignore")]
+        public void Single_CS_File(string color, string fileName, string fileExtension)
         {
             var fixture = new Fixture();
-            var mocker = new AutoMocker();
 
-            mocker.GetMock<IFileColorMapper>().Setup(x => x.Map(".cs")).Returns(color);
+            GivenTheseColorMappings(new Tuple<string, string>(fileExtension, color));
 
             var tree = new GitTree();
             tree.AddFile(fileName, fixture.Create<long>(), Array.Empty<Commit>() );
             
-            var target = mocker.CreateInstance<SvgChartDataWriter>();
+            var target = _mocker.CreateInstance<SvgChartDataWriter>();
 
             var result = target.WriteChartData(tree);
 
@@ -31,32 +38,41 @@ namespace repo_man.xunit.domain.Diagram
                                     "<circle r=\"10\" />" +
                                     $"<text style=\"fill:black\" font-size=\"6\" alignment-baseline=\"middle\" text-anchor=\"middle\"/>{fileName}</text>" +
                                     "</g>");
+
         }
-    }
 
-    public class SvgChartDataWriter
-    {
-        public readonly IFileColorMapper _colorMapper;
-
-        public SvgChartDataWriter(IFileColorMapper colorMapper)
+        [Fact]
+        public void Two_TopLevel_Files_Same_Size()
         {
-            _colorMapper = colorMapper;
+            GivenTheseColorMappings(
+                new Tuple<string, string>(".cs", "pink"),
+                new Tuple<string, string>(".md", "blue")
+            );
+
+            var tree = new GitTree();
+            tree.AddFile("Program.cs", 100, Array.Empty<Commit>());
+            tree.AddFile("Readme.md", 100, Array.Empty<Commit>());
+
+            var target = _mocker.CreateInstance<SvgChartDataWriter>();
+
+            var result = target.WriteChartData(tree);
+
+            result.Data.Should().Be("<g style=\"fill:pink\" transform=\"translate(20,20)\">" +
+                                    "<circle r=\"10\" />" +
+                                    "<text style=\"fill:black\" font-size=\"6\" alignment-baseline=\"middle\" text-anchor=\"middle\"/>Program.cs</text>" +
+                                    "</g>" +
+                                    "<g style=\"fill:blue\" transform=\"translate(40,20)\">" +
+                                    "<circle r=\"10\" />" +
+                                    "<text style=\"fill:black\" font-size=\"6\" alignment-baseline=\"middle\" text-anchor=\"middle\"/>Readme.md</text>" +
+                                    "</g>");
         }
-        
-        public ChartData WriteChartData(GitTree tree)
-        {
-            var firstFile = tree.Files.Single();
-            var color = _colorMapper.Map(Path.GetExtension(firstFile.Name));
 
-            var chartData = new ChartData
+        private void GivenTheseColorMappings(params Tuple<string, string>[] mappings)
+        {
+            foreach (var mapping in mappings)
             {
-                Data = $"<g style=\"fill:{color}\" transform=\"translate(20,20)\">" +
-                       "<circle r=\"10\" />" +
-                       $"<text style=\"fill:black\" font-size=\"6\" alignment-baseline=\"middle\" text-anchor=\"middle\"/>{firstFile.Name}</text>" +
-                       "</g>"
-            };
-
-            return chartData;
+                _mocker.GetMock<IFileColorMapper>().Setup(x => x.Map(mapping.Item1)).Returns(mapping.Item2);
+            }
         }
     }
 }
