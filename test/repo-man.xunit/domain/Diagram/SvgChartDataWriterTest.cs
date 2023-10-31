@@ -3,6 +3,7 @@ using FluentAssertions;
 using Moq.AutoMock;
 using repo_man.domain.Diagram;
 using repo_man.domain.Git;
+using System.Drawing;
 
 namespace repo_man.xunit.domain.Diagram
 {
@@ -23,7 +24,7 @@ namespace repo_man.xunit.domain.Diagram
         [InlineData("aliceblue", "Main.cs", ".cs")]
         [InlineData("#012345", "Readme.md", ".md")]
         [InlineData("black", ".gitignore", ".gitignore")]
-        public void Single_CS_File(string color, string fileName, string fileExtension)
+        public void Single_TopLevel_CS_File(string color, string fileName, string fileExtension)
         {
 
             GivenTheseColorMappings(new Tuple<string, string>(fileExtension, color));
@@ -82,6 +83,26 @@ namespace repo_man.xunit.domain.Diagram
                                     "<g style=\"fill:#001122\" transform=\"translate(60,20)\">" +
                                     "<circle r=\"10\" />" +
                                     "<text style=\"fill:black\" font-size=\"6\" alignment-baseline=\"middle\" text-anchor=\"middle\"/>App.cs</text>" +
+                                    "</g>");
+        }
+
+        [Fact]
+        public void Single_File_In_A_Folder()
+        {
+            GivenTheseColorMappings(new Tuple<string, string>(".cs", "fuschia"));
+
+            var tree = GivenThisFileTree(
+                new Tuple<string, long>("src/Program.cs", _fixture.Create<long>()));
+
+            var result = WhenICreateChartData(tree);
+
+            result.Data.Should().Be($"<g style=\"fill:fuschia\" transform=\"translate(25,25)\">" +
+                                    "<circle r=\"10\" />" +
+                                    $"<text style=\"fill:black\" font-size=\"6\" alignment-baseline=\"middle\" text-anchor=\"middle\"/>Program.cs</text>" +
+                                    "</g>" +
+                                    $"<g transform=\"translate(10,10)\">" +
+                                    "<rect fill=\"none\" stroke-width=\"0.5\" stroke=\"black\" width=\"30\" height=\"30\" />" +
+                                    $"<text style=\"fill:black\" font-size=\"6\" transform=\"translate(-1,-1)\" >src</text>" +
                                     "</g>");
         }
 
