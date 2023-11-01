@@ -26,12 +26,11 @@ public class SvgChartDataWriter
         {
             startY = 10;
             var file = tree.Files.ElementAt(i);
-            var color = _colorMapper.Map(Path.GetExtension(file.Name));
             var radius = (file.FileSize / minFileSize) * 10;
             x += radius;
             var y = startY + radius;
 
-            AddFileCircle(builder, color, x, y, radius, file.Name);
+            AddFileCircle(builder, x, y, radius, file.Name);
             x += radius;
             maxY = Math.Max(maxY, y + radius + 10);
 
@@ -47,12 +46,11 @@ public class SvgChartDataWriter
             for (int j = 0; j < folder.Files.Count; j++)
             {
                 var file = folder.Files.ElementAt(j);
-                var color = _colorMapper.Map(Path.GetExtension(file.Name));
                 var radius = (file.FileSize / minFileSize) * 10;
                 x += radius;
                 long y = startY + 5 + radius;
 
-                AddFileCircle(builder, color, x, y, radius, file.Name);
+                AddFileCircle(builder, x, y, radius, file.Name);
                 x += radius;
                 maxY = Math.Max(maxY, y + radius + 10);
             }
@@ -78,8 +76,10 @@ public class SvgChartDataWriter
         builder.Append("</g>");
     }
 
-    private static void AddFileCircle(StringBuilder builder, string color, long x, long y, long radius, string fileName)
+    private void AddFileCircle(StringBuilder builder, long x, long y, long radius, string fileName)
     {
+        var color = _colorMapper.Map(Path.GetExtension(fileName));
+
         builder.Append($"<g style=\"fill:{color}\" transform=\"translate({x},{y})\">");
         builder.Append($"<circle r=\"{radius}\" />");
         builder.Append(
