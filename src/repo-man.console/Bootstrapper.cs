@@ -17,6 +17,7 @@ public static class Bootstrapper
                 services.AddTransient<IGitRepoCrawler, LibGit2SharpGitRepoCrawler>();
                 services.AddTransient<ITreeExtracter, GitRepositoryTreeExtracter>();
                 services.AddTransient<IDiagramRenderer, SvgDiagramRenderer>();
+                services.AddTransient<SvgStringBuilder>();
                 services.AddTransient<RepositoryVisualizer>();
             })
             .Build();

@@ -1,22 +1,18 @@
 ﻿using repo_man.domain.Git;
-using System.Drawing;
-using System.Text;
 
 namespace repo_man.domain.Diagram;
 
 public class SvgChartDataWriter
 {
-    public readonly IFileColorMapper _colorMapper;
+    private readonly SvgStringBuilder _stringBuilder;
 
-    public SvgChartDataWriter(IFileColorMapper colorMapper)
+    public SvgChartDataWriter(SvgStringBuilder stringBuilder)
     {
-        _colorMapper = colorMapper;
+        _stringBuilder = stringBuilder;
     }
 
     public ChartData WriteChartData(GitTree tree)
     {
-        var builder = new StringBuilder();
-
         var minFileSize = tree.GetMinFileSize();
 
         long x = 10;
@@ -30,7 +26,7 @@ public class SvgChartDataWriter
             x += radius;
             var y = startY + radius;
 
-            AddFileCircle(builder, x, y, radius, file.Name);
+            _stringBuilder.AddFileCircle(x, y, radius, file.Name);
             x += radius;
             maxY = Math.Max(maxY, y + radius + 10);
 
@@ -50,7 +46,7 @@ public class SvgChartDataWriter
                 x += radius;
                 long y = startY + 5 + radius;
 
-                AddFileCircle(builder, x, y, radius, file.Name);
+                _stringBuilder.AddFileCircle(x, y, radius, file.Name);
                 x += radius;
                 maxY = Math.Max(maxY, y + radius + 10);
             }
@@ -60,30 +56,9 @@ public class SvgChartDataWriter
             var rectangleX = 10;
             var rectangleY = startY;
             var folderName = folder.Name;
-            AddBoundingRectangle(builder, rectangleX, rectangleY, width, height, folderName);
+            _stringBuilder.AddBoundingRectangle(rectangleX, rectangleY, width, height, folderName);
         }
 
-        return new ChartData { Data = builder.ToString() };
-    }
-
-    private static void AddBoundingRectangle(StringBuilder builder, int rectangleX, long rectangleY, long width,
-        long height, string folderName)
-    {
-        builder.Append($"<g transform=\"translate({rectangleX},{rectangleY})\">");
-        builder.Append(
-            $"<rect fill=\"none\" stroke-width=\"0.5\" stroke=\"black\" width=\"{width}\" height=\"{height}\" />");
-        builder.Append($"<text style=\"fill:black\" font-size=\"6\" transform=\"translate(-1,-1)\" >{folderName}</text>");
-        builder.Append("</g>");
-    }
-
-    private void AddFileCircle(StringBuilder builder, long x, long y, long radius, string fileName)
-    {
-        var color = _colorMapper.Map(Path.GetExtension(fileName));
-
-        builder.Append($"<g style=\"fill:{color}\" transform=\"translate({x},{y})\">");
-        builder.Append($"<circle r=\"{radius}\" />");
-        builder.Append(
-            $"<text style=\"fill:black\" font-size=\"6\" alignment-baseline=\"middle\" text-anchor=\"middle\"/>{fileName}</text>");
-        builder.Append("</g>");
+        return new ChartData { Data = _stringBuilder.ToSvgString() };
     }
 }
