@@ -1,5 +1,6 @@
 ﻿using repo_man.domain.Git;
 using System.Drawing;
+using System.Text;
 
 namespace repo_man.domain.Diagram;
 
@@ -11,10 +12,10 @@ public class SvgChartDataWriter
     {
         _colorMapper = colorMapper;
     }
-        
+
     public ChartData WriteChartData(GitTree tree)
     {
-        var chartData = new ChartData { Data = "" };
+        var builder = new StringBuilder();
 
         var minFileSize = tree.GetMinFileSize();
 
@@ -30,10 +31,10 @@ public class SvgChartDataWriter
             x += radius;
             var y = startY + radius;
 
-            chartData.Data += $"<g style=\"fill:{color}\" transform=\"translate({x},{y})\">" +
-                              $"<circle r=\"{radius}\" />" +
-                              $"<text style=\"fill:black\" font-size=\"6\" alignment-baseline=\"middle\" text-anchor=\"middle\"/>{file.Name}</text>" +
-                              "</g>";
+            builder.Append($"<g style=\"fill:{color}\" transform=\"translate({x},{y})\">");
+            builder.Append($"<circle r=\"{radius}\" />");
+            builder.Append($"<text style=\"fill:black\" font-size=\"6\" alignment-baseline=\"middle\" text-anchor=\"middle\"/>{file.Name}</text>");
+            builder.Append("</g>");
             x += radius;
             maxY = Math.Max(maxY, y + radius + 10);
 
@@ -54,21 +55,21 @@ public class SvgChartDataWriter
                 x += radius;
                 long y = startY + 5 + radius;
 
-                chartData.Data += $"<g style=\"fill:{color}\" transform=\"translate({x},{y})\">" +
-                                  $"<circle r=\"{radius}\" />" +
-                                  $"<text style=\"fill:black\" font-size=\"6\" alignment-baseline=\"middle\" text-anchor=\"middle\"/>{file.Name}</text>" +
-                                  "</g>";
+                builder.Append($"<g style=\"fill:{color}\" transform=\"translate({x},{y})\">");
+                builder.Append($"<circle r=\"{radius}\" />");
+                builder.Append($"<text style=\"fill:black\" font-size=\"6\" alignment-baseline=\"middle\" text-anchor=\"middle\"/>{file.Name}</text>");
+                builder.Append("</g>");
                 x += radius;
                 maxY = Math.Max(maxY, y + radius + 10);
             }
 
-            chartData.Data += $"<g transform=\"translate(10,{startY})\">" +
-                              $"<rect fill=\"none\" stroke-width=\"0.5\" stroke=\"black\" width=\"{x - 5}\" height=\"{maxY - 15}\" />" +
-                              $"<text style=\"fill:black\" font-size=\"6\" transform=\"translate(-1,-1)\" >{folder.Name}</text>" +
-                              "</g>";
+            builder.Append($"<g transform=\"translate(10,{startY})\">");
+            builder.Append($"<rect fill=\"none\" stroke-width=\"0.5\" stroke=\"black\" width=\"{x - 5}\" height=\"{maxY - 15}\" />");
+            builder.Append($"<text style=\"fill:black\" font-size=\"6\" transform=\"translate(-1,-1)\" >{folder.Name}</text>");
+            builder.Append("</g>");
 
         }
 
-        return chartData;
+        return new ChartData { Data = builder.ToString() };
     }
 }
