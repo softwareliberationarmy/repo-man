@@ -31,10 +31,7 @@ public class SvgChartDataWriter
             x += radius;
             var y = startY + radius;
 
-            builder.Append($"<g style=\"fill:{color}\" transform=\"translate({x},{y})\">");
-            builder.Append($"<circle r=\"{radius}\" />");
-            builder.Append($"<text style=\"fill:black\" font-size=\"6\" alignment-baseline=\"middle\" text-anchor=\"middle\"/>{file.Name}</text>");
-            builder.Append("</g>");
+            AddFileCircle(builder, color, x, y, radius, file.Name);
             x += radius;
             maxY = Math.Max(maxY, y + radius + 10);
 
@@ -55,21 +52,38 @@ public class SvgChartDataWriter
                 x += radius;
                 long y = startY + 5 + radius;
 
-                builder.Append($"<g style=\"fill:{color}\" transform=\"translate({x},{y})\">");
-                builder.Append($"<circle r=\"{radius}\" />");
-                builder.Append($"<text style=\"fill:black\" font-size=\"6\" alignment-baseline=\"middle\" text-anchor=\"middle\"/>{file.Name}</text>");
-                builder.Append("</g>");
+                AddFileCircle(builder, color, x, y, radius, file.Name);
                 x += radius;
                 maxY = Math.Max(maxY, y + radius + 10);
             }
 
-            builder.Append($"<g transform=\"translate(10,{startY})\">");
-            builder.Append($"<rect fill=\"none\" stroke-width=\"0.5\" stroke=\"black\" width=\"{x - 5}\" height=\"{maxY - 15}\" />");
-            builder.Append($"<text style=\"fill:black\" font-size=\"6\" transform=\"translate(-1,-1)\" >{folder.Name}</text>");
-            builder.Append("</g>");
-
+            var width = x - 5;
+            var height = maxY - 15;
+            var rectangleX = 10;
+            var rectangleY = startY;
+            var folderName = folder.Name;
+            AddBoundingRectangle(builder, rectangleX, rectangleY, width, height, folderName);
         }
 
         return new ChartData { Data = builder.ToString() };
+    }
+
+    private static void AddBoundingRectangle(StringBuilder builder, int rectangleX, long rectangleY, long width,
+        long height, string folderName)
+    {
+        builder.Append($"<g transform=\"translate({rectangleX},{rectangleY})\">");
+        builder.Append(
+            $"<rect fill=\"none\" stroke-width=\"0.5\" stroke=\"black\" width=\"{width}\" height=\"{height}\" />");
+        builder.Append($"<text style=\"fill:black\" font-size=\"6\" transform=\"translate(-1,-1)\" >{folderName}</text>");
+        builder.Append("</g>");
+    }
+
+    private static void AddFileCircle(StringBuilder builder, string color, long x, long y, long radius, string fileName)
+    {
+        builder.Append($"<g style=\"fill:{color}\" transform=\"translate({x},{y})\">");
+        builder.Append($"<circle r=\"{radius}\" />");
+        builder.Append(
+            $"<text style=\"fill:black\" font-size=\"6\" alignment-baseline=\"middle\" text-anchor=\"middle\"/>{fileName}</text>");
+        builder.Append("</g>");
     }
 }
