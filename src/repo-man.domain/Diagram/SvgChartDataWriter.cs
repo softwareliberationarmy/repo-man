@@ -4,6 +4,17 @@ namespace repo_man.domain.Diagram;
 
 public class SvgChartDataWriter
 {
+    //SVG file outer margins
+    private const int TopMargin = 10;
+    private const int LeftMargin = 10;
+
+    //inner padding and margins
+    private const int FileMargin = 5;
+    private const int FolderPadding = 5;
+
+    //other constants
+    private const int MinRadius = 10;
+
     private readonly SvgStringBuilder _stringBuilder;
 
     public SvgChartDataWriter(SvgStringBuilder stringBuilder)
@@ -13,39 +24,49 @@ public class SvgChartDataWriter
 
     public ChartData WriteChartData(GitTree tree)
     {
-        var filePadding = 5;
-        var minFileSize = tree.GetMinFileSize();
+        var startAt = WriteTopLevelFiles(tree);
+        WriteFolderFiles(tree, startAt);
 
-        var startAt = new StartingPoint(10, 10);
-        long maxY = 10;
+        return new ChartData { Data = _stringBuilder.ToSvgString() };
+    }
+
+    private StartingPoint WriteTopLevelFiles(GitTree tree)
+    {
+        var startAt = new StartingPoint(LeftMargin, TopMargin);
+        long fileMaxY = startAt.Y;
         foreach (var file in tree.Files)
         {
-            var radius = (file.FileSize / minFileSize) * 10;
+            var radius = (file.FileSize / tree.GetMinFileSize()) * MinRadius;
             var y = startAt.Y + radius;
             var x = startAt.X + radius;
 
             _stringBuilder.AddFileCircle(x, y, radius, file.Name);
-            maxY = Math.Max(maxY, y + radius + 10);
-            startAt = startAt with { X = x + radius + filePadding };
+            fileMaxY = Math.Max(fileMaxY, y + radius + 10);
+            startAt = startAt with { X = x + radius + FileMargin };
         }
 
-        startAt = new StartingPoint(X: 10, Y: maxY);
+        startAt = new StartingPoint(X: LeftMargin, Y: fileMaxY);
+        return startAt;
+    }
 
+    private void WriteFolderFiles(GitTree tree, StartingPoint startAt)
+    {
+        long maxY = startAt.Y;
         foreach (var folder in tree.Folders)
         {
-            var folderPadding = 5;
             var folderStartAt = startAt;
-            var folderFileStartAt = new StartingPoint(X: folderStartAt.X + folderPadding, Y: folderStartAt.Y + folderPadding);
+            var folderFileStartAt =
+                new StartingPoint(X: folderStartAt.X + FolderPadding, Y: folderStartAt.Y + FolderPadding);
 
             foreach (var file in folder.Files)
             {
-                var radius = (file.FileSize / minFileSize) * 10;
+                var radius = (file.FileSize / tree.GetMinFileSize()) * 10;
                 var y = folderFileStartAt.Y + radius;
                 var x = folderFileStartAt.X + radius;
 
                 _stringBuilder.AddFileCircle(x, y, radius, file.Name);
-                maxY = Math.Max(maxY, y + radius + folderPadding);
-                folderFileStartAt = folderFileStartAt with { X = x + radius + filePadding };
+                maxY = Math.Max(maxY, y + radius + FolderPadding);
+                folderFileStartAt = folderFileStartAt with { X = x + radius + FileMargin };
             }
 
             var width = folderFileStartAt.X - folderStartAt.X;
@@ -55,8 +76,6 @@ public class SvgChartDataWriter
             var folderName = folder.Name;
             _stringBuilder.AddBoundingRectangle(rectangleX, rectangleY, width, height, folderName);
         }
-
-        return new ChartData { Data = _stringBuilder.ToSvgString() };
     }
 
     private record StartingPoint(long X, long Y);
