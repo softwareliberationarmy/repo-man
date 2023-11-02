@@ -24,15 +24,16 @@ public class SvgChartDataWriter
 
     public ChartData WriteChartData(GitTree tree)
     {
-        var startAt = WriteTopLevelFiles(tree);
+        var startAt = WriteTopLevelFiles(tree, new StartingPoint(LeftMargin, TopMargin));
         WriteFolderFiles(tree, startAt);
 
         return new ChartData { Data = _stringBuilder.ToSvgString() };
     }
 
-    private StartingPoint WriteTopLevelFiles(GitTree tree)
+    private StartingPoint WriteTopLevelFiles(GitTree tree, StartingPoint startAt)
     {
-        var startAt = new StartingPoint(LeftMargin, TopMargin);
+        const long topLevelFilesBottomMargin = 10;
+
         long fileMaxY = startAt.Y;
         foreach (var file in tree.Files)
         {
@@ -41,11 +42,14 @@ public class SvgChartDataWriter
             var x = startAt.X + radius;
 
             _stringBuilder.AddFileCircle(x, y, radius, file.Name);
-            fileMaxY = Math.Max(fileMaxY, y + radius + 10);
+
+            fileMaxY = Math.Max(fileMaxY, y + radius + topLevelFilesBottomMargin);
             startAt = startAt with { X = x + radius + FileMargin };
         }
 
+        //done writing top-level files. Create a new starting point back at the left margin in a new row
         startAt = new StartingPoint(X: LeftMargin, Y: fileMaxY);
+
         return startAt;
     }
 
@@ -60,7 +64,7 @@ public class SvgChartDataWriter
 
             foreach (var file in folder.Files)
             {
-                var radius = (file.FileSize / tree.GetMinFileSize()) * 10;
+                var radius = (file.FileSize / tree.GetMinFileSize()) * MinRadius;
                 var y = folderFileStartAt.Y + radius;
                 var x = folderFileStartAt.X + radius;
 
