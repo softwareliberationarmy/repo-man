@@ -60,7 +60,7 @@ namespace repo_man.xunit.domain.Diagram
                                     "<circle r=\"10\" />" +
                                     "<text style=\"fill:black\" font-size=\"6\" alignment-baseline=\"middle\" text-anchor=\"middle\"/>Program.cs</text>" +
                                     "</g>" +
-                                    "<g style=\"fill:blue\" transform=\"translate(40,20)\">" +
+                                    "<g style=\"fill:blue\" transform=\"translate(45,20)\">" +
                                     "<circle r=\"10\" />" +
                                     "<text style=\"fill:black\" font-size=\"6\" alignment-baseline=\"middle\" text-anchor=\"middle\"/>Readme.md</text>" +
                                     "</g>");
@@ -80,7 +80,7 @@ namespace repo_man.xunit.domain.Diagram
                                     "<circle r=\"20\" />" +
                                     "<text style=\"fill:black\" font-size=\"6\" alignment-baseline=\"middle\" text-anchor=\"middle\"/>Program.cs</text>" +
                                     "</g>" +
-                                    "<g style=\"fill:#001122\" transform=\"translate(60,20)\">" +
+                                    "<g style=\"fill:#001122\" transform=\"translate(65,20)\">" +
                                     "<circle r=\"10\" />" +
                                     "<text style=\"fill:black\" font-size=\"6\" alignment-baseline=\"middle\" text-anchor=\"middle\"/>App.cs</text>" +
                                     "</g>");
@@ -102,6 +102,31 @@ namespace repo_man.xunit.domain.Diagram
                                     "</g>" +
                                     $"<g transform=\"translate(10,10)\">" +
                                     "<rect fill=\"none\" stroke-width=\"0.5\" stroke=\"black\" width=\"30\" height=\"30\" />" +
+                                    $"<text style=\"fill:black\" font-size=\"6\" transform=\"translate(-1,-1)\" >src</text>" +
+                                    "</g>");
+        }
+
+        [Fact]
+        public void Two_Files_In_A_Folder_Same_Size()
+        {
+            GivenTheseColorMappings(new Tuple<string, string>(".cs", "fuschia"), new Tuple<string, string>(".xaml", "#001122"));
+
+            var tree = GivenThisFileTree(
+                new Tuple<string, long>("src/Program.cs", 100L),
+                new Tuple<string, long>("src/App.xaml", 100L));
+
+            var result = WhenICreateChartData(tree);
+
+            result.Data.Should().Be($"<g style=\"fill:fuschia\" transform=\"translate(25,25)\">" +
+                                    "<circle r=\"10\" />" +
+                                    $"<text style=\"fill:black\" font-size=\"6\" alignment-baseline=\"middle\" text-anchor=\"middle\"/>Program.cs</text>" +
+                                    "</g>" +
+                                    $"<g style=\"fill:#001122\" transform=\"translate(50,25)\">" +
+                                    "<circle r=\"10\" />" +
+                                    $"<text style=\"fill:black\" font-size=\"6\" alignment-baseline=\"middle\" text-anchor=\"middle\"/>App.xaml</text>" +
+                                    "</g>" +
+                                    $"<g transform=\"translate(10,10)\">" +
+                                    "<rect fill=\"none\" stroke-width=\"0.5\" stroke=\"black\" width=\"55\" height=\"30\" />" +
                                     $"<text style=\"fill:black\" font-size=\"6\" transform=\"translate(-1,-1)\" >src</text>" +
                                     "</g>");
         }

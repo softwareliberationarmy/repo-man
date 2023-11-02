@@ -12,7 +12,7 @@ public class SvgStringBuilder
         _colorMapper = colorMapper;
     }
 
-    public void AddBoundingRectangle(int rectangleX, long rectangleY, long width,
+    public void AddBoundingRectangle(long rectangleX, long rectangleY, long width,
         long height, string folderName)
     {
         _builder.Append($"<g transform=\"translate({rectangleX},{rectangleY})\">");
