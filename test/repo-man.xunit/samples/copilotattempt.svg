@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg"
+    style="background-color: blanchedalmond;font-family:sans-serif">
+    <g id="legend" transform="translate(690,430)">
+        <rect x="0" y="0" width="100" height="160" fill="white" stroke="black" />
+        <!--LEGEND 
+	For each item:
+	- circle 
+		- r=5
+	- text 
+		- text y is circle y + 2
+		- font-size = 12
+	- distance between rows = 20
+	- rectangle width: 100? 
+	- rectangle height: (circles * 20) + 40
+	-->
+        <text x="10" y="20" font-size="20">Legend</text>
+        <g id="legend_items">
+            <g>
+                <circle cx="10" cy="40" r="5" fill="gray" />
+                <text x="20" y="40" font-size="12" dominant-baseline="middle">.gitignore</text>
+            </g>
+            <g>
+                <circle cx="10" cy="60" r="5" fill="lightgray" />
+                <text x="20" y="60" font-size="12" dominant-baseline="middle">.md</text>
+            </g>
+            <g>
+                <circle cx="10" cy="80" r="5" fill="darkgray" />
+                <text x="20" y="80" font-size="12" dominant-baseline="middle">.sln</text>
+            </g>
+            <g>
+                <circle cx="10" cy="100" r="5" fill="blue" />
+                <text x="20" y="100" font-size="12" dominant-baseline="middle">.csproj</text>
+            </g>
+            <g>
+                <circle cx="10" cy="120" r="5" fill="green" />
+                <text x="20" y="120" font-size="12" dominant-baseline="middle">.cs</text>
+            </g>
+            <g>
+                <circle cx="10" cy="140" r="5" fill="orange" />
+                <text x="20" y="140" font-size="12" dominant-baseline="middle">.xaml</text>
+            </g>
+        </g>
+    </g>
+
+    <!-- FILES 
+  
+  -->
+    <g id="folder_60_60" transform="translate(120,120)">
+        <circle cx="0" cy="0" r="100" fill="none" stroke="black" />
+        <text x="0" y="-100" font-size="12" text-anchor="middle"
+            alignment-baseline="text-after-edge">llama-demo.console</text>
+        <g id="file_120_120" transform="translate(-60,-40)">
+            <circle cx="0" cy="0" r="18" fill="blue" />
+            <text x="0" y="0" font-size="8" text-anchor="middle" alignment-baseline="middle">
+                <tspan>llama-demo.</tspan>
+                <tspan y="12" x="0">console.csproj</tspan>
+            </text>
+        </g>
+        <g id="file_120_166" transform="translate(0,-60)">
+            <circle cx="0" cy="0" r="26" fill="green" />
+            <text x="0" y="0" font-size="12" text-anchor="middle" alignment-baseline="middle">Program.cs</text>
+        </g>
+    </g>
+
+
+    <g id="folder_60_170" transform="translate(320,160)">
+        <circle cx="0" cy="0" r="100" fill="none" stroke="black" />
+        <text x="0" y="-100" font-size="12" text-anchor="middle"
+            alignment-baseline="text-after-edge">llama-demo.wpf</text>
+        <g id="file_230_30">
+            <circle cx="230" cy="30" r="18" fill="blue" />
+            <text x="230" y="30" font-size="12" text-anchor="middle"
+                alignment-baseline="middle">llama-demo.wpf.csproj</text>
+        </g>
+        <g id="file_230_76">
+            <circle cx="230" cy="76" r="17" fill="orange" />
+            <text x="230" y="76" font-size="12" text-anchor="middle" alignment-baseline="middle">App.xaml</text>
+        </g>
+        <g id="file_230_120">
+            <circle cx="230" cy="120" r="15" fill="green" />
+            <text x="230" y="120" font-size="12" text-anchor="middle" alignment-baseline="middle">App.xaml.cs</text>
+        </g>
+    </g>
+</svg>

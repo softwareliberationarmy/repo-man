@@ -34,4 +34,8 @@
     <ProjectReference Include="..\..\src\repo-man.domain\repo-man.domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="samples\" />
+  </ItemGroup>
+
 </Project>
