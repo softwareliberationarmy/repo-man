@@ -35,7 +35,7 @@ public class SvgChartDataWriter
         const long topLevelFilesBottomMargin = 10;
 
         long fileMaxY = startAt.Y;
-        foreach (var file in tree.Files)
+        foreach (var file in tree.Files.OrderByDescending(x => x.FileSize))
         {
             var radius = (file.FileSize / tree.GetMinFileSize()) * MinRadius;
             var y = startAt.Y + radius;
@@ -62,7 +62,7 @@ public class SvgChartDataWriter
             var folderFileStartAt =
                 new StartingPoint(X: folderStartAt.X + FolderPadding, Y: folderStartAt.Y + FolderPadding);
 
-            foreach (var file in folder.Files)
+            foreach (var file in folder.Files.OrderByDescending(x => x.FileSize))
             {
                 var radius = (file.FileSize / tree.GetMinFileSize()) * MinRadius;
                 var y = folderFileStartAt.Y + radius;

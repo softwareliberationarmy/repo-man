@@ -26,19 +26,14 @@ namespace repo_man.xunit.domain.Diagram
         [InlineData("black", ".gitignore", ".gitignore")]
         public void Single_TopLevel_CS_File(string color, string fileName, string fileExtension)
         {
-
             GivenTheseColorMappings(new Tuple<string, string>(fileExtension, color));
-            
+
             var tree = GivenThisFileTree(
                 new Tuple<string, long>(fileName, _fixture.Create<long>()));
 
             var result = WhenICreateChartData(tree);
 
-            result.Data.Should().Be($"<g style=\"fill:{color}\" transform=\"translate(20,20)\">" +
-                                    "<circle r=\"10\" />" +
-                                    $"<text style=\"fill:black\" font-size=\"6\" alignment-baseline=\"middle\" text-anchor=\"middle\"/>{fileName}</text>" +
-                                    "</g>");
-
+            result.Data.Should().Be(AFilledCircle(color, fileName, 20, 20, 10));
         }
 
         [Fact]
@@ -56,14 +51,8 @@ namespace repo_man.xunit.domain.Diagram
 
             var result = WhenICreateChartData(tree);
 
-            result.Data.Should().Be("<g style=\"fill:pink\" transform=\"translate(20,20)\">" +
-                                    "<circle r=\"10\" />" +
-                                    "<text style=\"fill:black\" font-size=\"6\" alignment-baseline=\"middle\" text-anchor=\"middle\"/>Program.cs</text>" +
-                                    "</g>" +
-                                    "<g style=\"fill:blue\" transform=\"translate(45,20)\">" +
-                                    "<circle r=\"10\" />" +
-                                    "<text style=\"fill:black\" font-size=\"6\" alignment-baseline=\"middle\" text-anchor=\"middle\"/>Readme.md</text>" +
-                                    "</g>");
+            result.Data.Should().Be(AFilledCircle("pink", "Program.cs", 20, 20, 10) +
+                                    AFilledCircle("blue", "Readme.md", 45, 20, 10));
         }
 
         [Fact]
@@ -76,14 +65,23 @@ namespace repo_man.xunit.domain.Diagram
 
             var result = WhenICreateChartData(tree);
 
-            result.Data.Should().Be("<g style=\"fill:#001122\" transform=\"translate(30,30)\">" +
-                                    "<circle r=\"20\" />" +
-                                    "<text style=\"fill:black\" font-size=\"6\" alignment-baseline=\"middle\" text-anchor=\"middle\"/>Program.cs</text>" +
-                                    "</g>" +
-                                    "<g style=\"fill:#001122\" transform=\"translate(65,20)\">" +
-                                    "<circle r=\"10\" />" +
-                                    "<text style=\"fill:black\" font-size=\"6\" alignment-baseline=\"middle\" text-anchor=\"middle\"/>App.cs</text>" +
-                                    "</g>");
+            result.Data.Should().Be(
+                AFilledCircle("#001122", "Program.cs", 30, 30, 20) +
+                AFilledCircle("#001122", "App.cs", 65, 20, 10));
+        }
+
+        [Fact]
+        public void TopLevel_Files_Are_Ordered_By_Size_Descending()
+        {
+            GivenTheseColorMappings(new Tuple<string, string>(".cs", "#001122"));
+            var tree = GivenThisFileTree(
+                new Tuple<string, long>("App.cs", 50),
+                new Tuple<string, long>("Program.cs", 100));
+
+            var result = WhenICreateChartData(tree);
+
+            result.Data.Should().Be(AFilledCircle("#001122", "Program.cs", 30, 30, 20) +
+                                    AFilledCircle("#001122", "App.cs", 65, 20, 10));
         }
 
         [Fact]
@@ -96,14 +94,8 @@ namespace repo_man.xunit.domain.Diagram
 
             var result = WhenICreateChartData(tree);
 
-            result.Data.Should().Be($"<g style=\"fill:fuschia\" transform=\"translate(25,25)\">" +
-                                    "<circle r=\"10\" />" +
-                                    $"<text style=\"fill:black\" font-size=\"6\" alignment-baseline=\"middle\" text-anchor=\"middle\"/>Program.cs</text>" +
-                                    "</g>" +
-                                    $"<g transform=\"translate(10,10)\">" +
-                                    "<rect fill=\"none\" stroke-width=\"0.5\" stroke=\"black\" width=\"30\" height=\"30\" />" +
-                                    $"<text style=\"fill:black\" font-size=\"6\" transform=\"translate(-1,-1)\" >src</text>" +
-                                    "</g>");
+            result.Data.Should().Be(AFilledCircle("fuschia", "Program.cs", 25, 25, 10) +
+                                    ARectangle(10, 10, 30, 30, "src"));
         }
 
         [Fact]
@@ -117,19 +109,36 @@ namespace repo_man.xunit.domain.Diagram
 
             var result = WhenICreateChartData(tree);
 
-            result.Data.Should().Be($"<g style=\"fill:fuschia\" transform=\"translate(25,25)\">" +
-                                    "<circle r=\"10\" />" +
-                                    $"<text style=\"fill:black\" font-size=\"6\" alignment-baseline=\"middle\" text-anchor=\"middle\"/>Program.cs</text>" +
-                                    "</g>" +
-                                    $"<g style=\"fill:#001122\" transform=\"translate(50,25)\">" +
-                                    "<circle r=\"10\" />" +
-                                    $"<text style=\"fill:black\" font-size=\"6\" alignment-baseline=\"middle\" text-anchor=\"middle\"/>App.xaml</text>" +
-                                    "</g>" +
-                                    $"<g transform=\"translate(10,10)\">" +
-                                    "<rect fill=\"none\" stroke-width=\"0.5\" stroke=\"black\" width=\"55\" height=\"30\" />" +
-                                    $"<text style=\"fill:black\" font-size=\"6\" transform=\"translate(-1,-1)\" >src</text>" +
-                                    "</g>");
+            result.Data.Should().Be(AFilledCircle("fuschia", "Program.cs", 25, 25, 10) +
+                                    AFilledCircle("#001122", "App.xaml", 50, 25, 10) +
+                                    ARectangle(10, 10, 55, 30, "src"));
         }
+
+        [Fact]
+        public void Two_Files_In_A_Folder_Different_Sizes_Ordered_Descending()
+        {
+            GivenTheseColorMappings(
+                new Tuple<string, string>(".cs", "fuschia"),
+                new Tuple<string, string>(".xaml", "#001122"));
+
+            var tree = GivenThisFileTree(
+                new Tuple<string, long>("src/Program.cs", 100L),
+                new Tuple<string, long>("src/App.xaml", 200L));
+
+            var result = WhenICreateChartData(tree);
+
+            result.Data.Should().Be(AFilledCircle("#001122", "App.xaml", 35, 35, 20) +
+                                    AFilledCircle("fuschia", "Program.cs", 70, 25, 10) +
+                                    ARectangle(10, 10, 75, 50, "src"));
+        }
+
+        //TO TEST: 
+        // two folders stacked
+        // two top-level files different sizes, plus two files in a folder, different sizes
+        // nested folders
+
+
+
 
         private ChartData WhenICreateChartData(GitTree tree)
         {
@@ -155,6 +164,22 @@ namespace repo_man.xunit.domain.Diagram
             {
                 _mocker.GetMock<IFileColorMapper>().Setup(x => x.Map(mapping.Item1)).Returns(mapping.Item2);
             }
+        }
+
+        private static string AFilledCircle(string color, string fileName, long expectedX, long expectedY, long expectedRadius)
+        {
+            return $"<g style=\"fill:{color}\" transform=\"translate({expectedX},{expectedY})\">" +
+                   $"<circle r=\"{expectedRadius}\" />" +
+                   $"<text style=\"fill:black\" font-size=\"6\" alignment-baseline=\"middle\" text-anchor=\"middle\"/>{fileName}</text>" +
+                   "</g>";
+        }
+
+        private string ARectangle(long expectedX, long expectedY, long width, long height, string text)
+        {
+            return $"<g transform=\"translate({expectedX},{expectedY})\">" +
+                   $"<rect fill=\"none\" stroke-width=\"0.5\" stroke=\"black\" width=\"{width}\" height=\"{height}\" />" +
+                   $"<text style=\"fill:black\" font-size=\"6\" transform=\"translate(-1,-1)\" >{text}</text>" +
+                   "</g>";
         }
     }
 }
