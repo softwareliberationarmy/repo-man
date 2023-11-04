@@ -9,14 +9,8 @@ namespace repo_man.xunit.domain.Diagram
 {
     public class SvgChartDataWriterTest
     {
-        private readonly AutoMocker _mocker;
-        private readonly Fixture _fixture;
-
-        public SvgChartDataWriterTest()
-        {
-            _mocker = new AutoMocker();
-            _fixture = new Fixture();
-        }
+        private readonly AutoMocker _mocker = new();
+        private readonly Fixture _fixture = new();
 
         [Theory]
         [InlineData("#0060ac", "Program.cs", ".cs")]
@@ -33,7 +27,7 @@ namespace repo_man.xunit.domain.Diagram
 
             var result = WhenICreateChartData(tree);
 
-            result.Data.Should().Be(AFilledCircle(color, fileName, 20, 20, 10));
+            result.Data.Should().Be(AFilledCircle(color, new Point(20,20), 10, fileName));
         }
 
         [Fact]
@@ -51,8 +45,8 @@ namespace repo_man.xunit.domain.Diagram
 
             var result = WhenICreateChartData(tree);
 
-            result.Data.Should().Be(AFilledCircle("pink", "Program.cs", 20, 20, 10) +
-                                    AFilledCircle("blue", "Readme.md", 45, 20, 10));
+            result.Data.Should().Be(AFilledCircle("pink", new Point(20,20), 10, "Program.cs") +
+                                    AFilledCircle("blue", new Point(45, 20), 10, "Readme.md"));
         }
 
         [Fact]
@@ -66,8 +60,8 @@ namespace repo_man.xunit.domain.Diagram
             var result = WhenICreateChartData(tree);
 
             result.Data.Should().Be(
-                AFilledCircle("#001122", "Program.cs", 30, 30, 20) +
-                AFilledCircle("#001122", "App.cs", 65, 20, 10));
+                AFilledCircle("#001122", new Point(30,30), 20, "Program.cs") +
+                AFilledCircle("#001122", new Point(65,20), 10, "App.cs"));
         }
 
         [Fact]
@@ -80,8 +74,8 @@ namespace repo_man.xunit.domain.Diagram
 
             var result = WhenICreateChartData(tree);
 
-            result.Data.Should().Be(AFilledCircle("#001122", "Program.cs", 30, 30, 20) +
-                                    AFilledCircle("#001122", "App.cs", 65, 20, 10));
+            result.Data.Should().Be(AFilledCircle("#001122", new Point(30,30), 20, "Program.cs") +
+                                    AFilledCircle("#001122", new Point(65,20), 10, "App.cs"));
         }
 
         [Fact]
@@ -94,8 +88,8 @@ namespace repo_man.xunit.domain.Diagram
 
             var result = WhenICreateChartData(tree);
 
-            result.Data.Should().Be(AFilledCircle("fuschia", "Program.cs", 25, 25, 10) +
-                                    ARectangle(10, 10, 30, 30, "src"));
+            result.Data.Should().Be(AFilledCircle("fuschia", new Point(25,25), 10, "Program.cs") +
+                                    ARectangle(new Point(10, 10), 30, 30, "src"));
         }
 
         [Fact]
@@ -109,9 +103,9 @@ namespace repo_man.xunit.domain.Diagram
 
             var result = WhenICreateChartData(tree);
 
-            result.Data.Should().Be(AFilledCircle("fuschia", "Program.cs", 25, 25, 10) +
-                                    AFilledCircle("#001122", "App.xaml", 50, 25, 10) +
-                                    ARectangle(10, 10, 55, 30, "src"));
+            result.Data.Should().Be(AFilledCircle("fuschia", new Point(25, 25), 10, "Program.cs") +
+                                    AFilledCircle("#001122", new Point(50, 25), 10, "App.xaml") +
+                                    ARectangle(new Point(10, 10), 55, 30, "src"));
         }
 
         [Fact]
@@ -127,9 +121,9 @@ namespace repo_man.xunit.domain.Diagram
 
             var result = WhenICreateChartData(tree);
 
-            result.Data.Should().Be(AFilledCircle("#001122", "App.xaml", 35, 35, 20) +
-                                    AFilledCircle("fuschia", "Program.cs", 70, 25, 10) +
-                                    ARectangle(10, 10, 75, 50, "src"));
+            result.Data.Should().Be(AFilledCircle("#001122", new Point(35,35), 20, "App.xaml") +
+                                    AFilledCircle("fuschia", new Point(70,25), 10, "Program.cs") +
+                                    ARectangle(new Point(10, 10), 75, 50, "src"));
         }
 
         [Fact]
@@ -147,16 +141,15 @@ namespace repo_man.xunit.domain.Diagram
 
             var result = WhenICreateChartData(tree);
 
-            result.Data.Should().Be(AFilledCircle("blue", "Bootstrapper.cs", 45, 45, 30) +
-                                    AFilledCircle("blue", "Program.cs", 90, 25, 10) +
-                                    ARectangle(10, 10, 95, 70, "src") +
-                                    AFilledCircle("pink", "GettingStarted.md", 55, 135, 40) +
-                                    AFilledCircle("pink", "About.md", 120, 115, 20) +
-                                    ARectangle(10, 90, 135, 90, "docs"));
+            result.Data.Should().Be(AFilledCircle("blue", new Point(45,45), 30, "Bootstrapper.cs") +
+                                    AFilledCircle("blue", new Point(90,25), 10, "Program.cs") +
+                                    ARectangle(new Point(10,10), 95, 70, "src") +
+                                    AFilledCircle("pink", new Point(55,135), 40, "GettingStarted.md") +
+                                    AFilledCircle("pink", new Point(120,115), 20, "About.md") +
+                                    ARectangle(new Point(10,90), 135, 90, "docs"));
         }
 
         //TO TEST: 
-        // two folders stacked
         // two top-level files different sizes, plus two files in a folder, different sizes
         // nested folders
 
@@ -186,17 +179,18 @@ namespace repo_man.xunit.domain.Diagram
             }
         }
 
-        private static string AFilledCircle(string color, string fileName, long expectedX, long expectedY, long expectedRadius)
+        private static string AFilledCircle(string color, Point point, long expectedRadius,
+            string fileName)
         {
-            return $"<g style=\"fill:{color}\" transform=\"translate({expectedX},{expectedY})\">" +
+            return $"<g style=\"fill:{color}\" transform=\"translate({point.X},{point.Y})\">" +
                    $"<circle r=\"{expectedRadius}\" />" +
                    $"<text style=\"fill:black\" font-size=\"6\" alignment-baseline=\"middle\" text-anchor=\"middle\"/>{fileName}</text>" +
                    "</g>";
         }
 
-        private string ARectangle(long expectedX, long expectedY, long width, long height, string text)
+        private string ARectangle(Point point, long width, long height, string text)
         {
-            return $"<g transform=\"translate({expectedX},{expectedY})\">" +
+            return $"<g transform=\"translate({point.X},{point.Y})\">" +
                    $"<rect fill=\"none\" stroke-width=\"0.5\" stroke=\"black\" width=\"{width}\" height=\"{height}\" />" +
                    $"<text style=\"fill:black\" font-size=\"6\" transform=\"translate(-1,-1)\" >{text}</text>" +
                    "</g>";
