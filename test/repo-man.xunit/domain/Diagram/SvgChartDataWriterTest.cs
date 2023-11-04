@@ -149,6 +149,34 @@ namespace repo_man.xunit.domain.Diagram
                                     ARectangle(new Point(10,90), 135, 90, "docs"));
         }
 
+        [Fact]
+        public void TopLevelFiles_Two_Folders_Different_Sizes_Stacked()
+        {
+            GivenTheseColorMappings(
+                new Tuple<string, string>(".cs", "blue"),
+                new Tuple<string, string>(".gitignore", "white"),
+                new Tuple<string, string>(".md", "pink"));
+
+            var tree = GivenThisFileTree(
+                new Tuple<string, long>("src/Program.cs", 100L),
+                new Tuple<string, long>("src/Bootstrapper.cs", 300L),
+                new Tuple<string, long>("docs/About.md", 200L),
+                new Tuple<string, long>("README.md", 50L),
+                new Tuple<string, long>(".gitignore", 500L),
+                new Tuple<string, long>("docs/GettingStarted.md", 400L));
+
+            var result = WhenICreateChartData(tree);
+
+            result.Data.Should().Be(AFilledCircle("white", new Point(110, 110), 100, ".gitignore") + 
+                                    AFilledCircle("pink", new Point(225, 20), 10, "README.md") +
+                                    AFilledCircle("blue", new Point(75, 285), 60, "Bootstrapper.cs") +
+                                    AFilledCircle("blue", new Point(160, 245), 20, "Program.cs") +
+                                    ARectangle(new Point(10, 220), 175, 130, "src") +
+                                    AFilledCircle("pink", new Point(95, 445), 80, "GettingStarted.md") +
+                                    AFilledCircle("pink", new Point(220, 405), 40, "About.md") +
+                                    ARectangle(new Point(10, 360), 255, 170, "docs"));
+        }
+
         //TO TEST: 
         // two top-level files different sizes, plus two files in a folder, different sizes
         // nested folders
