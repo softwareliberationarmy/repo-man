@@ -1,0 +1,26 @@
+<svg width="150" height="300" style="background:blanchedalmond;" xmlns="http://www.w3.org/2000/svg">
+    <g style="fill:blue" transform="translate(45,45)">
+        <circle r="30" stroke="#374151" stroke-width="0.5" />
+        <text style="fill:black" font-size="6" alignment-baseline="middle" text-anchor="middle">Bootstrapper.cs</text>
+    </g>
+    <g style="fill:blue" transform="translate(90,25)">
+        <circle r="10" stroke="#374151" stroke-width="0.5" />
+        <text style="fill:black" font-size="6" alignment-baseline="middle" text-anchor="middle">Program.cs</text>
+    </g>
+    <g transform="translate(10,10)">
+        <rect fill="none" stroke-width="0.5" stroke="black" width="95" height="70" />
+        <text style="fill:black" font-size="6" transform="translate(-1,-1)">src</text>
+    </g>
+    <g style="fill:pink" transform="translate(55,135)">
+        <circle r="40" stroke="#374151" stroke-width="0.5" />
+        <text style="fill:black" font-size="6" alignment-baseline="middle" text-anchor="middle">GettingStarted.md</text>
+    </g>
+    <g style="fill:pink" transform="translate(120,115)">
+        <circle r="20" stroke="#374151" stroke-width="0.5" />
+        <text style="fill:black" font-size="6" alignment-baseline="middle" text-anchor="middle">About.md</text>
+    </g>
+    <g transform="translate(10,90)">
+        <rect fill="none" stroke-width="0.5" stroke="black" width="135" height="90" />
+        <text style="fill:black" font-size="6" transform="translate(-1,-1)">docs</text>
+    </g>
+</svg>

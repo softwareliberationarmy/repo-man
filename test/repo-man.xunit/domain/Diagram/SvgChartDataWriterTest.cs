@@ -132,13 +132,33 @@ namespace repo_man.xunit.domain.Diagram
                                     ARectangle(10, 10, 75, 50, "src"));
         }
 
+        [Fact]
+        public void Two_Folders_Different_Sizes_Stacked()
+        {
+            GivenTheseColorMappings(
+                new Tuple<string, string>(".cs", "blue"),
+                new Tuple<string, string>(".md", "pink"));
+
+            var tree = GivenThisFileTree(
+                new Tuple<string, long>("src/Program.cs", 100L),
+                new Tuple<string, long>("src/Bootstrapper.cs", 300L),
+                new Tuple<string, long>("docs/About.md", 200L),
+                new Tuple<string, long>("docs/GettingStarted.md", 400L));
+
+            var result = WhenICreateChartData(tree);
+
+            result.Data.Should().Be(AFilledCircle("blue", "Bootstrapper.cs", 45, 45, 30) +
+                                    AFilledCircle("blue", "Program.cs", 90, 25, 10) +
+                                    ARectangle(10, 10, 95, 70, "src") +
+                                    AFilledCircle("pink", "GettingStarted.md", 55, 135, 40) +
+                                    AFilledCircle("pink", "About.md", 120, 115, 20) +
+                                    ARectangle(10, 90, 135, 90, "docs"));
+        }
+
         //TO TEST: 
         // two folders stacked
         // two top-level files different sizes, plus two files in a folder, different sizes
         // nested folders
-
-
-
 
         private ChartData WhenICreateChartData(GitTree tree)
         {

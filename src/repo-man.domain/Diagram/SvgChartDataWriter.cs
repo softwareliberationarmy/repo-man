@@ -55,10 +55,11 @@ public class SvgChartDataWriter
 
     private void WriteFolderFiles(GitTree tree, StartingPoint startAt)
     {
+        const long folderBottomMargin = 10;
         long maxY = startAt.Y;
+        var folderStartAt = startAt;
         foreach (var folder in tree.Folders)
         {
-            var folderStartAt = startAt;
             var folderFileStartAt =
                 new StartingPoint(X: folderStartAt.X + FolderPadding, Y: folderStartAt.Y + FolderPadding);
 
@@ -79,6 +80,8 @@ public class SvgChartDataWriter
             var rectangleY = folderStartAt.Y;
             var folderName = folder.Name;
             _stringBuilder.AddBoundingRectangle(rectangleX, rectangleY, width, height, folderName);
+
+            folderStartAt = new StartingPoint(X: startAt.X, Y: rectangleY + height + folderBottomMargin);
         }
     }
 
