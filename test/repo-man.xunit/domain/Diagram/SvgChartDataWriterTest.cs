@@ -177,10 +177,30 @@ namespace repo_man.xunit.domain.Diagram
                                     ARectangle(new Point(10, 360), 255, 170, "docs"));
         }
 
-        //TO TEST: 
-        // two top-level files different sizes, plus two files in a folder, different sizes
-        // nested folders
+        [Fact]
+        public void TwoNestedFolders_InsideOneParentFolder()
+        {
+            GivenTheseColorMappings(
+                new Tuple<string, string>(".cs", "blue"));
 
+            var tree = GivenThisFileTree(
+                new Tuple<string, long>("src/console/Program.cs", 100L),
+                new Tuple<string, long>("src/console/Bootstrapper.cs", 300L),
+                new Tuple<string, long>("src/domain/Context.cs", 200L),
+                new Tuple<string, long>("src/domain/Model.cs", 400L));
+
+            var result = WhenICreateChartData(tree);
+
+            result.Data.Should().Be(AFilledCircle("blue", new Point(55, 55), 30, "Bootstrapper.cs") +
+                                    AFilledCircle("blue", new Point(100, 35), 10, "Program.cs") +
+                                    ARectangle(new Point(20, 20), 95, 70, "console") +
+                                    AFilledCircle("blue", new Point(65, 145), 40, "Model.cs") +
+                                    AFilledCircle("blue", new Point(130, 125), 20, "Context.cs") +
+                                    ARectangle(new Point(20, 100), 135, 90, "domain") +
+                                    ARectangle(new Point(10, 10), 155, 190, "src"));
+        }
+
+        #region helper methods
         private ChartData WhenICreateChartData(GitTree tree)
         {
             var target = _mocker.CreateInstance<SvgChartDataWriter>();
@@ -223,5 +243,7 @@ namespace repo_man.xunit.domain.Diagram
                    $"<text style=\"fill:black\" font-size=\"6\" transform=\"translate(-1,-1)\" >{text}</text>" +
                    "</g>";
         }
+        #endregion
+
     }
 }

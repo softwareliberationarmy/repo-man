@@ -1,0 +1,36 @@
+<svg width="200" height="300" style="background:blanchedalmond;" xmlns="http://www.w3.org/2000/svg">
+
+    <!-- first nested folder -->
+    <g style="fill:blue" transform="translate(55,55)">
+        <circle r="30" stroke="#374151" stroke-width="0.5" />
+        <text style="fill:black" font-size="6" alignment-baseline="middle" text-anchor="middle">Bootstrapper.cs</text>
+    </g>
+    <g style="fill:blue" transform="translate(100,35)">
+        <circle r="10" stroke="#374151" stroke-width="0.5" />
+        <text style="fill:black" font-size="6" alignment-baseline="middle" text-anchor="middle">Program.cs</text>
+    </g>
+    <g transform="translate(20,20)">
+        <rect fill="none" stroke-width="0.5" stroke="black" width="95" height="70" />
+        <text style="fill:black" font-size="6" transform="translate(-1,-1)">console</text>
+    </g>
+
+    <!-- second nested folder -->
+    <g style="fill:blue" transform="translate(65,145)">
+        <circle r="40" stroke="#374151" stroke-width="0.5" />
+        <text style="fill:black" font-size="6" alignment-baseline="middle" text-anchor="middle">Model.cs</text>
+    </g>
+    <g style="fill:blue" transform="translate(130,125)">
+        <circle r="20" stroke="#374151" stroke-width="0.5" />
+        <text style="fill:black" font-size="6" alignment-baseline="middle" text-anchor="middle">Context.cs</text>
+    </g>
+    <g transform="translate(20,100)">
+        <rect fill="none" stroke-width="0.5" stroke="black" width="135" height="90" />
+        <text style="fill:black" font-size="6" transform="translate(-1,-1)">domain</text>
+    </g>
+
+    <!-- top-level folder -->
+    <g transform="translate(10,10)">
+        <rect fill="none" stroke-width="0.5" stroke="black" width="155" height="190" />
+        <text style="fill:black" font-size="6" transform="translate(-1,-1)">src</text>
+    </g>
+</svg>

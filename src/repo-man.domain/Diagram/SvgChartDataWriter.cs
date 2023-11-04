@@ -18,7 +18,7 @@ public class SvgChartDataWriter
     public ChartData WriteChartData(GitTree tree)
     {
         var startAt = WriteTopLevelFiles(tree, new StartingPoint(LeftMargin, TopMargin));
-        WriteFolderFiles(tree.Folders, startAt, tree.GetMinFileSize(), startAt.X);
+        var (maxX, maxY) = WriteFolderFiles(tree.Folders, startAt, tree.GetMinFileSize(), startAt.X);
 
         return new ChartData { Data = _stringBuilder.ToSvgString() };
     }
@@ -36,7 +36,7 @@ public class SvgChartDataWriter
         return startAt;
     }
 
-    private void WriteFolderFiles(IReadOnlyCollection<GitFolder> folders, StartingPoint startAt, long minFileSize, long maxX)
+    private (long maxX, long maxY) WriteFolderFiles(IReadOnlyCollection<GitFolder> folders, StartingPoint startAt, long minFileSize, long maxX)
     {
         const int folderPadding = 5;
         const long folderBottomMargin = 10;
@@ -50,8 +50,15 @@ public class SvgChartDataWriter
             (folderFileStartAt, maxY) = WriteFiles(folder.Files, folderFileStartAt, maxY, folderPadding, minFileSize);
             maxX = Math.Max(maxX, folderFileStartAt.X);
 
-            var width = maxX - folderStartAt.X;
-            var height = maxY - folderStartAt.Y;
+            var folderBorderOffset = 0;
+            if (folder.Folders.Any())
+            {
+                folderBorderOffset = 10;
+                (maxX,maxY) = WriteFolderFiles(folder.Folders, new StartingPoint(folderStartAt.X + LeftMargin, folderStartAt.Y + TopMargin), minFileSize, maxX);
+            }
+
+            var width = maxX + folderBorderOffset - folderStartAt.X;
+            var height = maxY + folderBorderOffset - folderStartAt.Y;
             var rectangleX = folderStartAt.X;
             var rectangleY = folderStartAt.Y;
             var folderName = folder.Name;
@@ -59,6 +66,8 @@ public class SvgChartDataWriter
 
             folderStartAt = startAt with { Y = rectangleY + height + folderBottomMargin };
         }
+
+        return (maxX, maxY);
     }
 
     private (StartingPoint folderFileStartAt, long maxY) WriteFiles(IReadOnlyCollection<GitFile> files, 
