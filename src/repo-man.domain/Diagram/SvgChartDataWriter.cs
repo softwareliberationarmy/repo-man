@@ -64,6 +64,8 @@ public class SvgChartDataWriter
             var folderName = folder.Name;
             _stringBuilder.AddBoundingRectangle(rectangleX, rectangleY, width, height, folderName);
 
+            maxX = Math.Max(maxX, rectangleX + width);
+            maxY = Math.Max(maxY, rectangleY + height);
             folderStartAt = startAt with { Y = rectangleY + height + folderBottomMargin };
         }
 

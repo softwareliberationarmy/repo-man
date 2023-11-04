@@ -200,6 +200,23 @@ namespace repo_man.xunit.domain.Diagram
                                     ARectangle(new Point(10, 10), 155, 190, "src"));
         }
 
+        [Fact]
+        public void SingleFile_DeeplyNested()
+        {
+            GivenTheseColorMappings(
+                new Tuple<string, string>(".cs", "blue"));
+
+            var tree = GivenThisFileTree(
+                new Tuple<string, long>("src/domain/console/Program.cs", 60000L));
+
+            var result = WhenICreateChartData(tree);
+
+            result.Data.Should().Be(AFilledCircle("blue", new Point(45, 45), 10, "Program.cs") +
+                                    ARectangle(new Point(30, 30), 30, 30, "console") +
+                                    ARectangle(new Point(20, 20), 50, 50, "domain") +
+                                    ARectangle(new Point(10, 10), 70, 70, "src"));
+        }
+
         #region helper methods
         private ChartData WhenICreateChartData(GitTree tree)
         {
