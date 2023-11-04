@@ -217,6 +217,40 @@ namespace repo_man.xunit.domain.Diagram
                                     ARectangle(new Point(10, 10), 70, 70, "src"));
         }
 
+        [Fact]
+        public void Single_File_Returns_Max_Height_And_Width_With_Chart_Data()
+        {
+            GivenTheseColorMappings(
+                new Tuple<string, string>(".cs", "blue"));
+
+            var tree = GivenThisFileTree(
+                new Tuple<string, long>("Program.cs", 60000L));
+
+            var result = WhenICreateChartData(tree);
+
+            result.Size.Should().BeEquivalentTo(new Point(35,40));  //circle x ends at 30 + 5 for interfile margin, circle y ends at 30 + 10 for top file bottom margin
+        }
+
+        [Fact]
+        public void TopFiles_Returns_Max_Height_And_Width_With_Chart_Data()
+        {
+            GivenTheseColorMappings(
+                new Tuple<string, string>(".cs", "blue"));
+
+            var tree = GivenThisFileTree(
+                new Tuple<string, long>("Program.cs", 100L),
+                new Tuple<string, long>("Initializer.cs", 100L),
+                new Tuple<string, long>("Committer.cs", 100L),
+                new Tuple<string, long>("src/otherfile.cs", 100L)
+                );
+
+            var result = WhenICreateChartData(tree);
+
+            result.Size.Should().BeEquivalentTo(new Point(85, 70));  
+            //x = 10 margin + 20 radius + 5 margin + 20 radius + 5 margin + 20 radius + 5 margin (toplevel > boxes)
+            //y = 10 margin + 20 radius + 10 margin + 5 padding + 20 radius + 5 padding
+        }
+
         #region helper methods
         private ChartData WhenICreateChartData(GitTree tree)
         {

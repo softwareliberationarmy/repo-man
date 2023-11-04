@@ -1,4 +1,5 @@
-﻿using repo_man.domain.Git;
+﻿using System.Drawing;
+using repo_man.domain.Git;
 
 namespace repo_man.domain.Diagram;
 
@@ -17,30 +18,28 @@ public class SvgChartDataWriter
 
     public ChartData WriteChartData(GitTree tree)
     {
-        var startAt = WriteTopLevelFiles(tree, new StartingPoint(LeftMargin, TopMargin));
+        var (startAt,topLevelMaxX) = WriteTopLevelFiles(tree, new StartingPoint(LeftMargin, TopMargin));
         var (maxX, maxY) = WriteFolderFiles(tree.Folders, startAt, tree.GetMinFileSize(), startAt.X);
 
-        return new ChartData { Data = _stringBuilder.ToSvgString() };
+        return new ChartData { Data = _stringBuilder.ToSvgString(), Size = new Point(Math.Max(maxX, topLevelMaxX), maxY)};
     }
 
-    private StartingPoint WriteTopLevelFiles(GitTree tree, StartingPoint startAt)
+    private (StartingPoint,int) WriteTopLevelFiles(GitTree tree, StartingPoint startAt)
     {
         const int topLevelFilesBottomMargin = 10;
 
-        long fileMaxY = startAt.Y;
-
-        (_, fileMaxY) = WriteFiles(tree.Files, startAt, fileMaxY, topLevelFilesBottomMargin, tree.GetMinFileSize());
+        var (fileStart, fileMaxY) = WriteFiles(tree.Files, startAt, startAt.Y, topLevelFilesBottomMargin, tree.GetMinFileSize());
 
         //done writing top-level files. Create a new starting point back at the left margin in a new row
         startAt = new StartingPoint(X: LeftMargin, Y: fileMaxY);
-        return startAt;
+        return (startAt, fileStart.X);
     }
 
-    private (long maxX, long maxY) WriteFolderFiles(IReadOnlyCollection<GitFolder> folders, StartingPoint startAt, long minFileSize, long maxX)
+    private (int maxX, int maxY) WriteFolderFiles(IReadOnlyCollection<GitFolder> folders, StartingPoint startAt, long minFileSize, int maxX)
     {
         const int folderPadding = 5;
-        const long folderBottomMargin = 10;
-        long maxY = startAt.Y;
+        const int folderBottomMargin = 10;
+        int maxY = startAt.Y;
         var folderStartAt = startAt;
         foreach (var folder in folders)
         {
@@ -72,14 +71,14 @@ public class SvgChartDataWriter
         return (maxX, maxY);
     }
 
-    private (StartingPoint folderFileStartAt, long maxY) WriteFiles(IReadOnlyCollection<GitFile> files, 
-        StartingPoint folderFileStartAt, long maxY, int bottomMargin, long minFileSize)
+    private (StartingPoint folderFileStartAt, int maxY) WriteFiles(IReadOnlyCollection<GitFile> files, 
+        StartingPoint folderFileStartAt, int maxY, int bottomMargin, long minFileSize)
     {
         const int InterFileMargin = 5;
         const int minRadius = 10;
         foreach (var file in files.OrderByDescending(x => x.FileSize))
         {
-            var radius = (file.FileSize / minFileSize) * minRadius;
+            var radius = (int)(file.FileSize / minFileSize) * minRadius;
             var y = folderFileStartAt.Y + radius;
             var x = folderFileStartAt.X + radius;
 
@@ -92,5 +91,5 @@ public class SvgChartDataWriter
         return (folderFileStartAt, maxY);
     }
 
-    private sealed record StartingPoint(long X, long Y);
+    private sealed record StartingPoint(int X, int Y);
 }
