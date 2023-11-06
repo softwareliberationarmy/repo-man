@@ -24,13 +24,20 @@ public class SvgStringBuilder
 
     public void AddFileCircle(long x, long y, long radius, string fileName)
     {
-        var color = _colorMapper.Map(Path.GetExtension(fileName));
+        var fileExtension = GetFileExtension(fileName);
+        var color = _colorMapper.Map(fileExtension);
 
         _builder.Append($"<g style=\"fill:{color}\" transform=\"translate({x},{y})\">");
         _builder.Append($"<circle r=\"{radius}\" />");
         _builder.Append(
             $"<text style=\"fill:black\" font-size=\"6\" alignment-baseline=\"middle\" text-anchor=\"middle\"/>{fileName}</text>");
         _builder.Append("</g>");
+    }
+
+    private static string GetFileExtension(string fileName)
+    {
+        var fileExtension = Path.GetExtension(fileName);
+        return string.IsNullOrEmpty(fileExtension) ? fileName : fileExtension;
     }
 
     public string ToSvgString()

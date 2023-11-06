@@ -15,6 +15,7 @@ namespace repo_man.xunit.domain.Diagram
         [Theory]
         [InlineData("#0060ac", "Program.cs", ".cs")]
         [InlineData("green", "Program.cs", ".cs")]
+        [InlineData("lightyellow", "CODEOWNERS", "CODEOWNERS")]
         [InlineData("aliceblue", "Main.cs", ".cs")]
         [InlineData("#012345", "Readme.md", ".md")]
         [InlineData("black", ".gitignore", ".gitignore")]
