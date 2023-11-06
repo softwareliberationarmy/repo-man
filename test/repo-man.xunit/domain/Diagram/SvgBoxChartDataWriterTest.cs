@@ -7,7 +7,7 @@ using System.Drawing;
 
 namespace repo_man.xunit.domain.Diagram
 {
-    public class SvgChartDataWriterTest
+    public class SvgBoxChartDataWriterTest
     {
         private readonly AutoMocker _mocker = new();
         private readonly Fixture _fixture = new();
@@ -254,7 +254,7 @@ namespace repo_man.xunit.domain.Diagram
         #region helper methods
         private ChartData WhenICreateChartData(GitTree tree)
         {
-            var target = _mocker.CreateInstance<SvgChartDataWriter>();
+            var target = _mocker.CreateInstance<SvgBoxChartDataWriter>();
             var result = target.WriteChartData(tree);
             return result;
         }

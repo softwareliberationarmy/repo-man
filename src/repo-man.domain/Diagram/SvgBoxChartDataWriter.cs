@@ -3,7 +3,7 @@ using repo_man.domain.Git;
 
 namespace repo_man.domain.Diagram;
 
-public class SvgChartDataWriter
+public class SvgBoxChartDataWriter : ISvgBoxChartDataWriter
 {
     //SVG file outer margins
     private const int TopMargin = 10;
@@ -11,7 +11,7 @@ public class SvgChartDataWriter
 
     private readonly SvgStringBuilder _stringBuilder;
 
-    public SvgChartDataWriter(SvgStringBuilder stringBuilder)
+    public SvgBoxChartDataWriter(SvgStringBuilder stringBuilder)
     {
         _stringBuilder = stringBuilder;
     }
