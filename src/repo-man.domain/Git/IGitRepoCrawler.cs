@@ -2,5 +2,5 @@
 
 public interface IGitRepoCrawler
 {
-    IEnumerable<(string,long, Commit[])> GetFilesWithCommits();
+    IEnumerable<(string,long, Commit[])> GitThemFiles(bool includeCommits = false);
 }

@@ -18,7 +18,7 @@ namespace repo_man.infrastructure
             _config = config;
         }
 
-        public IEnumerable<(string, long, Commit[])> GetFilesWithCommits()
+        public IEnumerable<(string, long, Commit[])> GitThemFiles(bool includeCommits = false)
         {
             var repoPath = _config["repo"];
             if (string.IsNullOrEmpty(repoPath))
@@ -31,10 +31,10 @@ namespace repo_man.infrastructure
             using var repo = new Repository(repoPath);
             var tree = repo.Head.Tip.Tree;
 
-            return ParseTree(tree, repo);
+            return ParseTree(tree, repo, includeCommits);
         }
 
-        private IEnumerable<(string, long, Commit[])> ParseTree(Tree tree, Repository repo)
+        private IEnumerable<(string, long, Commit[])> ParseTree(Tree tree, Repository repo, bool includeCommits)
         {
             var result = new List<(string, long, Commit[])>();
 
@@ -43,15 +43,23 @@ namespace repo_man.infrastructure
                 if (entry.TargetType == TreeEntryTargetType.Tree)
                 {
                     _logger.LogInformation("Crawling directory {path}", entry.Path);
-                    foreach (var valueTuple in ParseTree((Tree)entry.Target, repo))
+                    foreach (var valueTuple in ParseTree((Tree)entry.Target, repo, includeCommits))
                     {
                         result.Add(valueTuple);
                     }
                 }
                 else if (entry.TargetType == TreeEntryTargetType.Blob)
                 {
-                    var history = repo!.Commits.QueryBy(entry.Path).Select(
-                        c => new Commit(c.Commit.Sha, c.Commit.Committer.When)).ToArray();
+                    Commit[] history = Array.Empty<Commit>();
+                    if (includeCommits)
+                    {
+                        var commits = repo.Commits.QueryBy(entry.Path, new CommitFilter { SortBy = CommitSortStrategies.Topological }).ToArray();
+                        if (commits.Any())
+                        {
+                            history = commits.Select(
+                                c => new Commit(c.Commit.Sha, c.Commit.Committer.When)).ToArray();
+                        }
+                    }
                     var size = ((Blob)entry.Target).Size;
 
                     result.Add((entry.Path, size, history));

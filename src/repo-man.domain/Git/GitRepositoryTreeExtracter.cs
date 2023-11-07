@@ -17,7 +17,7 @@ namespace repo_man.domain.Git
         {
             _logger.LogInformation("Collecting files from repository");
             var result = new GitTree();
-            foreach (var (path, size, commits) in _crawler.GetFilesWithCommits())
+            foreach (var (path, size, commits) in _crawler.GitThemFiles())
             {
                 _logger.LogInformation("Adding file {path} - {size} bytes - {commits} commits", path, size, commits.Length);
                 result.AddFile(path, size, commits);

@@ -15,7 +15,7 @@ namespace repo_man.xunit.infrastructure
 
             var target = mocker.CreateInstance<LibGit2SharpGitRepoCrawler>();
 
-            Action getFiles = () => { target.GetFilesWithCommits(); };
+            Action getFiles = () => { target.GitThemFiles(); };
             getFiles.Should().Throw<InvalidOperationException>();
         }
 
