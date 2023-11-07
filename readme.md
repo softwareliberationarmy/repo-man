@@ -12,3 +12,9 @@ A console application that generates diagrams helping users to visualize the cod
 * add logging to the SvgChartDataWriter
 * feature: user can specify background color
 * feature: implement ignored file extensions for binary file types (png, jpg, bmp, etc.)
+* 
+
+## NOTES
+* Perf of commit history querying is super slow. Add a switch that doesn't query history unless the chart type requires it
+* Rather than trying to capture every single file extension, let's only include the file extensions we're concerned about (known code file extensions)
+* 
