@@ -1,10 +1,11 @@
 ﻿using FluentAssertions;
 using Moq.AutoMock;
 using repo_man.domain.Diagram;
+using repo_man.xunit._helpers;
 
 namespace repo_man.xunit.domain.Diagram
 {
-    public class ConstantFileColorMapperTest
+    public class ConstantFileColorMapperTest: TestBase
     {
         /// <summary>
         /// more file types: .ejs, .mk, .scss, .png, .svg, .jpg, .bmp, dockerfile, .build_wna, dockerfile, .yaml/.yml,
@@ -30,8 +31,7 @@ namespace repo_man.xunit.domain.Diagram
         [InlineData(".tsx", "#F442E2")]
         public void Returns_Constant_Color_Values_For_Common_File_Types(string extension, string expectedColor)
         {
-            var mocker = new AutoMocker();
-            IFileColorMapper target = mocker.CreateInstance<ConstantFileColorMapper>();
+            IFileColorMapper target = _mocker.CreateInstance<ConstantFileColorMapper>();
 
             target.Map(extension).Should().Be(expectedColor);
         }

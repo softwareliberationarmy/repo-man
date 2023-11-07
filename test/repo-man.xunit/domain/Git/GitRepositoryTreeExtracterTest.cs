@@ -2,22 +2,21 @@
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Moq.AutoMock;
 using repo_man.domain.Git;
 using repo_man.xunit._extensions;
+using repo_man.xunit._helpers;
 
 namespace repo_man.xunit.domain.Git
 {
-    public class GitRepositoryTreeExtracterTest
+    public class GitRepositoryTreeExtracterTest : TestBase
     {
         [Fact]
         public void ReturnsAnEmptyTreeIfNoFiles()
         {
-            var mocker = new AutoMocker();
-            mocker.GetMock<IGitRepoCrawler>().Setup(x => x.GitThemFiles(false))
+            _mocker.GetMock<IGitRepoCrawler>().Setup(x => x.GitThemFiles(false))
                 .Returns(Enumerable.Empty<(string, long, Commit[])>());
 
-            var target = mocker.CreateInstance<GitRepositoryTreeExtracter>();
+            var target = _mocker.CreateInstance<GitRepositoryTreeExtracter>();
             var result = target.GetFileTree();
 
             result.Should().NotBeNull();
@@ -28,17 +27,15 @@ namespace repo_man.xunit.domain.Git
         [Fact]
         public void AllGitFilesReturnedAreStoredInTree()
         {
-            var fixture = new Fixture();
-            var expectedLengths = fixture.CreateMany<long>(2).ToArray();
-            var mocker = new AutoMocker();
-            mocker.GetMock<IGitRepoCrawler>().Setup(x => x.GitThemFiles(false))
+            var expectedLengths = _fixture.CreateMany<long>(2).ToArray();
+            _mocker.GetMock<IGitRepoCrawler>().Setup(x => x.GitThemFiles(false))
                 .Returns(new[]
                 {
                     ("readme.md", expectedLengths[0], Array.Empty<Commit>()),
                     ("kung/fu.json", expectedLengths[1], Array.Empty<Commit>())
                 }.AsEnumerable());
 
-            var target = mocker.CreateInstance<GitRepositoryTreeExtracter>();
+            var target = _mocker.CreateInstance<GitRepositoryTreeExtracter>();
             var result = target.GetFileTree();
 
             result.Should().NotBeNull();
@@ -51,22 +48,21 @@ namespace repo_man.xunit.domain.Git
         [Fact]
         public void LogsInfoMessagesForEachFile()
         {
-            var mocker = new AutoMocker();
-            mocker.GetMock<IGitRepoCrawler>().Setup(x => x.GitThemFiles(false))
+            _mocker.GetMock<IGitRepoCrawler>().Setup(x => x.GitThemFiles(false))
                 .Returns(new[]
                 {
                     ("readme.md", 200L, Array.Empty<Commit>()),
                     ("kung/fu.json", 1000L, Array.Empty<Commit>())
                 }.AsEnumerable());
 
-            var target = mocker.CreateInstance<GitRepositoryTreeExtracter>();
+            var target = _mocker.CreateInstance<GitRepositoryTreeExtracter>();
             target.GetFileTree();
 
-            mocker.GetMock<ILogger<GitRepositoryTreeExtracter>>().VerifyInfoWasCalled(
+            _mocker.GetMock<ILogger<GitRepositoryTreeExtracter>>().VerifyInfoWasCalled(
                 "Collecting files from repository", Times.Once());
-            mocker.GetMock<ILogger<GitRepositoryTreeExtracter>>().VerifyInfoWasCalled(
+            _mocker.GetMock<ILogger<GitRepositoryTreeExtracter>>().VerifyInfoWasCalled(
                 "Adding file readme.md - 200 bytes - 0 commits", Times.Once());
-            mocker.GetMock<ILogger<GitRepositoryTreeExtracter>>().VerifyInfoWasCalled(
+            _mocker.GetMock<ILogger<GitRepositoryTreeExtracter>>().VerifyInfoWasCalled(
                 "Adding file kung/fu.json - 1000 bytes - 0 commits", Times.Once());
         }
     }

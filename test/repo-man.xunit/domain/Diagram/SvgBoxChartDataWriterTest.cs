@@ -4,14 +4,12 @@ using Moq.AutoMock;
 using repo_man.domain.Diagram;
 using repo_man.domain.Git;
 using System.Drawing;
+using repo_man.xunit._helpers;
 
 namespace repo_man.xunit.domain.Diagram
 {
-    public class SvgBoxChartDataWriterTest
+    public class SvgBoxChartDataWriterTest: TestBase
     {
-        private readonly AutoMocker _mocker = new();
-        private readonly Fixture _fixture = new();
-
         [Theory]
         [InlineData("#0060ac", "Program.cs", ".cs")]
         [InlineData("green", "Program.cs", ".cs")]

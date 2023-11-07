@@ -2,18 +2,12 @@
 using FluentAssertions;
 using repo_man.domain;
 using repo_man.domain.Git;
+using repo_man.xunit._helpers;
 
 namespace repo_man.xunit.domain.Git
 {
-    public class GitTreeTest
+    public class GitTreeTest: TestBase
     {
-        private readonly Fixture _fixture;
-
-        public GitTreeTest()
-        {
-            _fixture = new Fixture();
-        }
-
         [Fact]
         public void TopLevelFileSavedToTree()
         {
