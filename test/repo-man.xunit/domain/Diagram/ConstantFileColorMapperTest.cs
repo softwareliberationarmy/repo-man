@@ -16,7 +16,9 @@ namespace repo_man.xunit.domain.Diagram
         [InlineData(".sln", "#FF0000")]
         [InlineData(".csproj", "#5988C6")]
         [InlineData("codeowners","#8E5E3C")]
-        [InlineData(".gitignore", "#F54D27")] 
+        [InlineData(".gitignore", "#F54D27")]
+        [InlineData(".jsx", "#C6BE21")]
+        [InlineData(".tsx", "#F442E2")]
         public void Returns_Constant_Color_Values_For_Common_File_Types(string extension, string expectedColor)
         {
             var mocker = new AutoMocker();
@@ -33,9 +35,10 @@ namespace repo_man.xunit.domain.Diagram
             { ".cs", "#A377DA" },   //csharp purple
             { ".sln", "#FF0000" },   //sln red
             { ".csproj", "#5988C6" },   //csproj slate blue
-
             { ".js", "#F7E018" },   //javascript yellow
+            { ".jsx", "#C6BE21" },   //jsx gold
             { ".ts", "#3178C6" },   //typescript blue
+            { ".tsx", "#F442E2" },   //tsx pink
             { ".json", "#A1A1A1" },   //json grey
             { ".md", "#FFFFFF" },   //white
             { "codeowners", "#8E5E3C" },   //codeowners brown
