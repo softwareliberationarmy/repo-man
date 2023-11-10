@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System.Formats.Tar;
+using FluentAssertions;
 using repo_man.domain.Diagram;
 using repo_man.xunit._helpers;
 
@@ -7,9 +8,8 @@ namespace repo_man.xunit.domain.Diagram
     public class ConstantFileColorMapperTest: TestBase
     {
         /// <summary>
-        /// more file types: .mk, dockerfile, .build_wna, dockerfile, .yaml/.yml,
-        /// .sqlite, .dockerignore, .ruleset, .txt, .config, .sql, .jwk, .cshtml, .resx, .html,
-        /// .ds_store, .bat, .sh, .ps1, .properties, .lock, .snap,
+        /// more file types: .mk, .sqlite, .ruleset, .txt, .config, .sql, .jwk, .resx, .html,
+        /// .ds_store, .properties, .lock, .snap,
         /// textvariables, makefile, .log, .ttf, pre-commit, .pem, .zip, .py, .template, .conf 
         /// </summary>
         /// <param name="extension"></param>
@@ -48,16 +48,57 @@ namespace repo_man.xunit.domain.Diagram
         [InlineData("codeowners","#8E5E3C")]
         [InlineData(".gitignore", "#F54D27")]
         [InlineData(".gitattributes", "#F54D27")]
+        [InlineData(".bat", "#09B514")]
+        [InlineData(".sh", "#09B514")]
+        [InlineData(".ps1", "#09B514")]
+        [InlineData(".build_wna", "#999966")]
+        [InlineData(".yaml", "#999966")]
+        [InlineData(".yml", "#999966")]
+        [InlineData("dockerfile", "#666666")]
+        [InlineData(".dockerignore", "#666666")]
         public void Returns_Constant_Color_Values_For_Common_File_Types(string extension, string expectedColor)
         {
             IFileColorMapper target = _mocker.CreateInstance<ConstantFileColorMapper>();
 
             target.Map(extension).Should().Be(expectedColor);
         }
+
+        [Fact]
+        public void Returns_Consistent_Color_For_Unknown_Extension()
+        {
+            var target = _mocker.CreateInstance<ConstantFileColorMapper>();
+            var unknownExtension = ".xyz";
+
+            var expectedColor = target.Map(unknownExtension);
+            expectedColor.Should().NotBeNullOrWhiteSpace();
+
+            for (int i = 0; i < 100; i++)
+            {
+                target.Map(unknownExtension).Should().Be(expectedColor);
+            }
+        }
     }
 
     public class ConstantFileColorMapper : IFileColorMapper
     {
+        //TODO: curate this better
+
+        private string[] _extraColors = new[]
+        {
+            "#FF69B4", // Hot Pink
+            "#FF4500", // Orange Red
+            "#FF6347", // Tomato
+            "#FF7F50", // Coral
+            "#FFA07A", // Light Salmon
+            "#FF8C00", // Dark Orange
+            "#FFD700", // Gold
+            "#FFA500", // Orange
+            "#FF1493", // Deep Pink
+            "#FF00FF", // Magenta
+            "#DC143C", // Crimson
+            "#FFC0CB", // Pink
+        };
+
         private readonly Dictionary<string, string> _wellKnownFileTypes = new()
         {
             { ".cs", "#A377DA" },   //csharp purple
@@ -79,9 +120,15 @@ namespace repo_man.xunit.domain.Diagram
             { ".gif", "#33CC33"},    //image light green
             { ".ico", "#33CC33"},    //image light green
             { ".svg", "#00CC66"},    //svg sea green
-            { ".json", "#A1A1A1" },   //json grey
-            { ".xml", "#A1A1A1" },   //xml also grey
-            { ".csv", "#A1A1A1" },   //csv also grey
+            { ".json", "#A1A1A1" },   //json light grey
+            { ".xml", "#A1A1A1" },   //xml also light grey
+            { ".csv", "#A1A1A1" },   //csv also light grey
+            { ".bat", "#09B514" },   //shell green
+            { ".sh", "#09B514" },   //shell green
+            { ".ps1", "#09B514" },   //shell green
+            { ".yaml", "#999966" },   //deploy beige
+            { ".yml", "#999966" },   //deploy beige
+            { ".build_wna", "#999966" },   //deploy beige
             { ".eslintrc", "#996666" },   //js config file copper
             { ".babelrc", "#996666" },   //js config file copper
             { ".prettierrc", "#996666" },   //js config file copper
@@ -89,6 +136,8 @@ namespace repo_man.xunit.domain.Diagram
             { ".nvmrc", "#996666" },   //js config file copper
             { ".env", "#996666" },   //js config file copper
             { ".md", "#FFFFFF" },   //white
+            { "dockerfile", "#666666" },   //whale grey
+            { ".dockerignore", "#666666" },   //whale grey
             { "codeowners", "#8E5E3C" },   //codeowners brown
             {".gitignore", "#F54D27"},   //git orange
             {".gitattributes", "#F54D27"}   //git orange
@@ -96,6 +145,10 @@ namespace repo_man.xunit.domain.Diagram
 
         public string Map(string fileExtension)
         {
+            if (!_wellKnownFileTypes.ContainsKey(fileExtension.ToLowerInvariant()))
+            {
+                _wellKnownFileTypes.Add(fileExtension.ToLowerInvariant(), _extraColors[Random.Shared.Next(1,_extraColors.Length)]);
+            }
             return _wellKnownFileTypes[fileExtension.ToLowerInvariant()];
         }
     }

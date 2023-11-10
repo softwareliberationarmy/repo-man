@@ -4,7 +4,6 @@ A console application that generates diagrams helping users to visualize the cod
 
 ## TODO
 => implement IFileColorMapper
-* add logic for files with no extension to return the full file name
 * define SvgLegendDataWriter
 * test the composition of the SvgDiagramRenderer now that we know where we're going with this
 * add infrastructure class to write data to file (thin wrapper)
