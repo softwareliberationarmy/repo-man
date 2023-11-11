@@ -1,13 +1,14 @@
-﻿using System.Text;
+﻿using repo_man.domain.Git;
+using System.Text;
 
 namespace repo_man.domain.Diagram;
 
-public class SvgStringBuilder
+public class SvgChartStringBuilder
 {
     private readonly IFileColorMapper _colorMapper;
     private readonly StringBuilder _builder = new StringBuilder();
 
-    public SvgStringBuilder(IFileColorMapper colorMapper)
+    public SvgChartStringBuilder(IFileColorMapper colorMapper)
     {
         _colorMapper = colorMapper;
     }
@@ -24,7 +25,7 @@ public class SvgStringBuilder
 
     public void AddFileCircle(long x, long y, long radius, string fileName)
     {
-        var fileExtension = GetFileExtension(fileName);
+        var fileExtension = fileName.GetFileExtension();
         var color = _colorMapper.Map(fileExtension);
 
         _builder.Append($"<g style=\"fill:{color}\" transform=\"translate({x},{y})\">");
@@ -32,12 +33,6 @@ public class SvgStringBuilder
         _builder.Append(
             $"<text style=\"fill:black\" font-size=\"6\" alignment-baseline=\"middle\" text-anchor=\"middle\"/>{fileName}</text>");
         _builder.Append("</g>");
-    }
-
-    private static string GetFileExtension(string fileName)
-    {
-        var fileExtension = Path.GetExtension(fileName);
-        return string.IsNullOrEmpty(fileExtension) ? fileName : fileExtension;
     }
 
     public string ToSvgString()

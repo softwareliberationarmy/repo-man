@@ -10,10 +10,10 @@ public class SvgBoxChartDataWriter : ISvgBoxChartDataWriter
     private const int TopMargin = 10;
     private const int LeftMargin = 10;
 
-    private readonly SvgStringBuilder _stringBuilder;
+    private readonly SvgChartStringBuilder _stringBuilder;
     private readonly ILogger<SvgBoxChartDataWriter> _logger;
 
-    public SvgBoxChartDataWriter(SvgStringBuilder stringBuilder, ILogger<SvgBoxChartDataWriter> logger)
+    public SvgBoxChartDataWriter(SvgChartStringBuilder stringBuilder, ILogger<SvgBoxChartDataWriter> logger)
     {
         _stringBuilder = stringBuilder;
         _logger = logger;
