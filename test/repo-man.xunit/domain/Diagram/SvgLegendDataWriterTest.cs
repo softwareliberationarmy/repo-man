@@ -11,20 +11,14 @@ namespace repo_man.xunit.domain.Diagram
         [Fact]
         public void Single_Cs_File()
         {
-            var extension = ".cs";
-            var expectedColor = "red";
-            var startingPoint = new Point(100, 100);
-
-            GivenTheseColorMappings(new Tuple<string, string>(extension, expectedColor));
+            GivenTheseColorMappings(new Tuple<string, string>(".cs", "red"));
             var tree = GivenThisFileTree(new Tuple<string, long>("src/Program.cs", 1000L));
-            var target = _mocker.CreateInstance<SvgLegendDataWriter>();
+            var data = WhenIWriteLegendData(tree, new Point(100, 100));
 
-            var data = target.WriteLegendData(tree, startingPoint);
-
-            data.Data.Should().Be($"<g transform=\"translate({100}, {100})\">" +
+            data.Data.Should().Be("<g transform=\"translate(100, 100)\">" +
                                   "<g transform=\"translate(0, 0)\">" +
-                                  $"<circle r=\"5\" fill=\"{expectedColor}\"></circle>" +
-                                  $"<text x=\"10\" style=\"font-size:14px;font-weight:300\" dominant-baseline=\"middle\">{extension}</text>" +
+                                  $"<circle r=\"5\" fill=\"red\"></circle>" +
+                                  $"<text x=\"10\" style=\"font-size:14px;font-weight:300\" dominant-baseline=\"middle\">.cs</text>" +
                                   $"</g>" +
                                   $"</g>");
         }
@@ -32,17 +26,13 @@ namespace repo_man.xunit.domain.Diagram
         [Fact]
         public void Cs_And_Md_Files()
         {
-            var startingPoint = new Point(100, 100);
-
             GivenTheseColorMappings(new Tuple<string, string>(".cs", "red"),
                 new Tuple<string, string>(".md", "green"));
             var tree = GivenThisFileTree(new Tuple<string, long>("src/Program.cs", 1000L),
                 new Tuple<string, long>("ReadMe.md", 200L));
-            var target = _mocker.CreateInstance<SvgLegendDataWriter>();
+            var data = WhenIWriteLegendData(tree, new Point(600, 400));
 
-            var data = target.WriteLegendData(tree, startingPoint);
-
-            data.Data.Should().Be($"<g transform=\"translate({100}, {100})\">" +
+            data.Data.Should().Be($"<g transform=\"translate(600, 400)\">" +
                                   "<g transform=\"translate(0, 0)\">" +
                                   $"<circle r=\"5\" fill=\"red\"></circle>" +
                                   $"<text x=\"10\" style=\"font-size:14px;font-weight:300\" dominant-baseline=\"middle\">.cs</text>" +
@@ -71,6 +61,13 @@ namespace repo_man.xunit.domain.Diagram
             {
                 _mocker.GetMock<IFileColorMapper>().Setup(x => x.Map(mapping.Item1)).Returns(mapping.Item2);
             }
+        }
+
+        private LegendData WhenIWriteLegendData(GitTree tree, Point startingPoint)
+        {
+            var target = _mocker.CreateInstance<SvgLegendDataWriter>();
+            var data = target.WriteLegendData(tree, startingPoint);
+            return data;
         }
     }
 }
