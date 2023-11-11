@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Drawing;
 using FluentAssertions;
-using LibGit2Sharp;
 using repo_man.domain.Diagram;
 using repo_man.domain.Git;
 using repo_man.xunit._helpers;
-using Commit = repo_man.domain.Git.Commit;
 
 namespace repo_man.xunit.domain.Diagram
 {
@@ -36,6 +29,31 @@ namespace repo_man.xunit.domain.Diagram
                                   $"</g>");
         }
 
+        [Fact]
+        public void Cs_And_Md_Files()
+        {
+            var startingPoint = new Point(100, 100);
+
+            GivenTheseColorMappings(new Tuple<string, string>(".cs", "red"),
+                new Tuple<string, string>(".md", "green"));
+            var tree = GivenThisFileTree(new Tuple<string, long>("src/Program.cs", 1000L),
+                new Tuple<string, long>("ReadMe.md", 200L));
+            var target = _mocker.CreateInstance<SvgLegendDataWriter>();
+
+            var data = target.WriteLegendData(tree, startingPoint);
+
+            data.Data.Should().Be($"<g transform=\"translate({100}, {100})\">" +
+                                  "<g transform=\"translate(0, 0)\">" +
+                                  $"<circle r=\"5\" fill=\"red\"></circle>" +
+                                  $"<text x=\"10\" style=\"font-size:14px;font-weight:300\" dominant-baseline=\"middle\">.cs</text>" +
+                                  $"</g>" +
+                                  "<g transform=\"translate(0, 15)\">" +
+                                  $"<circle r=\"5\" fill=\"green\"></circle>" +
+                                  $"<text x=\"10\" style=\"font-size:14px;font-weight:300\" dominant-baseline=\"middle\">.md</text>" +
+                                  $"</g>" +
+                                  $"</g>");
+        }
+        
         private static GitTree GivenThisFileTree(params Tuple<string, long>[] files)
         {
             var tree = new GitTree();
@@ -46,6 +64,7 @@ namespace repo_man.xunit.domain.Diagram
 
             return tree;
         }
+        
         private void GivenTheseColorMappings(params Tuple<string, string>[] mappings)
         {
             foreach (var mapping in mappings)
@@ -53,63 +72,5 @@ namespace repo_man.xunit.domain.Diagram
                 _mocker.GetMock<IFileColorMapper>().Setup(x => x.Map(mapping.Item1)).Returns(mapping.Item2);
             }
         }
-    }
-
-    public class SvgLegendDataWriter
-    {
-        private readonly IFileColorMapper _colorMapper;
-
-        public SvgLegendDataWriter(IFileColorMapper colorMapper)
-        {
-            _colorMapper = colorMapper;
-        }
-
-        public LegendData WriteLegendData(GitTree tree, Point startingPoint)
-        {
-            var builder = new StringBuilder();
-            builder.Append($"<g transform=\"translate({startingPoint.X}, {startingPoint.Y})\">");
-
-            var extensions = new SortedSet<string>();
-            foreach (var file in tree.Files)
-            {
-                CountFileExtension(file, extensions);
-            }
-
-            InspectFolders(tree.Folders, extensions);
-
-            var y = 0;
-            foreach (var extension in extensions)
-            {
-                builder.Append($"<g transform=\"translate(0, {y})\">");
-                builder.Append($"<circle r=\"5\" fill=\"{_colorMapper.Map(extension)}\"></circle>");
-                builder.Append(
-                    $"<text x=\"10\" style=\"font-size:14px;font-weight:300\" dominant-baseline=\"middle\">{extension}</text>");
-                builder.Append("</g>");
-            }
-            builder.Append("</g>");
-
-            return new LegendData
-            {
-                Data = builder.ToString()
-            };
-        }
-
-        private static void InspectFolders(IReadOnlyCollection<GitFolder> readOnlyCollection, SortedSet<string> extensions)
-        {
-            foreach (var folder in readOnlyCollection)
-            {
-                foreach (var file in folder.Files)
-                {
-                    CountFileExtension(file, extensions);
-                }
-                InspectFolders(folder.Folders, extensions);
-            }
-        }
-
-        private static void CountFileExtension(GitFile file, SortedSet<string> extensions)
-        {
-            extensions.Add(file.Name.GetFileExtension());
-        }
-
     }
 }
