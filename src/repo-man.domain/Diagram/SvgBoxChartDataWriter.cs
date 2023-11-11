@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using Microsoft.Extensions.Logging;
 using repo_man.domain.Git;
 
 namespace repo_man.domain.Diagram;
@@ -10,15 +11,19 @@ public class SvgBoxChartDataWriter : ISvgBoxChartDataWriter
     private const int LeftMargin = 10;
 
     private readonly SvgStringBuilder _stringBuilder;
+    private readonly ILogger<SvgBoxChartDataWriter> _logger;
 
-    public SvgBoxChartDataWriter(SvgStringBuilder stringBuilder)
+    public SvgBoxChartDataWriter(SvgStringBuilder stringBuilder, ILogger<SvgBoxChartDataWriter> logger)
     {
         _stringBuilder = stringBuilder;
+        _logger = logger;
     }
 
     public ChartData WriteChartData(GitTree tree)
     {
+        _logger.LogInformation("Writing top-level files");
         var (startAt,topLevelMaxX) = WriteTopLevelFiles(tree, new StartingPoint(LeftMargin, TopMargin));
+        _logger.LogInformation("Writing foldered files");
         var (maxX, maxY) = WriteFolderFiles(tree.Folders, startAt, tree.GetMinFileSize(), startAt.X);
 
         return new ChartData { Data = _stringBuilder.ToSvgString(), Size = new Point(Math.Max(maxX, topLevelMaxX), maxY)};
@@ -43,6 +48,7 @@ public class SvgBoxChartDataWriter : ISvgBoxChartDataWriter
         var folderStartAt = startAt;
         foreach (var folder in folders)
         {
+            _logger.LogInformation("{folderName}/", folder.Name);
             var folderFileStartAt =
                 new StartingPoint(X: folderStartAt.X + folderPadding, Y: folderStartAt.Y + folderPadding);
 
@@ -78,6 +84,7 @@ public class SvgBoxChartDataWriter : ISvgBoxChartDataWriter
         const int minRadius = 10;
         foreach (var file in files.OrderByDescending(x => x.FileSize))
         {
+            _logger.LogInformation(file.Name);
             var radius = (int)(file.FileSize / minFileSize) * minRadius;
             var y = folderFileStartAt.Y + radius;
             var x = folderFileStartAt.X + radius;

@@ -1,9 +1,11 @@
 ﻿using AutoFixture;
 using FluentAssertions;
-using Moq.AutoMock;
 using repo_man.domain.Diagram;
 using repo_man.domain.Git;
 using System.Drawing;
+using Microsoft.Extensions.Logging;
+using Moq;
+using repo_man.xunit._extensions;
 using repo_man.xunit._helpers;
 
 namespace repo_man.xunit.domain.Diagram
@@ -248,6 +250,63 @@ namespace repo_man.xunit.domain.Diagram
             result.Size.Should().BeEquivalentTo(new Point(85, 70));  
             //x = 10 margin + 20 radius + 5 margin + 20 radius + 5 margin + 20 radius + 5 margin (toplevel > boxes)
             //y = 10 margin + 20 radius + 10 margin + 5 padding + 20 radius + 5 padding
+        }
+
+        [Fact]
+        public void Logs_HighLevelFlow_Of_DataWriter()
+        {
+            GivenTheseColorMappings(
+                new Tuple<string, string>(".cs", "blue"),
+                new Tuple<string, string>(".gitignore", "white"),
+                new Tuple<string, string>(".md", "pink"));
+
+            var tree = GivenThisFileTree(
+                new Tuple<string, long>("src/Program.cs", 100L),
+                new Tuple<string, long>("README.md", 50L),
+                new Tuple<string, long>("docs/GettingStarted.md", 400L));
+
+            WhenICreateChartData(tree);
+
+            _mocker.GetMock<ILogger<SvgBoxChartDataWriter>>().VerifyInfoWasCalled("Writing top-level files", Times.Once());
+            _mocker.GetMock<ILogger<SvgBoxChartDataWriter>>().VerifyInfoWasCalled("Writing foldered files", Times.Once());
+        }
+
+        [Fact]
+        public void Logs_Individual_File_Names()
+        {
+            GivenTheseColorMappings(
+                new Tuple<string, string>(".cs", "blue"),
+                new Tuple<string, string>(".md", "pink"));
+
+            var tree = GivenThisFileTree(
+                new Tuple<string, long>("src/Program.cs", 100L),
+                new Tuple<string, long>("README.md", 50L),
+                new Tuple<string, long>("docs/GettingStarted.md", 400L));
+
+            WhenICreateChartData(tree);
+
+            _mocker.GetMock<ILogger<SvgBoxChartDataWriter>>().VerifyInfoWasCalled("Program.cs", Times.Once());
+            _mocker.GetMock<ILogger<SvgBoxChartDataWriter>>().VerifyInfoWasCalled("README.md", Times.Once());
+            _mocker.GetMock<ILogger<SvgBoxChartDataWriter>>().VerifyInfoWasCalled("GettingStarted.md", Times.Once());
+        }
+
+        [Fact]
+        public void Logs_Individual_Folders()
+        {
+            GivenTheseColorMappings(
+                new Tuple<string, string>(".cs", "blue"),
+                new Tuple<string, string>(".md", "pink"));
+
+            var tree = GivenThisFileTree(
+                new Tuple<string, long>("src/console/Program.cs", 100L),
+                new Tuple<string, long>("README.md", 50L),
+                new Tuple<string, long>("docs/GettingStarted.md", 400L));
+
+            WhenICreateChartData(tree);
+
+            _mocker.GetMock<ILogger<SvgBoxChartDataWriter>>().VerifyInfoWasCalled("src/", Times.Once());
+            _mocker.GetMock<ILogger<SvgBoxChartDataWriter>>().VerifyInfoWasCalled("console/", Times.Once());
+            _mocker.GetMock<ILogger<SvgBoxChartDataWriter>>().VerifyInfoWasCalled("docs/", Times.Once());
         }
 
         #region helper methods

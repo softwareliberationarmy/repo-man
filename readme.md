@@ -8,7 +8,6 @@ A console application that generates diagrams helping users to visualize the cod
 * test the composition of the SvgDiagramRenderer now that we know where we're going with this
 * add infrastructure class to write data to file (thin wrapper)
 * define SvgComposer or use SvgDiagramRenderer as composer and add an SvgBookendManager
-* add logging to the SvgChartDataWriter
 * feature: user can specify background color
 * feature: implement ignored file extensions for binary file types (png, jpg, bmp, etc.)
 * 
