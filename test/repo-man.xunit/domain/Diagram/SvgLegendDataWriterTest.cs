@@ -43,7 +43,19 @@ namespace repo_man.xunit.domain.Diagram
                                   $"</g>" +
                                   $"</g>");
         }
-        
+
+        [Fact]
+        public void Returns_Necessary_Extra_Width()
+        {
+            GivenTheseColorMappings(new Tuple<string, string>(".cs", "red"),
+                new Tuple<string, string>(".md", "green"));
+            var tree = GivenThisFileTree(new Tuple<string, long>("src/Program.cs", 1000L),
+                new Tuple<string, long>("ReadMe.md", 200L));
+            var data = WhenIWriteLegendData(tree, new Point(600, 400));
+
+            data.Size.Should().Be(new Point(100, 30));
+        }
+
         private static GitTree GivenThisFileTree(params Tuple<string, long>[] files)
         {
             var tree = new GitTree();

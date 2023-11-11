@@ -40,7 +40,8 @@ public class SvgLegendDataWriter
 
         return new LegendData
         {
-            Data = builder.ToString()
+            Data = builder.ToString(),
+            Size = new Point(100, y)
         };
     }
 
