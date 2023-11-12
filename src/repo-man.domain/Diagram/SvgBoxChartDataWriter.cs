@@ -4,7 +4,7 @@ using repo_man.domain.Git;
 
 namespace repo_man.domain.Diagram;
 
-public class SvgBoxChartDataWriter : ISvgBoxChartDataWriter
+public class SvgBoxChartDataWriter : ISvgChartDataWriter
 {
     //SVG file outer margins
     private const int TopMargin = 10;

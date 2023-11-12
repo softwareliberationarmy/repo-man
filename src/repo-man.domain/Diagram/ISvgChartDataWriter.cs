@@ -2,7 +2,7 @@
 
 namespace repo_man.domain.Diagram;
 
-public interface ISvgBoxChartDataWriter
+public interface ISvgChartDataWriter
 {
     ChartData WriteChartData(GitTree tree);
 }

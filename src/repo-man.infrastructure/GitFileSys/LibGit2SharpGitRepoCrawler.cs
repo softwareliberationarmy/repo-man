@@ -5,9 +5,9 @@ using repo_man.domain.Git;
 using Commit = repo_man.domain.Git.Commit;
 using Tree = LibGit2Sharp.Tree;
 
-namespace repo_man.infrastructure
+namespace repo_man.infrastructure.GitFileSys
 {
-    public class LibGit2SharpGitRepoCrawler: IGitRepoCrawler
+    public class LibGit2SharpGitRepoCrawler : IGitRepoCrawler
     {
         private readonly ILogger<LibGit2SharpGitRepoCrawler> _logger;
         private readonly IConfiguration _config;

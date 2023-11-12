@@ -4,7 +4,7 @@ using repo_man.domain.Git;
 
 namespace repo_man.domain.Diagram;
 
-public class SvgLegendDataWriter
+public class SvgLegendDataWriter : ISvgLegendDataWriter
 {
     private readonly IFileColorMapper _colorMapper;
 
