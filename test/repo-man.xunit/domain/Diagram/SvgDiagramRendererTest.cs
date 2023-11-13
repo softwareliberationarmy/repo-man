@@ -18,7 +18,7 @@ namespace repo_man.xunit.domain.Diagram
             var chartData = new ChartData{ Data = "", Size = point};
             var legendData = new LegendData { Data = "", Size = new Point(100, 30) };
             var expectedSvg = "Test";
-            _mocker.GetMock<IConfiguration>().Setup(c => c["path"]).Returns("C:\\temp");
+            _mocker.GetMock<IConfiguration>().Setup(c => c["outputDir"]).Returns("C:\\temp");
             _mocker.GetMock<ISvgChartDataWriter>().Setup(x => x.WriteChartData(tree))
                 .Returns(chartData);
             _mocker.GetMock<ISvgLegendDataWriter>().Setup(x => x.WriteLegendData(tree, point))
@@ -35,7 +35,7 @@ namespace repo_man.xunit.domain.Diagram
         [Fact]
         public async Task Uses_Path_From_Config_And_Default_File_Name()
         {
-            _mocker.GetMock<IConfiguration>().Setup(c => c["path"]).Returns("C:\\temp");
+            _mocker.GetMock<IConfiguration>().Setup(c => c["outputDir"]).Returns("C:\\temp");
             _mocker.GetMock<ISvgChartDataWriter>().Setup(x => x.WriteChartData(It.IsAny<GitTree>()))
                 .Returns(_fixture.Build<ChartData>().With(x => x.Size, Point.Empty).Create());
             _mocker.GetMock<ISvgLegendDataWriter>().Setup(x => x.WriteLegendData(It.IsAny<GitTree>(), It.IsAny<Point>()))

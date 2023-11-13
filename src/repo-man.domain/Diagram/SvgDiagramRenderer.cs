@@ -24,7 +24,7 @@ namespace repo_man.domain.Diagram
         {
             var finalSvg = BuildSvgString(tree);
 
-            var path = _config["path"] ?? _config["repo"];
+            var path = _config["outputDir"] ?? _config["repo"];
 
             await _fileWriter.WriteTextToFile(finalSvg, Path.Combine(path!, "diagram.svg"));
         }
