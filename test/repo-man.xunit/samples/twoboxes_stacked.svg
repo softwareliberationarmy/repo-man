@@ -4,6 +4,7 @@
         <text style="fill:black" font-size="6" alignment-baseline="middle" text-anchor="middle">Bootstrapper.cs</text>
     </g>
     <g style="fill:blue" transform="translate(90,25)">
+        <title>Program.cs</title>
         <circle r="10" stroke="#374151" stroke-width="0.5" />
         <text style="fill:black" font-size="6" alignment-baseline="middle" text-anchor="middle">Program.cs</text>
     </g>
