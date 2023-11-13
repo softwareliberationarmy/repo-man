@@ -31,7 +31,7 @@ public class SvgChartStringBuilder
         _builder.Append($"<g style=\"fill:{color}\" transform=\"translate({x},{y})\">");
         _builder.Append($"<circle r=\"{radius}\" />");
         _builder.Append(
-            $"<text style=\"fill:black\" font-size=\"6\" alignment-baseline=\"middle\" text-anchor=\"middle\"/>{fileName}</text>");
+            $"<text style=\"fill:black\" font-size=\"6\" alignment-baseline=\"middle\" text-anchor=\"middle\" >{fileName}</text>");
         _builder.Append("</g>");
     }
 
