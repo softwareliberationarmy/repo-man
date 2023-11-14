@@ -16,7 +16,7 @@ namespace repo_man.xunit.domain.Diagram
             var tree = new GitTree();
             tree.AddFile("Fred.cs", minFileSize, Array.Empty<Commit>());
 
-            var target = new UnboundedFileRadiusCalculator(tree);
+            IFileRadiusCalculator target = new UnboundedFileRadiusCalculator(tree);
 
             target.CalculateFileRadius(tree.Files.Single()).Should().Be(10);
         }
@@ -30,7 +30,7 @@ namespace repo_man.xunit.domain.Diagram
             tree.AddFile("Fred.cs", minFileSize, Array.Empty<Commit>());
             tree.AddFile("Program.cs", minFileSize * 2, Array.Empty<Commit>());
 
-            var target = new UnboundedFileRadiusCalculator(tree);
+            IFileRadiusCalculator target = new UnboundedFileRadiusCalculator(tree);
 
             target.CalculateFileRadius(tree.Files.Last()).Should().Be(20);
         }

@@ -2,7 +2,12 @@
 
 namespace repo_man.domain.Diagram;
 
-public class UnboundedFileRadiusCalculator
+public interface IFileRadiusCalculator
+{
+    int CalculateFileRadius(GitFile file);
+}
+
+public class UnboundedFileRadiusCalculator : IFileRadiusCalculator
 {
     private readonly long _minFileSize;
 

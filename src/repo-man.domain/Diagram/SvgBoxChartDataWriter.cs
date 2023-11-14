@@ -12,6 +12,7 @@ public class SvgBoxChartDataWriter : ISvgChartDataWriter
 
     private readonly SvgChartStringBuilder _stringBuilder;
     private readonly ILogger<SvgBoxChartDataWriter> _logger;
+    private IFileRadiusCalculator _fileRadiusCalculator = null!;
 
     public SvgBoxChartDataWriter(SvgChartStringBuilder stringBuilder, ILogger<SvgBoxChartDataWriter> logger)
     {
@@ -21,10 +22,11 @@ public class SvgBoxChartDataWriter : ISvgChartDataWriter
 
     public ChartData WriteChartData(GitTree tree)
     {
+        _fileRadiusCalculator = new UnboundedFileRadiusCalculator(tree);
         _logger.LogInformation("Writing top-level files");
         var (startAt,topLevelMaxX) = WriteTopLevelFiles(tree, new StartingPoint(LeftMargin, TopMargin));
         _logger.LogInformation("Writing foldered files");
-        var (maxX, maxY) = WriteFolderFiles(tree.Folders, startAt, tree.GetMinFileSize(), startAt.X);
+        var (maxX, maxY) = WriteFolderFiles(tree.Folders, startAt, startAt.X);
 
         return new ChartData { Data = _stringBuilder.ToSvgString(), Size = new Point(Math.Max(maxX, topLevelMaxX), maxY)};
     }
@@ -33,14 +35,14 @@ public class SvgBoxChartDataWriter : ISvgChartDataWriter
     {
         const int topLevelFilesBottomMargin = 10;
 
-        var (fileStart, fileMaxY) = WriteFiles(tree.Files, startAt, startAt.Y, topLevelFilesBottomMargin, tree.GetMinFileSize());
+        var (fileStart, fileMaxY) = WriteFiles(tree.Files, startAt, startAt.Y, topLevelFilesBottomMargin);
 
         //done writing top-level files. Create a new starting point back at the left margin in a new row
         startAt = new StartingPoint(X: LeftMargin, Y: fileMaxY);
         return (startAt, fileStart.X);
     }
 
-    private (int maxX, int maxY) WriteFolderFiles(IReadOnlyCollection<GitFolder> folders, StartingPoint startAt, long minFileSize, int maxX)
+    private (int maxX, int maxY) WriteFolderFiles(IReadOnlyCollection<GitFolder> folders, StartingPoint startAt, int maxX)
     {
         const int folderPadding = 5;
         const int folderBottomMargin = 10;
@@ -52,14 +54,14 @@ public class SvgBoxChartDataWriter : ISvgChartDataWriter
             var folderFileStartAt =
                 new StartingPoint(X: folderStartAt.X + folderPadding, Y: folderStartAt.Y + folderPadding);
 
-            (folderFileStartAt, maxY) = WriteFiles(folder.Files, folderFileStartAt, maxY, folderPadding, minFileSize);
+            (folderFileStartAt, maxY) = WriteFiles(folder.Files, folderFileStartAt, maxY, folderPadding);
             maxX = Math.Max(maxX, folderFileStartAt.X);
 
             var folderBorderOffset = 0;
             if (folder.Folders.Any())
             {
                 folderBorderOffset = 10;
-                (maxX,maxY) = WriteFolderFiles(folder.Folders, new StartingPoint(folderStartAt.X + LeftMargin, folderStartAt.Y + TopMargin), minFileSize, maxX);
+                (maxX,maxY) = WriteFolderFiles(folder.Folders, new StartingPoint(folderStartAt.X + LeftMargin, folderStartAt.Y + TopMargin), maxX);
             }
 
             var width = maxX + folderBorderOffset - folderStartAt.X;
@@ -78,13 +80,13 @@ public class SvgBoxChartDataWriter : ISvgChartDataWriter
     }
 
     private (StartingPoint folderFileStartAt, int maxY) WriteFiles(IReadOnlyCollection<GitFile> files, 
-        StartingPoint folderFileStartAt, int maxY, int bottomMargin, long minFileSize)
+        StartingPoint folderFileStartAt, int maxY, int bottomMargin)
     {
         const int InterFileMargin = 5;
         foreach (var file in files.OrderByDescending(x => x.FileSize))
         {
             _logger.LogInformation(file.Name);
-            var radius = CalculateFileRadius(minFileSize, file);
+            var radius = _fileRadiusCalculator.CalculateFileRadius(file);
             var y = folderFileStartAt.Y + radius;
             var x = folderFileStartAt.X + radius;
 
@@ -99,11 +101,4 @@ public class SvgBoxChartDataWriter : ISvgChartDataWriter
 
     private sealed record StartingPoint(int X, int Y);
 
-
-    private static int CalculateFileRadius(long minFileSize, GitFile file)
-    {
-        const int minRadius = 10;
-        var radius = (int)(file.FileSize / minFileSize) * minRadius;
-        return radius;
-    }
 }
