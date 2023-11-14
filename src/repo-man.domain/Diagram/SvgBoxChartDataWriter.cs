@@ -81,11 +81,10 @@ public class SvgBoxChartDataWriter : ISvgChartDataWriter
         StartingPoint folderFileStartAt, int maxY, int bottomMargin, long minFileSize)
     {
         const int InterFileMargin = 5;
-        const int minRadius = 10;
         foreach (var file in files.OrderByDescending(x => x.FileSize))
         {
             _logger.LogInformation(file.Name);
-            var radius = (int)(file.FileSize / minFileSize) * minRadius;
+            var radius = CalculateFileRadius(minFileSize, file);
             var y = folderFileStartAt.Y + radius;
             var x = folderFileStartAt.X + radius;
 
@@ -99,4 +98,12 @@ public class SvgBoxChartDataWriter : ISvgChartDataWriter
     }
 
     private sealed record StartingPoint(int X, int Y);
+
+
+    private static int CalculateFileRadius(long minFileSize, GitFile file)
+    {
+        const int minRadius = 10;
+        var radius = (int)(file.FileSize / minFileSize) * minRadius;
+        return radius;
+    }
 }
