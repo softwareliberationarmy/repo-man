@@ -312,6 +312,7 @@ namespace repo_man.xunit.domain.Diagram
         #region helper methods
         private ChartData WhenICreateChartData(GitTree tree)
         {
+            _mocker.Use<IFileRadiusCalculator>(new UnboundedFileRadiusCalculator());
             var target = _mocker.CreateInstance<SvgBoxChartDataWriter>();
             var result = target.WriteChartData(tree);
             return result;

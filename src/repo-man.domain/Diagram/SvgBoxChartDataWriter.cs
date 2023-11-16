@@ -12,17 +12,17 @@ public class SvgBoxChartDataWriter : ISvgChartDataWriter
 
     private readonly SvgChartStringBuilder _stringBuilder;
     private readonly ILogger<SvgBoxChartDataWriter> _logger;
-    private IFileRadiusCalculator _fileRadiusCalculator = null!;
+    private readonly IFileRadiusCalculator _fileRadiusCalculator;
 
-    public SvgBoxChartDataWriter(SvgChartStringBuilder stringBuilder, ILogger<SvgBoxChartDataWriter> logger)
+    public SvgBoxChartDataWriter(SvgChartStringBuilder stringBuilder, ILogger<SvgBoxChartDataWriter> logger, IFileRadiusCalculator fileRadiusCalculator)
     {
         _stringBuilder = stringBuilder;
         _logger = logger;
+        _fileRadiusCalculator = fileRadiusCalculator;
     }
 
     public ChartData WriteChartData(GitTree tree)
     {
-        _fileRadiusCalculator = new UnboundedFileRadiusCalculator();
         _logger.LogInformation("Writing top-level files");
         var (startAt,topLevelMaxX) = WriteTopLevelFiles(tree, new StartingPoint(LeftMargin, TopMargin));
         _logger.LogInformation("Writing foldered files");
