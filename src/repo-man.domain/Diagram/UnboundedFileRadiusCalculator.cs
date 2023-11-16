@@ -4,22 +4,15 @@ namespace repo_man.domain.Diagram;
 
 public interface IFileRadiusCalculator
 {
-    int CalculateFileRadius(GitFile file);
+    int CalculateFileRadius(GitFile file, GitTree gitTree);
 }
 
 public class UnboundedFileRadiusCalculator : IFileRadiusCalculator
 {
-    private readonly long _minFileSize;
-
-    public UnboundedFileRadiusCalculator(GitTree tree)
-    {
-        _minFileSize = tree.GetMinFileSize();
-    }
-
-    public int CalculateFileRadius(GitFile file)
+    public int CalculateFileRadius(GitFile file, GitTree gitTree)
     {
         const int minRadius = 10;
-        var radius = (int)(file.FileSize / _minFileSize) * minRadius;
+        var radius = (int)(file.FileSize / gitTree.GetMinFileSize()) * minRadius;
         return radius;
     }
 }
