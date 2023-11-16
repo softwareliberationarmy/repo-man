@@ -66,5 +66,17 @@ namespace repo_man.xunit.domain.Git
 
             target.GetMinFileSize().Should().Be(expectedSize);
         }
+
+        [Fact]
+        public void RemembersTheLargestFileSize()
+        {
+            var expectedSize = 1024;
+            var target = new GitTree();
+            target.AddFile("Program.cs", expectedSize / 3, Array.Empty<Commit>());
+            target.AddFile("src/ImportantFile.cs", expectedSize, Array.Empty<Commit>());
+            target.AddFile("test/Project.Test/MyTestFile.cs", expectedSize / 2, Array.Empty<Commit>());
+
+            target.GetMaxFileSize().Should().Be(expectedSize);
+        }
     }
 }
