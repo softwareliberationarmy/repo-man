@@ -2,6 +2,7 @@
 using AutoFixture;
 using Microsoft.Extensions.Configuration;
 using Moq;
+using repo_man.domain.Diagram.Legend;
 
 namespace repo_man.xunit.domain.Diagram
 {

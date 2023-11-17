@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace repo_man.domain.Diagram;
+namespace repo_man.domain.Diagram.Legend;
 
 public class LegendData
 {

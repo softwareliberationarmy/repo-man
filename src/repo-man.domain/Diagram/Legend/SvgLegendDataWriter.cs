@@ -2,7 +2,7 @@
 using System.Text;
 using repo_man.domain.Git;
 
-namespace repo_man.domain.Diagram;
+namespace repo_man.domain.Diagram.Legend;
 
 public class SvgLegendDataWriter : ISvgLegendDataWriter
 {

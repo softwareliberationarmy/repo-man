@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using repo_man.domain.Diagram.Legend;
 using repo_man.domain.Git;
 
 namespace repo_man.domain.Diagram

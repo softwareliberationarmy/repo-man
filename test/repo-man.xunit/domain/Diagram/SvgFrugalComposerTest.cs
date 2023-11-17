@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using Microsoft.Extensions.Configuration;
+using repo_man.domain.Diagram.Legend;
 
 namespace repo_man.xunit.domain.Diagram
 {

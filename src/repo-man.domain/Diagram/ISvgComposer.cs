@@ -1,4 +1,6 @@
-﻿namespace repo_man.domain.Diagram;
+﻿using repo_man.domain.Diagram.Legend;
+
+namespace repo_man.domain.Diagram;
 
 public interface ISvgComposer
 {
