@@ -80,10 +80,12 @@ namespace repo_man.xunit.domain.Diagram
             WhenICalculateTheFileRadius(tree.Files.Last(), tree).Should().Be(10);
         }
 
-        [Fact]
-        public void Largest_File_Radius_IsConfigurable()
+        [Theory]
+        [InlineData("500",500)]
+        [InlineData("10",10)]
+        public void Largest_File_Radius_IsConfigurable(string configInput, int expectedRadius)
         {
-            _mocker.GetMock<IConfiguration>().Setup(c => c["maxRadius"]).Returns("500");
+            _mocker.GetMock<IConfiguration>().Setup(c => c["maxRadius"]).Returns(configInput);
 
             var tree = GivenThisFileTree(
                 new Tuple<string, long>("program.cs", 100L),
@@ -91,7 +93,7 @@ namespace repo_man.xunit.domain.Diagram
             );
 
             var radius = WhenICalculateTheFileRadius(tree.Files.First(), tree);
-            radius.Should().Be(500);
+            radius.Should().Be(expectedRadius);
         }
 
         [Theory]
@@ -149,7 +151,7 @@ namespace repo_man.xunit.domain.Diagram
             var maxRadius = 100;
             if (_config["maxRadius"] is { } maxRadiusString 
                 && int.TryParse(maxRadiusString, out var newMaxRadius) 
-                && newMaxRadius > minRadius)
+                && newMaxRadius >= minRadius)
             {
                 maxRadius = newMaxRadius;
             }
