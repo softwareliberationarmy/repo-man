@@ -1,4 +1,6 @@
-﻿namespace repo_man.xunit.domain.Diagram
+﻿using Microsoft.Extensions.Configuration;
+
+namespace repo_man.xunit.domain.Diagram
 {
 
     public class BoundedFileRadiusCalculatorTest : TestBase
@@ -78,6 +80,40 @@
             WhenICalculateTheFileRadius(tree.Files.Last(), tree).Should().Be(10);
         }
 
+        [Fact]
+        public void Largest_File_Radius_IsConfigurable()
+        {
+            _mocker.GetMock<IConfiguration>().Setup(c => c["maxRadius"]).Returns("500");
+
+            var tree = GivenThisFileTree(
+                new Tuple<string, long>("program.cs", 100L),
+                new Tuple<string, long>("readme.md", 10L)
+            );
+
+            var radius = WhenICalculateTheFileRadius(tree.Files.First(), tree);
+            radius.Should().Be(500);
+        }
+
+        [Theory]
+        [InlineData(null)]    //empty string
+        [InlineData("")]    //empty string
+        [InlineData("abc")] //not numeric
+        [InlineData("500.0001")]    //decimal value
+        [InlineData("-1")]  //negative value
+        [InlineData("9")]  //less than minRadius
+        public void Ignores_Invalid_MaxRadius_Config_Values(string configValue)
+        {
+            _mocker.GetMock<IConfiguration>().Setup(c => c["maxRadius"]).Returns(configValue);
+
+            var tree = GivenThisFileTree(
+                new Tuple<string, long>("program.cs", 100L),
+                new Tuple<string, long>("readme.md", 10L)
+            );
+
+            var radius = WhenICalculateTheFileRadius(tree.Files.First(), tree);
+            radius.Should().Be(100);
+        }
+
         private int WhenICalculateTheFileRadius(GitFile gitFile, GitTree tree)
         {
             IFileRadiusCalculator target = _mocker.CreateInstance<BoundedFileRadiusCalculator>();
@@ -96,16 +132,27 @@
             return tree;
         }
 
-        //TODO: allow max radius to be configurable
-
     }
 
     public class BoundedFileRadiusCalculator : IFileRadiusCalculator
     {
+        private readonly IConfiguration _config;
+
+        public BoundedFileRadiusCalculator(IConfiguration config)
+        {
+            _config = config;
+        }
+
         public int CalculateFileRadius(GitFile file, GitTree gitTree)
         {
             const int minRadius = 10;
-            const int maxRadius = 100;
+            var maxRadius = 100;
+            if (_config["maxRadius"] is { } maxRadiusString 
+                && int.TryParse(maxRadiusString, out var newMaxRadius) 
+                && newMaxRadius > minRadius)
+            {
+                maxRadius = newMaxRadius;
+            }
 
             var minFileSize = gitTree.GetMinFileSize();
             var maxFileSize = gitTree.GetMaxFileSize();
