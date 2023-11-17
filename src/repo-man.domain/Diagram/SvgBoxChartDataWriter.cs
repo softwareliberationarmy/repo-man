@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using Microsoft.Extensions.Logging;
+using repo_man.domain.Diagram.FileRadiusCalculator;
 using repo_man.domain.Git;
 
 namespace repo_man.domain.Diagram;

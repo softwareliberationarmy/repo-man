@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using repo_man.domain.Diagram;
+using repo_man.domain.Diagram.FileRadiusCalculator;
 using repo_man.domain.Diagram.Legend;
 using repo_man.domain.Git;
 

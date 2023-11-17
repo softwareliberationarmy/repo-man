@@ -1,9 +1,9 @@
 ﻿using System.Drawing;
 using repo_man.domain.Diagram.Legend;
 
-namespace repo_man.xunit.domain.Diagram
+namespace repo_man.xunit.domain.Diagram.Legend
 {
-    public class SvgLegendDataWriterTest: TestBase
+    public class SvgLegendDataWriterTest : TestBase
     {
         [Fact]
         public void Single_Cs_File()
@@ -63,7 +63,7 @@ namespace repo_man.xunit.domain.Diagram
 
             return tree;
         }
-        
+
         private void GivenTheseColorMappings(params Tuple<string, string>[] mappings)
         {
             foreach (var mapping in mappings)

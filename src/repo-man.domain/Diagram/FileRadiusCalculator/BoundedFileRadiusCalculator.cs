@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using repo_man.domain.Git;
 
-namespace repo_man.domain.Diagram;
+namespace repo_man.domain.Diagram.FileRadiusCalculator;
 
 public class BoundedFileRadiusCalculator : IFileRadiusCalculator
 {
@@ -16,8 +16,8 @@ public class BoundedFileRadiusCalculator : IFileRadiusCalculator
     {
         const int minRadius = 10;
         var maxRadius = 100;
-        if (_config["maxRadius"] is { } maxRadiusString 
-            && int.TryParse(maxRadiusString, out var newMaxRadius) 
+        if (_config["maxRadius"] is { } maxRadiusString
+            && int.TryParse(maxRadiusString, out var newMaxRadius)
             && newMaxRadius >= minRadius)
         {
             maxRadius = newMaxRadius;

@@ -1,6 +1,6 @@
 ﻿using repo_man.domain.Git;
 
-namespace repo_man.domain.Diagram;
+namespace repo_man.domain.Diagram.FileRadiusCalculator;
 
 /// <summary>
 /// Calculates the radius of the circle based on the file size. The smallest file in the repository gets a radius of 10. All other files get a proportional radius.

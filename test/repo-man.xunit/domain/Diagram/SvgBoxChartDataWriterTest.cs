@@ -3,6 +3,7 @@ using System.Drawing;
 using Microsoft.Extensions.Logging;
 using Moq;
 using repo_man.xunit._extensions;
+using repo_man.domain.Diagram.FileRadiusCalculator;
 
 namespace repo_man.xunit.domain.Diagram
 {

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
+using repo_man.domain.Diagram.FileRadiusCalculator;
 
-namespace repo_man.xunit.domain.Diagram
+namespace repo_man.xunit.domain.Diagram.FileRadiusCalculator
 {
 
     public class BoundedFileRadiusCalculatorTest : TestBase
@@ -81,8 +82,8 @@ namespace repo_man.xunit.domain.Diagram
         }
 
         [Theory]
-        [InlineData("500",500)]
-        [InlineData("10",10)]
+        [InlineData("500", 500)]
+        [InlineData("10", 10)]
         public void Largest_File_Radius_IsConfigurable(string configInput, int expectedRadius)
         {
             _mocker.GetMock<IConfiguration>().Setup(c => c["maxRadius"]).Returns(configInput);

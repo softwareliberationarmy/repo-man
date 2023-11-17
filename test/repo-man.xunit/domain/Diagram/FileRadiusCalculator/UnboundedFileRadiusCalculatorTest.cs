@@ -1,8 +1,9 @@
 ﻿using AutoFixture;
+using repo_man.domain.Diagram.FileRadiusCalculator;
 
-namespace repo_man.xunit.domain.Diagram
+namespace repo_man.xunit.domain.Diagram.FileRadiusCalculator
 {
-    public class UnboundedFileRadiusCalculatorTest: TestBase
+    public class UnboundedFileRadiusCalculatorTest : TestBase
     {
         [Fact]
         public void Returns10ForMinFileSize()
@@ -11,7 +12,7 @@ namespace repo_man.xunit.domain.Diagram
 
             var tree = new GitTree();
             tree.AddFile("Fred.cs", minFileSize, Array.Empty<Commit>());
-            
+
             IFileRadiusCalculator target = new UnboundedFileRadiusCalculator();
 
             target.CalculateFileRadius(tree.Files.Single(), tree).Should().Be(10);
@@ -20,7 +21,7 @@ namespace repo_man.xunit.domain.Diagram
         [Fact]
         public void Returns20IfFileTwiceAsLargeAsMin()
         {
-            var minFileSize = Random.Shared.NextInt64(10L, Int16.MaxValue); //keep values conservative to prevent overflow
+            var minFileSize = Random.Shared.NextInt64(10L, short.MaxValue); //keep values conservative to prevent overflow
 
             var tree = new GitTree();
             tree.AddFile("Fred.cs", minFileSize, Array.Empty<Commit>());

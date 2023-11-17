@@ -1,6 +1,6 @@
 ﻿using repo_man.domain.Git;
 
-namespace repo_man.domain.Diagram;
+namespace repo_man.domain.Diagram.FileRadiusCalculator;
 
 public interface IFileRadiusCalculator
 {
