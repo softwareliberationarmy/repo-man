@@ -1,5 +1,4 @@
-﻿using FluentAssertions;
-using repo_man.console;
+﻿using repo_man.console;
 using repo_man.domain;
 
 namespace repo_man.xunit.console

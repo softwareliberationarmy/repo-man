@@ -1,7 +1,5 @@
-﻿using FluentAssertions;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using repo_man.infrastructure.GitFileSys;
-using repo_man.xunit._helpers;
 
 namespace repo_man.xunit.infrastructure
 {

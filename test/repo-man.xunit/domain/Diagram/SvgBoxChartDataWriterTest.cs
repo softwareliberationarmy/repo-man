@@ -1,12 +1,8 @@
 ﻿using AutoFixture;
-using FluentAssertions;
-using repo_man.domain.Diagram;
-using repo_man.domain.Git;
 using System.Drawing;
 using Microsoft.Extensions.Logging;
 using Moq;
 using repo_man.xunit._extensions;
-using repo_man.xunit._helpers;
 
 namespace repo_man.xunit.domain.Diagram
 {

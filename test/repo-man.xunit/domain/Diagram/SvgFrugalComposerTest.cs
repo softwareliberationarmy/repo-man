@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Drawing;
-using FluentAssertions;
 using Microsoft.Extensions.Configuration;
-using repo_man.domain.Diagram;
-using repo_man.xunit._helpers;
 
 namespace repo_man.xunit.domain.Diagram
 {
