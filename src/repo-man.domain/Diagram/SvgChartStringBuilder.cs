@@ -1,4 +1,5 @@
-﻿using repo_man.domain.Git;
+﻿using repo_man.domain.Diagram.FileColorMapper;
+using repo_man.domain.Git;
 using System.Text;
 
 namespace repo_man.domain.Diagram;

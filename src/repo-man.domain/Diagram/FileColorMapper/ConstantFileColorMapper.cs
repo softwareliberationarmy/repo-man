@@ -1,4 +1,4 @@
-﻿namespace repo_man.domain.Diagram;
+﻿namespace repo_man.domain.Diagram.FileColorMapper;
 
 public class ConstantFileColorMapper : IFileColorMapper
 {
@@ -68,7 +68,7 @@ public class ConstantFileColorMapper : IFileColorMapper
     {
         if (!_wellKnownFileTypes.ContainsKey(fileExtension.ToLowerInvariant()))
         {
-            _wellKnownFileTypes.Add(fileExtension.ToLowerInvariant(), _extraColors[Random.Shared.Next(1,_extraColors.Length)]);
+            _wellKnownFileTypes.Add(fileExtension.ToLowerInvariant(), _extraColors[Random.Shared.Next(1, _extraColors.Length)]);
         }
         return _wellKnownFileTypes[fileExtension.ToLowerInvariant()];
     }

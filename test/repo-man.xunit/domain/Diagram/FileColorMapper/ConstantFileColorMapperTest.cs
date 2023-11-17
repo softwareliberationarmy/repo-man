@@ -1,6 +1,8 @@
-﻿namespace repo_man.xunit.domain.Diagram
+﻿using repo_man.domain.Diagram.FileColorMapper;
+
+namespace repo_man.xunit.domain.Diagram.FileColorMapper
 {
-    public class ConstantFileColorMapperTest: TestBase
+    public class ConstantFileColorMapperTest : TestBase
     {
         /// <summary>
         /// more file types: .mk, .sqlite, .ruleset, .txt, .config, .sql, .jwk, .resx, .html,
@@ -40,7 +42,7 @@
         [InlineData(".md", "#FFFFFF")]
         [InlineData(".sln", "#FF0000")]
         [InlineData(".csproj", "#5988C6")]
-        [InlineData("codeowners","#8E5E3C")]
+        [InlineData("codeowners", "#8E5E3C")]
         [InlineData(".gitignore", "#F54D27")]
         [InlineData(".gitattributes", "#F54D27")]
         [InlineData(".bat", "#09B514")]

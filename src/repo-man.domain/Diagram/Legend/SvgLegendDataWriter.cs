@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using System.Text;
+using repo_man.domain.Diagram.FileColorMapper;
 using repo_man.domain.Git;
 
 namespace repo_man.domain.Diagram.Legend;

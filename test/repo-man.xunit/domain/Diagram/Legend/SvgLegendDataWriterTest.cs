@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using repo_man.domain.Diagram.FileColorMapper;
 using repo_man.domain.Diagram.Legend;
 
 namespace repo_man.xunit.domain.Diagram.Legend

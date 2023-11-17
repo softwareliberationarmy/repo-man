@@ -1,4 +1,4 @@
-﻿namespace repo_man.domain.Diagram;
+﻿namespace repo_man.domain.Diagram.FileColorMapper;
 
 public interface IFileColorMapper
 {
