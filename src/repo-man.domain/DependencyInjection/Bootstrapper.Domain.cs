@@ -17,7 +17,7 @@ namespace repo_man.domain.DependencyInjection
             services.AddTransient<ISvgLegendDataWriter, SvgLegendDataWriter>();
             services.AddTransient<IFileColorMapper, ConstantFileColorMapper>();
             services.AddTransient<ISvgComposer, SvgFrugalComposer>();
-            services.AddTransient<IFileRadiusCalculator, UnboundedFileRadiusCalculator>();
+            services.AddTransient<IFileRadiusCalculator, BoundedFileRadiusCalculator>();
             services.AddTransient<SvgChartStringBuilder>();
             services.AddTransient<RepositoryVisualizer>();
 

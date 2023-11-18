@@ -339,6 +339,7 @@ namespace repo_man.xunit.domain.Diagram
             string fileName)
         {
             return $"<g style=\"fill:{color}\" transform=\"translate({point.X},{point.Y})\">" +
+                   $"<title>{fileName}</title>" +
                    $"<circle r=\"{expectedRadius}\" />" +
                    $"<text style=\"fill:black\" font-size=\"6\" alignment-baseline=\"middle\" text-anchor=\"middle\" >{fileName}</text>" +
                    "</g>";

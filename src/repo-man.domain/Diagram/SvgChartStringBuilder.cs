@@ -30,6 +30,7 @@ public class SvgChartStringBuilder
         var color = _colorMapper.Map(fileExtension);
 
         _builder.Append($"<g style=\"fill:{color}\" transform=\"translate({x},{y})\">");
+        _builder.Append($"<title>{fileName}</title>");
         _builder.Append($"<circle r=\"{radius}\" />");
         _builder.Append(
             $"<text style=\"fill:black\" font-size=\"6\" alignment-baseline=\"middle\" text-anchor=\"middle\" >{fileName}</text>");
