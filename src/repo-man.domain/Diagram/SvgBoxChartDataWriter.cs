@@ -25,22 +25,14 @@ public class SvgBoxChartDataWriter : ISvgChartDataWriter
     public ChartData WriteChartData(GitTree tree)
     {
         _logger.LogInformation("Writing top-level files");
-        var (startAt, topLevelMaxX) = WriteTopLevelFiles(tree, new Point(LeftMargin, TopMargin));
-        _logger.LogInformation("Writing foldered files");
-        var (maxX, maxY) = WriteFolderFiles(tree.Folders, startAt, startAt.X, tree);
-
-        return new ChartData { Data = _stringBuilder.ToSvgString(), Size = new Point(Math.Max(maxX, topLevelMaxX), maxY) };
-    }
-
-    private (Point, int) WriteTopLevelFiles(GitTree tree, Point startAt)
-    {
         const int topLevelFilesBottomMargin = 10;
-
+        var startAt = new Point(LeftMargin, TopMargin);
         var newMaxPoint = WriteFiles(tree.Files, startAt, startAt.Y, topLevelFilesBottomMargin, tree);
 
-        //done writing top-level files. Create a new starting point back at the left margin in a new row
-        startAt = new Point(LeftMargin, newMaxPoint.Y);
-        return (startAt, newMaxPoint.X);
+        _logger.LogInformation("Writing foldered files");
+        var (maxX, maxY) = WriteFolderFiles(tree.Folders, newMaxPoint with { X = LeftMargin }, startAt.X, tree);
+
+        return new ChartData { Data = _stringBuilder.ToSvgString(), Size = new Point(Math.Max(maxX, newMaxPoint.X), maxY) };
     }
 
     private (int maxX, int maxY) WriteFolderFiles(IReadOnlyCollection<GitFolder> folders, Point startAt,
