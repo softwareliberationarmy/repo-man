@@ -25,25 +25,25 @@ public class SvgBoxChartDataWriter : ISvgChartDataWriter
     public ChartData WriteChartData(GitTree tree)
     {
         _logger.LogInformation("Writing top-level files");
-        var (startAt,topLevelMaxX) = WriteTopLevelFiles(tree, new StartingPoint(LeftMargin, TopMargin));
+        var (startAt, topLevelMaxX) = WriteTopLevelFiles(tree, new Point(LeftMargin, TopMargin));
         _logger.LogInformation("Writing foldered files");
         var (maxX, maxY) = WriteFolderFiles(tree.Folders, startAt, startAt.X, tree);
 
-        return new ChartData { Data = _stringBuilder.ToSvgString(), Size = new Point(Math.Max(maxX, topLevelMaxX), maxY)};
+        return new ChartData { Data = _stringBuilder.ToSvgString(), Size = new Point(Math.Max(maxX, topLevelMaxX), maxY) };
     }
 
-    private (StartingPoint,int) WriteTopLevelFiles(GitTree tree, StartingPoint startAt)
+    private (Point, int) WriteTopLevelFiles(GitTree tree, Point startAt)
     {
         const int topLevelFilesBottomMargin = 10;
 
         var (fileStart, fileMaxY) = WriteFiles(tree.Files, startAt, startAt.Y, topLevelFilesBottomMargin, tree);
 
         //done writing top-level files. Create a new starting point back at the left margin in a new row
-        startAt = new StartingPoint(X: LeftMargin, Y: fileMaxY);
+        startAt = new Point(LeftMargin, fileMaxY);
         return (startAt, fileStart.X);
     }
 
-    private (int maxX, int maxY) WriteFolderFiles(IReadOnlyCollection<GitFolder> folders, StartingPoint startAt,
+    private (int maxX, int maxY) WriteFolderFiles(IReadOnlyCollection<GitFolder> folders, Point startAt,
         int maxX, GitTree gitTree)
     {
         const int folderPadding = 5;
@@ -54,7 +54,7 @@ public class SvgBoxChartDataWriter : ISvgChartDataWriter
         {
             _logger.LogInformation("{folderName}/", folder.Name);
             var folderFileStartAt =
-                new StartingPoint(X: folderStartAt.X + folderPadding, Y: folderStartAt.Y + folderPadding);
+                new Point(folderStartAt.X + folderPadding, folderStartAt.Y + folderPadding);
 
             (folderFileStartAt, maxY) = WriteFiles(folder.Files, folderFileStartAt, maxY, folderPadding, gitTree);
             maxX = Math.Max(maxX, folderFileStartAt.X);
@@ -63,7 +63,7 @@ public class SvgBoxChartDataWriter : ISvgChartDataWriter
             if (folder.Folders.Any())
             {
                 folderBorderOffset = 10;
-                (maxX,maxY) = WriteFolderFiles(folder.Folders, new StartingPoint(folderStartAt.X + LeftMargin, folderStartAt.Y + TopMargin), maxX, gitTree);
+                (maxX, maxY) = WriteFolderFiles(folder.Folders, new Point(folderStartAt.X + LeftMargin, folderStartAt.Y + TopMargin), maxX, gitTree);
             }
 
             var width = maxX + folderBorderOffset - folderStartAt.X;
@@ -75,14 +75,14 @@ public class SvgBoxChartDataWriter : ISvgChartDataWriter
 
             maxX = Math.Max(maxX, rectangleX + width);
             maxY = Math.Max(maxY, rectangleY + height);
-            folderStartAt = startAt with { Y = rectangleY + height + folderBottomMargin };
+            folderStartAt = new Point(startAt.X, rectangleY + height + folderBottomMargin);
         }
 
         return (maxX, maxY);
     }
 
-    private (StartingPoint folderFileStartAt, int maxY) WriteFiles(IReadOnlyCollection<GitFile> files,
-        StartingPoint folderFileStartAt, int maxY, int bottomMargin, GitTree gitTree)
+    private (Point folderFileStartAt, int maxY) WriteFiles(IReadOnlyCollection<GitFile> files,
+        Point folderFileStartAt, int maxY, int bottomMargin, GitTree gitTree)
     {
         const int InterFileMargin = 5;
         foreach (var file in files.OrderByDescending(x => x.FileSize))
@@ -100,7 +100,4 @@ public class SvgBoxChartDataWriter : ISvgChartDataWriter
 
         return (folderFileStartAt, maxY);
     }
-
-    private sealed record StartingPoint(int X, int Y);
-
 }
