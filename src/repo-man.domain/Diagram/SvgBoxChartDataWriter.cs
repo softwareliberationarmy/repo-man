@@ -5,18 +5,6 @@ using repo_man.domain.Git;
 
 namespace repo_man.domain.Diagram;
 
-public class FilesWriteResult
-{
-    public FilesWriteResult(int maxX, int maxY)
-    {
-        MaxX = maxX;
-        MaxY = maxY;
-    }
-
-    public int MaxX { get; }
-    public int MaxY { get; }
-}
-
 public class SvgBoxChartDataWriter : ISvgChartDataWriter
 {
     //SVG file outer margins
@@ -48,11 +36,11 @@ public class SvgBoxChartDataWriter : ISvgChartDataWriter
     {
         const int topLevelFilesBottomMargin = 10;
 
-        var result = WriteFiles(tree.Files, startAt, startAt.Y, topLevelFilesBottomMargin, tree);
+        var newMaxPoint = WriteFiles(tree.Files, startAt, startAt.Y, topLevelFilesBottomMargin, tree);
 
         //done writing top-level files. Create a new starting point back at the left margin in a new row
-        startAt = new Point(LeftMargin, result.MaxY);
-        return (startAt, result.MaxX);
+        startAt = new Point(LeftMargin, newMaxPoint.Y);
+        return (startAt, newMaxPoint.X);
     }
 
     private (int maxX, int maxY) WriteFolderFiles(IReadOnlyCollection<GitFolder> folders, Point startAt,
@@ -68,10 +56,10 @@ public class SvgBoxChartDataWriter : ISvgChartDataWriter
             var folderFileStartAt =
                 new Point(folderStartAt.X + folderPadding, folderStartAt.Y + folderPadding);
 
-            var result = WriteFiles(folder.Files, folderFileStartAt, maxY, folderPadding, gitTree);
-            maxY = result.MaxY;
+            var newMaxPoint = WriteFiles(folder.Files, folderFileStartAt, maxY, folderPadding, gitTree);
+            maxY = newMaxPoint.Y;
 
-            maxX = Math.Max(maxX, result.MaxX);
+            maxX = Math.Max(maxX, newMaxPoint.X);
 
             var folderBorderOffset = 0;
             if (folder.Folders.Any())
@@ -95,7 +83,7 @@ public class SvgBoxChartDataWriter : ISvgChartDataWriter
         return (maxX, maxY);
     }
 
-    private FilesWriteResult WriteFiles(IReadOnlyCollection<GitFile> files,
+    private Point WriteFiles(IReadOnlyCollection<GitFile> files,
         Point folderFileStartAt, int maxY, int bottomMargin, GitTree gitTree)
     {
         const int InterFileMargin = 5;
@@ -112,6 +100,6 @@ public class SvgBoxChartDataWriter : ISvgChartDataWriter
             folderFileStartAt = folderFileStartAt with { X = x + radius + InterFileMargin };
         }
 
-        return new FilesWriteResult(folderFileStartAt.X, maxY);
+        return folderFileStartAt with { Y = maxY };
     }
 }
