@@ -27,7 +27,7 @@ public class SvgBoxChartDataWriter : ISvgChartDataWriter
         _logger.LogInformation("Writing top-level files");
         const int topLevelFilesBottomMargin = 10;
         var startAt = new Point(LeftMargin, TopMargin);
-        var newMaxPoint = WriteFiles(tree.Files, startAt, startAt.Y, topLevelFilesBottomMargin, tree);
+        var newMaxPoint = WriteFiles(tree.Files, startAt, TopMargin, topLevelFilesBottomMargin, tree);
 
         _logger.LogInformation("Writing foldered files");
         var folderMaxPoint = WriteFolderFiles(tree.Folders, newMaxPoint with { X = LeftMargin }, startAt.X, tree);
@@ -72,29 +72,50 @@ public class SvgBoxChartDataWriter : ISvgChartDataWriter
 
             maxX = Math.Max(maxX, rectangleX + width);
             maxY = Math.Max(maxY, rectangleY + height);
-            folderStartAt = new Point(startAt.X, rectangleY + height + folderBottomMargin);
+            folderStartAt = startAt with { Y = rectangleY + height + folderBottomMargin };
         }
 
         return new Point(maxX, maxY);
     }
 
+    /// <summary>
+    /// Given some files, a tree, a starting point, a current max Y, and a bottom margin:
+    /// if no files, return starting point
+    /// else
+    ///     loop through the files ordered by size descending:
+    ///         calculate a file radius
+    ///         set the x and y coordinates of the circle center
+    ///         add the circle to the svg string
+    ///         calculate a new maxY
+    ///         calculate a new starting point for the next file
+    ///     return the furthest point touched (including the bottom margin)
+    /// </summary>
+    /// <param name="files">the set of files to write sequentially</param>
+    /// <param name="startingPoint">the point at which to begin drawing the circles</param>
+    /// <param name="maxY">the current max Y value</param>
+    /// <param name="bottomMargin">the bottom margin that should be added below the files</param>
+    /// <param name="gitTree">the entire tree of git files</param>
+    /// <returns>the maximum x and y values reached when writing these files</returns>
     private Point WriteFiles(IReadOnlyCollection<GitFile> files,
-        Point folderFileStartAt, int maxY, int bottomMargin, GitTree gitTree)
+        Point startingPoint, int maxY, int bottomMargin, GitTree gitTree)
     {
+        if (!files.Any()) return startingPoint;
+
         const int InterFileMargin = 5;
         foreach (var file in files.OrderByDescending(x => x.FileSize))
         {
             _logger.LogInformation(file.Name);
             var radius = _fileRadiusCalculator.CalculateFileRadius(file, gitTree);
-            var y = folderFileStartAt.Y + radius;
-            var x = folderFileStartAt.X + radius;
+            var y = startingPoint.Y + radius;
+            var x = startingPoint.X + radius;
 
             _stringBuilder.AddFileCircle(x, y, radius, file.Name);
 
-            maxY = Math.Max(maxY, y + radius + bottomMargin);
-            folderFileStartAt = folderFileStartAt with { X = x + radius + InterFileMargin };
+            maxY = Math.Max(maxY, y + radius);
+            startingPoint = startingPoint with { X = x + radius + InterFileMargin };
         }
 
-        return folderFileStartAt with { Y = maxY };
+        return startingPoint with { Y = maxY + bottomMargin };
+
     }
 }
