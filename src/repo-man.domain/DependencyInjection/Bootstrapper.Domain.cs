@@ -11,15 +11,15 @@ namespace repo_man.domain.DependencyInjection
     {
         public static IServiceCollection AddDomainServices(this IServiceCollection services)
         {
-            services.AddTransient<ITreeExtracter, GitRepositoryTreeExtracter>();
-            services.AddTransient<IDiagramRenderer, SvgDiagramRenderer>();
-            services.AddTransient<ISvgChartDataWriter, SvgBoxChartDataWriter>();
-            services.AddTransient<ISvgLegendDataWriter, SvgLegendDataWriter>();
-            services.AddTransient<IFileColorMapper, ConstantFileColorMapper>();
-            services.AddTransient<ISvgComposer, SvgFrugalComposer>();
-            services.AddTransient<IFileRadiusCalculator, BoundedFileRadiusCalculator>();
-            services.AddTransient<SvgChartStringBuilder>();
-            services.AddTransient<RepositoryVisualizer>();
+            services.AddScoped<ITreeExtracter, GitRepositoryTreeExtracter>();
+            services.AddScoped<IDiagramRenderer, SvgDiagramRenderer>();
+            services.AddScoped<ISvgChartDataWriter, SvgBoxChartDataWriter>();
+            services.AddScoped<ISvgLegendDataWriter, SvgLegendDataWriter>();
+            services.AddScoped<IFileColorMapper, ConstantFileColorMapper>();
+            services.AddScoped<ISvgComposer, SvgFrugalComposer>();
+            services.AddScoped<IFileRadiusCalculator, BoundedFileRadiusCalculator>();
+            services.AddScoped<SvgChartStringBuilder>();
+            services.AddScoped<RepositoryVisualizer>();
 
             return services;
         }
