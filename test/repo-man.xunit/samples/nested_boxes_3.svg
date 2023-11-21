@@ -2,23 +2,24 @@
 
     <g style="fill:blue" transform="translate(35,35)">
         <circle r="10" stroke="#374151" stroke-width="0.5" />
-        <text style="fill:black" font-size="6" alignment-baseline="middle" text-anchor="middle">RepositoryVisualizer.cs</text>
+        <text style="fill:black" font-size="6" alignment-baseline="middle"
+            text-anchor="middle">RepositoryVisualizer.cs (35,35)</text>
     </g>
 
     <!-- inner-most nested folder -->
     <g style="fill:blue" transform="translate(45,70)">
         <circle r="10" stroke="#374151" stroke-width="0.5" />
-        <text style="fill:black" font-size="6" alignment-baseline="middle" text-anchor="middle">GitFolder.cs</text>
+        <text style="fill:black" font-size="6" alignment-baseline="middle" text-anchor="middle">GitFolder.cs (45,70)</text>
     </g>
     <g transform="translate(30,55)">
         <rect fill="none" stroke-width="0.5" stroke="black" width="30" height="30" />
-        <text style="fill:black" font-size="6" transform="translate(-1,-1)">Git</text>
+        <text style="fill:black" font-size="6" transform="translate(-1,-1)">Git (30,55) 30x30</text>
     </g>
 
     <!-- second-level nested folder -->
     <g transform="translate(20,20)">
         <rect fill="none" stroke-width="0.5" stroke="black" width="50" height="75" />
-        <text style="fill:black" font-size="6" transform="translate(-1,-1)">repo-man.domain</text>
+        <text style="fill:black" font-size="6" transform="translate(-1,-1)">repo-man.domain (20,20) 50x75</text>
     </g>
 
 
@@ -27,6 +28,6 @@
     <!-- top-level folder -->
     <g transform="translate(10,10)">
         <rect fill="none" stroke-width="0.5" stroke="black" width="70" height="95" />
-        <text style="fill:black" font-size="6" transform="translate(-1,-1)">src</text>
+        <text style="fill:black" font-size="6" transform="translate(-1,-1)">src (10,10), 70x95</text>
     </g>
 </svg>

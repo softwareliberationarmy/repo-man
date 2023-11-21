@@ -35,6 +35,24 @@ public class SvgBoxChartDataWriter : ISvgChartDataWriter
         return new ChartData { Data = _stringBuilder.ToSvgString(), Size = folderMaxPoint with { X = Math.Max(folderMaxPoint.X, newMaxPoint.X) } };
     }
 
+    /// <summary>
+    /// Given a collection of Git folders, a starting point, a current max X value, and the whole Git tree:
+    /// loop through the folders and:
+    ///     write the files in the folder to the svg string, returning a new max point
+    ///     if files were written 
+    ///         set the new maxY to the returned max Y
+    ///         set the current maxX to the returned max X if it is larger
+    ///     if there are any subfolders
+    ///         recurse, passing in the subfolders, a starting point indented top left, the current max X, and the whole git tree
+    ///     calculate the width of the bounding rectangle for this folder
+    ///         width = the current max X minus the starting point + 10 if there are subfolders
+    ///         height = the current max Y minus the starting point + 10 if there are subfolders
+    /// </summary>
+    /// <param name="folders"></param>
+    /// <param name="startAt"></param>
+    /// <param name="maxX"></param>
+    /// <param name="gitTree"></param>
+    /// <returns></returns>
     private Point WriteFolderFiles(IReadOnlyCollection<GitFolder> folders, Point startAt,
         int maxX, GitTree gitTree)
     {
@@ -45,34 +63,37 @@ public class SvgBoxChartDataWriter : ISvgChartDataWriter
         foreach (var folder in folders)
         {
             _logger.LogInformation("{folderName}/", folder.Name);
-            var folderFileStartAt =
+
+            var folderFilesStartingPoint = 
                 new Point(folderStartAt.X + folderPadding, folderStartAt.Y + folderPadding);
-
-            var newMaxPoint = WriteFiles(folder.Files, folderFileStartAt, maxY, folderPadding, gitTree);
-            maxY = newMaxPoint.Y;
-
-            maxX = Math.Max(maxX, newMaxPoint.X);
+            var newMaxPoint = WriteFiles(folder.Files, folderFilesStartingPoint, maxY, folderPadding, gitTree);
+            if (folderFilesStartingPoint != newMaxPoint)
+            {
+                maxY = newMaxPoint.Y;
+                maxX = Math.Max(maxX, newMaxPoint.X);
+            }
 
             var folderBorderOffset = 0;
             if (folder.Folders.Any())
             {
+                if (folder.Files.Any())
+                {
+                    maxY -= 5;
+                }
                 folderBorderOffset = 10;
                 var localMax = WriteFolderFiles(folder.Folders,
-                    new Point(folderStartAt.X + LeftMargin, folderStartAt.Y + TopMargin), maxX, gitTree);
-                maxX = localMax.X;
+                    new Point(folderStartAt.X + LeftMargin, maxY + TopMargin), maxX, gitTree);
+                maxX = Math.Max(maxX, localMax.X);
                 maxY = localMax.Y;
             }
 
             var width = maxX + folderBorderOffset - folderStartAt.X;
             var height = maxY + folderBorderOffset - folderStartAt.Y;
-            var rectangleX = folderStartAt.X;
-            var rectangleY = folderStartAt.Y;
-            var folderName = folder.Name;
-            _stringBuilder.AddBoundingRectangle(rectangleX, rectangleY, width, height, folderName);
+            _stringBuilder.AddBoundingRectangle(folderStartAt.X, folderStartAt.Y, width, height, folder.Name);
 
-            maxX = Math.Max(maxX, rectangleX + width);
-            maxY = Math.Max(maxY, rectangleY + height);
-            folderStartAt = startAt with { Y = rectangleY + height + folderBottomMargin };
+            maxX = Math.Max(maxX, folderStartAt.X + width);
+            maxY = Math.Max(maxY, folderStartAt.Y + height);
+            folderStartAt = startAt with { Y = folderStartAt.Y + height + folderBottomMargin };
         }
 
         return new Point(maxX, maxY);

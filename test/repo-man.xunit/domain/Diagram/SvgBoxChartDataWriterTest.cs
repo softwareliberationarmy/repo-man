@@ -216,24 +216,24 @@ namespace repo_man.xunit.domain.Diagram
                                     ARectangle(new Point(10, 10), 70, 70, "src"));
         }
 
-        //[Fact]
-        //public void Folder_Files_And_Subfolders()
-        //{
-        //    GivenTheseColorMappings(
-        //        new Tuple<string, string>(".cs", "blue"));
+        [Fact]
+        public void Folder_Files_And_Subfolders()
+        {
+            GivenTheseColorMappings(
+                new Tuple<string, string>(".cs", "blue"));
 
-        //    var tree = GivenThisFileTree(
-        //        new Tuple<string, long>("src/repo-man.domain/RepositoryVisualizer.cs", 100L),
-        //        new Tuple<string, long>("src/repo-man.domain/Git/GitFolder.cs", 100L));
+            var tree = GivenThisFileTree(
+                new Tuple<string, long>("src/repo-man.domain/RepositoryVisualizer.cs", 100L),
+                new Tuple<string, long>("src/repo-man.domain/Git/GitFolder.cs", 100L));
 
-        //    var result = WhenICreateChartData(tree);
+            var result = WhenICreateChartData(tree);
 
-        //    result.Data.Should().BeEquivalentTo(AFilledCircle("blue", new Point(35, 35), 10L, "RepositoryVisualizer.cs")
-        //                                        + AFilledCircle("blue", new Point(45, 70), 10L, "GitFolder.cs")
-        //                                        + ARectangle(new Point(30, 55), 30L, 30L, "Git")
-        //                                        + ARectangle(new Point(20, 20), 50L, 75L, "repo-man.domain")
-        //                                        + ARectangle(new Point(10, 10), 70L, 95L, "src"));
-        //}
+            result.Data.Should().BeEquivalentTo(AFilledCircle("blue", new Point(35, 35), 10L, "RepositoryVisualizer.cs")
+                                                + AFilledCircle("blue", new Point(45, 70), 10L, "GitFolder.cs")
+                                                + ARectangle(new Point(30, 55), 30L, 30L, "Git")
+                                                + ARectangle(new Point(20, 20), 50L, 75L, "repo-man.domain")
+                                                + ARectangle(new Point(10, 10), 70L, 95L, "src"));
+        }
 
         //HEIGHT
 
