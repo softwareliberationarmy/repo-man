@@ -1,6 +1,7 @@
 # repo-man
 
 A console application that generates diagrams helping users to visualize the codebase. The original idea was to compile this project and run the resulting executable as a husky pre-commit hook. So each time you committed changes to the repository, an updated diagram would be generated, showing you the relative size of the files in your project, like this:
+
 ![Visualization of this repo](./diagram.svg)
 
 ## DEPENDENCIES
