@@ -24,12 +24,12 @@ Below are the configuration values:
 - maxRadius - by default, diagrammed files have a radius range of 10 to 100. All of the file sizes in your repo are charted on that scale. If you have a wide disparity in file sizes, you may want to set the maxRadius lower so you can see the very small files better. Setting the maxRadius to 10 will chart all files the same size.
 - outputDir - the directory to write the diagram.svg file. Defaults to the git repository root folder.
 - background - sets the background color of the svg file. Defaults to "blanchedalmond" 🐿️.
+- fileName - for setting the diagram file name, defaults to diagram.svg
 
 ## TODO
 
 - feature: implement ignored file extensions for binary file types (png, jpg,
   bmp, etc.)
-- feature: be able to specify a different diagram file name in the configuration
 - performance: figure out how to crawl the repo for commits much faster than we're doing today (libgit2sharp crawls so slowly that we had to shut off commit gathering)
 - feature: change the intensity of the file color based on how recently it was modified if option passed in
 - feature: change the intensity of the file color based on how many commits it has if option passed in
