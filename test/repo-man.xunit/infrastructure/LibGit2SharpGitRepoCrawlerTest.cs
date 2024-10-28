@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
-using repo_man.infrastructure.GitFileSys;
+using repo_man.infrastructure.Git;
 
 namespace repo_man.xunit.infrastructure
 {

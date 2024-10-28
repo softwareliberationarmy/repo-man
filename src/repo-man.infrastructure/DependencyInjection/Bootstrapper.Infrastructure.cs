@@ -2,7 +2,7 @@
 using repo_man.domain.Diagram;
 using repo_man.domain.Git;
 using repo_man.infrastructure.FileSys;
-using repo_man.infrastructure.GitFileSys;
+using repo_man.infrastructure.Git;
 
 namespace repo_man.infrastructure.DependencyInjection
 {
