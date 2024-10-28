@@ -12,9 +12,11 @@ namespace repo_man.infrastructure.DependencyInjection
     {
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
         {
-            services.AddTransient<IGitRepoCrawler, LibGit2SharpGitRepoCrawler>();
+            services.AddTransient<IGitRepoCrawler, ConsoleLogGitRepoCrawler>();
             services.AddTransient<IFileWriter, WindowsFileWriter>();
             services.AddTransient<ICodeQualityAnalyst, OllamaCodeQualityAnalyst>();
+            services.AddTransient<GitLogParser>();
+            services.AddSingleton<WindowsFileSize>();
             return services;
         }
     }
