@@ -14,11 +14,11 @@ namespace repo_man.xunit.domain.Git
 
             //act
             var target = new GitTree();
-            target.AddFile("readme.md", _fixture.Create<long>(), new[] { new Commit(expectedHash, expectedDate) });
+            target.AddFile("readme.md", _fixture.Create<long>(), new[] { new Commit(expectedHash, expectedDate, "Some Author", "Some Message") });
 
             //assert
             target.Files.Single().Commits.Single().Should()
-                .BeEquivalentTo(new Commit(expectedHash, expectedDate));
+                .BeEquivalentTo(new Commit(expectedHash, expectedDate, "Some Author", "Some Message"));
         }
 
         [Fact]
@@ -28,7 +28,7 @@ namespace repo_man.xunit.domain.Git
 
             //act
             var target = new GitTree();
-            target.AddFile(".config/dotnet-tools.json", _fixture.Create<long>(), new[] { new Commit(_fixture.Create<string>(), DateTimeOffset.Now) });
+            target.AddFile(".config/dotnet-tools.json", _fixture.Create<long>(), new[] { new Commit(_fixture.Create<string>(), DateTimeOffset.Now, "Some Author", "Some Message") });
 
             target.Files.Should().BeEmpty();
             var folder = target.Folders.Single();

@@ -57,7 +57,7 @@ namespace repo_man.infrastructure.Git
                         if (commits.Any())
                         {
                             history = commits.Select(
-                                c => new Commit(c.Commit.Sha, c.Commit.Committer.When)).ToArray();
+                                c => new Commit(c.Commit.Sha, c.Commit.Committer.When, c.Commit.Author.Name, c.Commit.Message)).ToArray();
                         }
                     }
                     var size = ((Blob)entry.Target).Size;
