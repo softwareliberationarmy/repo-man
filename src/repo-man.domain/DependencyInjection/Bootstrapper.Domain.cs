@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using repo_man.domain.CodeQuality;
 using repo_man.domain.Diagram;
 using repo_man.domain.Diagram.FileColorMapper;
 using repo_man.domain.Diagram.FileRadiusCalculator;
@@ -20,6 +21,8 @@ namespace repo_man.domain.DependencyInjection
             services.AddSingleton<IFileRadiusCalculator, BoundedFileRadiusCalculator>();
             services.AddSingleton<SvgChartStringBuilder>();
             services.AddSingleton<RepositoryVisualizer>();
+            services.AddSingleton<RepositoryReviewer>();
+            services.AddSingleton<RepoMan>();   
 
             return services;
         }

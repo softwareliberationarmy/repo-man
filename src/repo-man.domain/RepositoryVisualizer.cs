@@ -17,7 +17,7 @@ public class RepositoryVisualizer
         _renderer = renderer;
     }
 
-    public async Task GenerateDiagram()
+    public virtual async Task GenerateDiagram()
     {
         try
         {

@@ -13,7 +13,7 @@ namespace repo_man.xunit.console
             Action callWithNoArgs = () =>
             {
                 var host = Bootstrapper.BuildHost(Array.Empty<string>());
-                host.Services.GetRequiredService<RepositoryVisualizer>();
+                host.Services.GetRequiredService<RepoMan>();
             };
             callWithNoArgs.Should().Throw<ArgumentException>();
         }
@@ -22,8 +22,8 @@ namespace repo_man.xunit.console
         public void SuccessfullyInitializesRepositoryVisualizer()
         {
             var host = Bootstrapper.BuildHost(new []{ "diagram", "--repo=c:\\git\\il\\"});
-            var target = host.Services.GetRequiredService<RepositoryVisualizer>();
-            target.Should().BeOfType<RepositoryVisualizer>();
+            var target = host.Services.GetRequiredService<RepoMan>();
+            target.Should().BeOfType<RepoMan>();
         }
 
         [Fact]
