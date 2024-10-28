@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using repo_man.domain.CodeQuality;
 using repo_man.domain.Diagram;
 using repo_man.domain.Git;
+using repo_man.infrastructure.AI;
 using repo_man.infrastructure.FileSys;
 using repo_man.infrastructure.Git;
 
@@ -12,6 +14,7 @@ namespace repo_man.infrastructure.DependencyInjection
         {
             services.AddTransient<IGitRepoCrawler, LibGit2SharpGitRepoCrawler>();
             services.AddTransient<IFileWriter, WindowsFileWriter>();
+            services.AddTransient<ICodeQualityAnalyst, OllamaCodeQualityAnalyst>();
             return services;
         }
     }
