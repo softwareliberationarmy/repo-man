@@ -104,7 +104,7 @@ namespace repo_man.xunit.domain.Diagram.FileRadiusCalculator
         [InlineData("500.0001")]    //decimal value
         [InlineData("-1")]  //negative value
         [InlineData("9")]  //less than minRadius
-        public void Ignores_Invalid_MaxRadius_Config_Values(string configValue)
+        public void Ignores_Invalid_MaxRadius_Config_Values(string? configValue)
         {
             _mocker.GetMock<IConfiguration>().Setup(c => c["maxRadius"]).Returns(configValue);
 
