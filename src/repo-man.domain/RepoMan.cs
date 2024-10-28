@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using repo_man.domain.CodeQuality;
+using repo_man.domain.Diagram;
 
 namespace repo_man.domain;
 

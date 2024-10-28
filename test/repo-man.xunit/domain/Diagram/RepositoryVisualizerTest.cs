@@ -1,10 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.AutoMock;
-using repo_man.domain;
 using repo_man.xunit._extensions;
 
-namespace repo_man.xunit.domain
+namespace repo_man.xunit.domain.Diagram
 {
     public class RepositoryVisualizerTest
     {

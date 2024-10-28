@@ -1,8 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
-using repo_man.domain.Diagram;
 using repo_man.domain.Git;
 
-namespace repo_man.domain;
+namespace repo_man.domain.Diagram;
 
 public class RepositoryVisualizer
 {
