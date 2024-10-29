@@ -20,7 +20,7 @@ so you should be able to clone the repo and run it immediately.
 
 If you want to run it from the command line, navigate to the folder with the executable and run it like this: 
 ```
-repo-man.exe diagram --repo "C:\path\to\your\git\repo" --maxRadius 100 --outputDir "C:\path\to\output\folder" --background "white" --fileName "diagram.svg"
+repo-man.exe diagram --repo "C:\path\to\your\git\repo" --maxRadius 100 --outputDir "C:\path\to\output\folder" --background "white" --fileName "diagram.svg" --ignoreFileTypes "png|jpg|bmp"
 ```
 
 ## CONFIG OPTIONS
@@ -32,13 +32,14 @@ but the Microsoft default host builder does set you up with the rest of the typi
 When you call the tool from the command line, your first argument should always be the action you want to take. 
 Currently "diagram" is the only action available, but in the future there will be additional actions to give better analysis. 
 
-Below are additional configuration values that can be passed at the command line:
+Below are additional configuration keys (case-sensitive) that can be passed at the command line:
 
 - **repo (required)** - relative or absolute folder path to the git repository you want to diagram (the folder containing the .git folder)
 - maxRadius - by default, diagrammed files have a radius range of 10 to 100. All of the file sizes in your repo are charted on that scale. If you have a wide disparity in file sizes, you may want to set the maxRadius lower so you can see the very small files better. Setting the maxRadius to 10 will chart all files the same size.
 - outputDir - the directory to write the diagram.svg file. Defaults to the git repository root folder.
 - background - sets the background color of the svg file. Defaults to "blanchedalmond" 🐿️.
 - fileName - for setting the diagram file name, defaults to diagram.svg
+- ignoreFileTypes - a pipe-delimited list of file extensions to ignore from analysis and from the diagram. For example, passing in "png|jpg|bmp" will ignore all image files from the diagram.
 
 ## TODO
 

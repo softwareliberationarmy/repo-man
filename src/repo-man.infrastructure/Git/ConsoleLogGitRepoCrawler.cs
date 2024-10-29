@@ -44,7 +44,14 @@ namespace repo_man.infrastructure.Git
                 }
             }
 
-            return _parser.GetGitFileData();
+            var gitFiles = _parser.GetGitFileData();
+
+            if (!string.IsNullOrEmpty(_config["ignoreFileTypes"]))
+            {
+                var fileTypes = _config["ignoreFileTypes"]!.Split('|');
+                gitFiles = gitFiles.Where(gf => !fileTypes.Any(ft => gf.Item1.EndsWith($".{ft}")));
+            }
+            return gitFiles;
         }
     }
 }
