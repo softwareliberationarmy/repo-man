@@ -4,5 +4,5 @@ namespace repo_man.domain.CodeQuality;
 
 public interface ICodeQualityAnalyst
 {
-    Task<string> EvaluateCodeQuality(GitTree commitHistory);
+    Task<string> EvaluateCodeQuality(IEnumerable<(string, long, Commit[])> commitHistory);
 }

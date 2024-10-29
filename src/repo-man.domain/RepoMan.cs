@@ -22,6 +22,9 @@ public class RepoMan
 
     public async Task Run()
     {
+        //_logger.LogInformation($"Endpoint: {_config["ollama:endpoint"]}");
+        //_logger.LogInformation($"Endpoint: {_config["ollama:model"]}");
+
         var action = (_config["action"] ?? "").ToLower();
 
         if (action == "diagram")

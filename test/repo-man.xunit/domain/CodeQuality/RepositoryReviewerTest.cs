@@ -10,12 +10,12 @@ namespace repo_man.xunit.domain.CodeQuality
         [Fact]
         public async Task GetsTheCommitHistoryAndPushesItToACodeQualityAnalystForReview()
         {
-            var gitTree = new GitTree();
-            _mocker.GetMock<ITreeExtracter>().Setup(t => t.GetFileTree()).Returns(gitTree);
-            _mocker.GetMock<ICodeQualityAnalyst>().Setup(a => a.EvaluateCodeQuality(gitTree)).ReturnsAsync("LGTM");
+            var commitList = new List<(string, long, Commit[])>();
+            _mocker.GetMock<IGitRepoCrawler>().Setup(t => t.GitThemFiles()).Returns(commitList.AsEnumerable());
+            _mocker.GetMock<ICodeQualityAnalyst>().Setup(a => a.EvaluateCodeQuality(It.IsAny<IEnumerable<(string,long, Commit[])>>())).ReturnsAsync("LGTM");
             var target = _mocker.CreateInstance<RepositoryReviewer>();
             await target.ReviewCodeQuality();
-            _mocker.GetMock<ICodeQualityAnalyst>().Verify(a => a.EvaluateCodeQuality(gitTree), Times.Once);
+            _mocker.GetMock<ICodeQualityAnalyst>().Verify(a => a.EvaluateCodeQuality(commitList), Times.Once);
             _mocker.GetMock<ILogger<RepositoryReviewer>>()
                 .VerifyInfoWasCalled("Starting code quality review", Times.Once());
             _mocker.GetMock<ILogger<RepositoryReviewer>>()
