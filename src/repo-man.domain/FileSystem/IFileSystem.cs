@@ -2,7 +2,9 @@
 
 public interface IFileSystem
 {
-    Task WriteTextToFile(string fileContent, string filePath);
+    Task WriteTextToFileAsync(string fileContent, string filePath);
 
     long GetFileSize(string path);
+
+    Task<string> ReadTextFromFileAsync(string filePath);
 }

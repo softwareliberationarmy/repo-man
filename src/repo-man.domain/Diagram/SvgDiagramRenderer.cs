@@ -29,7 +29,7 @@ namespace repo_man.domain.Diagram
             var path = _config["outputDir"] ?? _config["repo"];
 
             var fileName = _config["fileName"] ?? "diagram.svg";
-            await _fileWriter.WriteTextToFile(finalSvg, Path.Combine(path!, fileName));
+            await _fileWriter.WriteTextToFileAsync(finalSvg, Path.Combine(path!, fileName));
         }
 
         private string BuildSvgString(GitTree tree)
