@@ -1,16 +1,19 @@
 ﻿using System.Diagnostics;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using repo_man.domain.Git;
 
 namespace repo_man.infrastructure.Git
 {
     public class ConsoleLogGitRepoCrawler: IGitRepoCrawler
     {
+        private readonly ILogger<ConsoleLogGitRepoCrawler> _logger;
         private readonly IConfiguration _config;
         private readonly GitLogParser _parser;
 
-        public ConsoleLogGitRepoCrawler(IConfiguration config, GitLogParser parser)
+        public ConsoleLogGitRepoCrawler(ILogger<ConsoleLogGitRepoCrawler> logger, IConfiguration config, GitLogParser parser)
         {
+            _logger = logger;
             _config = config;
             _parser = parser;
         }
@@ -34,6 +37,7 @@ namespace repo_man.infrastructure.Git
                     string? result = reader.ReadLine();
                     while (result != null)
                     {
+                        _logger.LogInformation(result);
                         _parser.Parse(result);
                         result = reader.ReadLine();
                     }

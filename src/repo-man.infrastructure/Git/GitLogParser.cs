@@ -37,15 +37,15 @@ public class GitLogParser
         {
             ProcessCommitMessage(text);
         }
-        else if (text.StartsWith("M "))
+        else if (text.StartsWith("M"))
         {
             ProcessModifiedFile(text);
         }
-        else if (text.StartsWith("A "))
+        else if (text.StartsWith("A"))
         {
             ProcessAddedFile(text);
         }
-        else if (text.StartsWith("D "))
+        else if (text.StartsWith("D"))
         {
             ProcessDeletedFile(text);
         }
@@ -82,7 +82,7 @@ public class GitLogParser
 
     private void ProcessDeletedFile(string text)
     {
-        var path = text.Replace("D ", "").Trim();
+        var path = text.Replace("D\t", "").Trim();
         if (!_entriesByPath.ContainsKey(path))
         {
             var entry = new GitLogFileEntry
@@ -97,7 +97,7 @@ public class GitLogParser
 
     private void ProcessAddedFile(string text)
     {
-        var path = text.Replace("A ", "").Trim();
+        var path = text.Replace("A\t", "").Trim();
         if (!_entriesByPath.ContainsKey(path))
         {
             var entry = new GitLogFileEntry
@@ -113,7 +113,7 @@ public class GitLogParser
 
     private void ProcessModifiedFile(string text)
     {
-        var path = text.Replace("M ", "").Trim();
+        var path = text.Replace("M\t", "").Trim();
         if (!_entriesByPath.ContainsKey(path))
         {
             var entry = new GitLogFileEntry

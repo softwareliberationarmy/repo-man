@@ -25,7 +25,7 @@ namespace repo_man.xunit.infrastructure
             target.Parse("");
             target.Parse("    IPS-778 setting the userId regardless of whether the avatar and background are in local storage. (#253)");
             target.Parse("");
-            target.Parse("M       src/Program.cs");
+            target.Parse("M\tsrc/Program.cs");
             target.Parse("");
 
             var result = target.GetGitFileData().Single();
@@ -53,7 +53,7 @@ namespace repo_man.xunit.infrastructure
             target.Parse("");
             target.Parse("    * sub-comment here");
             target.Parse("");
-            target.Parse("M       src/Program.cs");
+            target.Parse("M\tsrc/Program.cs");
             target.Parse("");
 
             var result = target.GetGitFileData().Single();
@@ -79,8 +79,8 @@ namespace repo_man.xunit.infrastructure
             target.Parse("");
             target.Parse("    IPS-778 setting the userId regardless of whether the avatar and background are in local storage. (#253)");
             target.Parse("");
-            target.Parse("M       src/Program.cs");
-            target.Parse("M       src/App.cs");
+            target.Parse("M\tsrc/Program.cs");
+            target.Parse("M\tsrc/App.cs");
             target.Parse("");
 
             var result = target.GetGitFileData().ToArray();
@@ -109,7 +109,7 @@ namespace repo_man.xunit.infrastructure
             target.Parse("");
             target.Parse("    IPS-778 setting the userId regardless of whether the avatar and background are in local storage. (#253)");
             target.Parse("");
-            target.Parse("M       src/Program.cs");
+            target.Parse("M\tsrc/Program.cs");
             target.Parse("");
             target.Parse("commit 70ac6ff1ebe1390a5c4b19476e9132efd1ba8f25");
             target.Parse("Author: kerry-patrick-il <146291855+kerry-patrick-il@users.noreply.github.com>");
@@ -117,7 +117,7 @@ namespace repo_man.xunit.infrastructure
             target.Parse("");
             target.Parse("    IPS-897 uncommenting staging and prod domains (#251)");
             target.Parse("");
-            target.Parse("A       src/Program.cs");
+            target.Parse("A\tsrc/Program.cs");
             target.Parse("");
 
             var result = target.GetGitFileData().Single();
@@ -150,7 +150,7 @@ namespace repo_man.xunit.infrastructure
             target.Parse("");
             target.Parse("    IPS-897 uncommenting staging and prod domains (#251)");
             target.Parse("");
-            target.Parse("M       src/Program.cs");
+            target.Parse("M\tsrc/Program.cs");
             target.Parse("");
 
             var result = target.GetGitFileData().Single();
@@ -183,7 +183,7 @@ namespace repo_man.xunit.infrastructure
             target.Parse("");
             target.Parse("    IPS-897 uncommenting staging and prod domains (#251)");
             target.Parse("");
-            target.Parse("M       src/Program.cs");
+            target.Parse("M\tsrc/Program.cs");
             target.Parse("");
             target.Parse("commit e07bccbfccf95197026d5b43c97081341689762a");
             target.Parse("Author: kerry-patrick-il <146291855+kerry-patrick-il@users.noreply.github.com>");
@@ -215,7 +215,7 @@ namespace repo_man.xunit.infrastructure
             target.Parse("");
             target.Parse("    IPS-778 setting the userId regardless of whether the avatar and background are in local storage. (#253)");
             target.Parse("");
-            target.Parse("D       src/Program.cs");
+            target.Parse("D\tsrc/Program.cs");
             target.Parse("");
             target.Parse("commit 70ac6ff1ebe1390a5c4b19476e9132efd1ba8f25");
             target.Parse("Author: kerry-patrick-il <146291855+kerry-patrick-il@users.noreply.github.com>");
@@ -223,7 +223,7 @@ namespace repo_man.xunit.infrastructure
             target.Parse("");
             target.Parse("    IPS-897 uncommenting staging and prod domains (#251)");
             target.Parse("");
-            target.Parse("M       src/Program.cs");
+            target.Parse("M\tsrc/Program.cs");
             target.Parse("");
 
             var result = target.GetGitFileData();
