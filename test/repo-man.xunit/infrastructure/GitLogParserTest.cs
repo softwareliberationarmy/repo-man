@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using Microsoft.Extensions.Configuration;
 using Moq;
+using repo_man.domain.FileSystem;
 using repo_man.infrastructure.FileSys;
 using repo_man.infrastructure.Git;
 
@@ -16,7 +17,7 @@ namespace repo_man.xunit.infrastructure
         [Fact]
         public void CanParseSingleCommitLog()
         {
-            _mocker.GetMock<WindowsFileSize>().Setup(x => x.GetSize("C:\\Temp\\MyRepo\\src\\Program.cs")).Returns(1L);
+            _mocker.GetMock<IFileSystem>().Setup(x => x.GetFileSize("C:\\Temp\\MyRepo\\src\\Program.cs")).Returns(1L);
             var target = _mocker.CreateInstance<GitLogParser>();
             
             target.Parse("commit e026029a7e494fdcc54bc9d04efa40956f0d119a");
@@ -42,7 +43,7 @@ namespace repo_man.xunit.infrastructure
         [Fact]
         public void MultipleCommentLines()
         {
-            _mocker.GetMock<WindowsFileSize>().Setup(x => x.GetSize("C:\\Temp\\MyRepo\\src\\Program.cs")).Returns(1L);
+            _mocker.GetMock<IFileSystem>().Setup(x => x.GetFileSize("C:\\Temp\\MyRepo\\src\\Program.cs")).Returns(1L);
             var target = _mocker.CreateInstance<GitLogParser>();
 
             target.Parse("commit e026029a7e494fdcc54bc9d04efa40956f0d119a");
@@ -70,7 +71,7 @@ namespace repo_man.xunit.infrastructure
         [Fact]
         public void TwoFilesModifiedInOneCommit()
         {
-            _mocker.GetMock<WindowsFileSize>().Setup(x => x.GetSize(It.IsAny<string>())).Returns(1L);
+            _mocker.GetMock<IFileSystem>().Setup(x => x.GetFileSize(It.IsAny<string>())).Returns(1L);
             var target = _mocker.CreateInstance<GitLogParser>();
 
             target.Parse("commit e026029a7e494fdcc54bc9d04efa40956f0d119a");
@@ -100,7 +101,7 @@ namespace repo_man.xunit.infrastructure
         [Fact]
         public void TwoLogEntriesModifyingOneFile()
         {
-            _mocker.GetMock<WindowsFileSize>().Setup(x => x.GetSize("C:\\Temp\\MyRepo\\src\\Program.cs")).Returns(2L);
+            _mocker.GetMock<IFileSystem>().Setup(x => x.GetFileSize("C:\\Temp\\MyRepo\\src\\Program.cs")).Returns(2L);
             var target = _mocker.CreateInstance<GitLogParser>();
 
             target.Parse("commit e026029a7e494fdcc54bc9d04efa40956f0d119a");
@@ -133,7 +134,7 @@ namespace repo_man.xunit.infrastructure
         [Fact]
         public void RenamedFilesAreTrackedCorrectly()
         {
-            _mocker.GetMock<WindowsFileSize>().Setup(x => x.GetSize("C:\\Temp\\MyRepo\\src\\NewProgram.cs")).Returns(2L);
+            _mocker.GetMock<IFileSystem>().Setup(x => x.GetFileSize("C:\\Temp\\MyRepo\\src\\NewProgram.cs")).Returns(2L);
             var target = _mocker.CreateInstance<GitLogParser>();
 
             target.Parse("commit e026029a7e494fdcc54bc9d04efa40956f0d119a");
@@ -166,7 +167,7 @@ namespace repo_man.xunit.infrastructure
         [Fact]
         public void MoreCommplicatedRenamingScenario()
         {
-            _mocker.GetMock<WindowsFileSize>().Setup(x => x.GetSize("C:\\Temp\\MyRepo\\src\\NewProgram.cs")).Returns(2L);
+            _mocker.GetMock<IFileSystem>().Setup(x => x.GetFileSize("C:\\Temp\\MyRepo\\src\\NewProgram.cs")).Returns(2L);
             var target = _mocker.CreateInstance<GitLogParser>();
 
             target.Parse("commit e026029a7e494fdcc54bc9d04efa40956f0d119a");
@@ -206,7 +207,7 @@ namespace repo_man.xunit.infrastructure
         [Fact]
         public void DeletedFilesArentReturned()
         {
-            _mocker.GetMock<WindowsFileSize>().Setup(x => x.GetSize("C:\\Temp\\MyRepo\\src\\Program.cs")).Returns(0L);
+            _mocker.GetMock<IFileSystem>().Setup(x => x.GetFileSize("C:\\Temp\\MyRepo\\src\\Program.cs")).Returns(0L);
             var target = _mocker.CreateInstance<GitLogParser>();
 
             target.Parse("commit e026029a7e494fdcc54bc9d04efa40956f0d119a");

@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using Microsoft.Extensions.Configuration;
+using repo_man.domain.FileSystem;
 using repo_man.domain.Git;
 using repo_man.infrastructure.FileSys;
 
@@ -7,15 +8,15 @@ namespace repo_man.infrastructure.Git;
 
 public class GitLogParser
 {
-    private readonly WindowsFileSize _fileSizer;
+    private readonly IFileSystem _fileSystem;
     private readonly string _repoDirectory;
     private Commit? _currentCommit;
     private readonly List<GitLogFileEntry> _entries = new();
     private readonly Dictionary<string,GitLogFileEntry> _entriesByPath = new();
 
-    public GitLogParser(IConfiguration config, WindowsFileSize fileSizer)
+    public GitLogParser(IConfiguration config, IFileSystem fileSystem)
     {
-        _fileSizer = fileSizer;
+        _fileSystem = fileSystem;
         _repoDirectory = config["repo"] ?? "";
     }
 
@@ -66,7 +67,7 @@ public class GitLogParser
             var entry = new GitLogFileEntry
             {
                 CurrentName = newPath,
-                FileSize = _fileSizer.GetSize(Path.Combine(_repoDirectory!, newPath.Replace("/", "\\")))
+                FileSize = _fileSystem.GetFileSize(Path.Combine(_repoDirectory!, newPath.Replace("/", "\\")))
             };
             _entriesByPath.Add(newPath, entry);
             _entries.Add(entry);    //file isn't in the dictionary yet, so it won't be in the list yet
@@ -103,7 +104,7 @@ public class GitLogParser
             var entry = new GitLogFileEntry
             {
                 CurrentName = path,
-                FileSize = _fileSizer.GetSize(Path.Combine(_repoDirectory!, path.Replace("/", "\\")))
+                FileSize = _fileSystem.GetFileSize(Path.Combine(_repoDirectory!, path.Replace("/", "\\")))
             };
             _entriesByPath.Add(path, entry);
             _entries.Add(entry);
@@ -119,7 +120,7 @@ public class GitLogParser
             var entry = new GitLogFileEntry
             {
                 CurrentName = path,
-                FileSize = _fileSizer.GetSize(Path.Combine(_repoDirectory!, path.Replace("/", "\\")))
+                FileSize = _fileSystem.GetFileSize(Path.Combine(_repoDirectory!, path.Replace("/", "\\")))
             };
             _entriesByPath.Add(path, entry);
             _entries.Add(entry);

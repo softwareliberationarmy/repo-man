@@ -16,7 +16,6 @@ namespace repo_man.infrastructure.DependencyInjection
             services.AddTransient<IFileSystem, WindowsFileSystem>();
             services.AddTransient<ITextGenerationModel, OllamaTextGenerationModel>();
             services.AddTransient<GitLogParser>();
-            services.AddSingleton<WindowsFileSize>();
             return services;
         }
     }
