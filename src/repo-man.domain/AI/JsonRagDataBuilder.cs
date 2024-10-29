@@ -14,7 +14,8 @@ namespace repo_man.domain.AI
                 size = x.Item2,
                 commits = x.Item3.Select(y => new
                 {
-                    hash = y.Hash
+                    hash = y.Hash,
+                    message = y.Message.Split("\r\n")[0]
                 })
             });
             return JsonSerializer.Serialize(files);
