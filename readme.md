@@ -43,7 +43,6 @@ Below are additional configuration keys (case-sensitive) that can be passed at t
 
 ## TODO
 
-- feature: implement ignored file extensions for binary file types (png, jpg, bmp, etc.)
 - feature: change the intensity of the file color based on how recently it was modified if option passed in
 - feature: change the intensity of the file color based on how many commits it has if option passed in
 
