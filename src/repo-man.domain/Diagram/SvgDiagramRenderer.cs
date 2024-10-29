@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using repo_man.domain.Diagram.Legend;
+using repo_man.domain.FileSystem;
 using repo_man.domain.Git;
 
 namespace repo_man.domain.Diagram
@@ -9,10 +10,10 @@ namespace repo_man.domain.Diagram
         private readonly ISvgChartDataWriter _chartWriter;
         private readonly ISvgLegendDataWriter _legendWriter;
         private readonly ISvgComposer _composer;
-        private readonly IFileWriter _fileWriter;
+        private readonly IFileSystem _fileWriter;
         private readonly IConfiguration _config;
 
-        public SvgDiagramRenderer(ISvgChartDataWriter chartWriter, ISvgLegendDataWriter legendWriter, ISvgComposer composer, IFileWriter fileWriter, IConfiguration config)
+        public SvgDiagramRenderer(ISvgChartDataWriter chartWriter, ISvgLegendDataWriter legendWriter, ISvgComposer composer, IFileSystem fileWriter, IConfiguration config)
         {
             _chartWriter = chartWriter;
             _legendWriter = legendWriter;

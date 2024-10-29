@@ -1,8 +1,8 @@
-﻿using repo_man.domain.Diagram;
+﻿using repo_man.domain.FileSystem;
 
 namespace repo_man.infrastructure.FileSys
 {
-    public class WindowsFileWriter: IFileWriter
+    public class WindowsFileSystem: IFileSystem
     {
         public async Task WriteTextToFile(string fileContent, string filePath)
         {
