@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using repo_man.domain.AI;
 using repo_man.domain.CodeQuality;
 using repo_man.domain.Diagram;
 using repo_man.domain.Diagram.FileColorMapper;
@@ -19,6 +20,8 @@ namespace repo_man.domain.DependencyInjection
             services.AddSingleton<IFileColorMapper, ConstantFileColorMapper>();
             services.AddSingleton<ISvgComposer, SvgFrugalComposer>();
             services.AddSingleton<IFileRadiusCalculator, BoundedFileRadiusCalculator>();
+            services.AddSingleton<ICodeQualityAnalyst, LlmCodeQualityAnalyst>();
+            services.AddSingleton<IRagDataBuilder, JsonRagDataBuilder>();
             services.AddSingleton<SvgChartStringBuilder>();
             services.AddSingleton<RepositoryVisualizer>();
             services.AddSingleton<RepositoryReviewer>();

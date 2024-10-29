@@ -6,3 +6,4 @@ var host = Bootstrapper.BuildHost(args);
 var repoMan = host.Services.GetRequiredService<RepoMan>();
 await repoMan.Run();
 
+Console.WriteLine("*** SEASONS DON'T FEAR THE REPO! ***");

@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using repo_man.domain.CodeQuality;
+using repo_man.domain.AI;
 using repo_man.domain.Diagram;
 using repo_man.domain.Git;
 using repo_man.infrastructure.AI;
@@ -14,7 +14,7 @@ namespace repo_man.infrastructure.DependencyInjection
         {
             services.AddTransient<IGitRepoCrawler, ConsoleLogGitRepoCrawler>();
             services.AddTransient<IFileWriter, WindowsFileWriter>();
-            services.AddTransient<ICodeQualityAnalyst, OllamaCodeQualityAnalyst>();
+            services.AddTransient<ITextGenerationModel, OllamaTextGenerationModel>();
             services.AddTransient<GitLogParser>();
             services.AddSingleton<WindowsFileSize>();
             return services;
