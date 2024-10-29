@@ -6,6 +6,7 @@ namespace repo_man.xunit.infrastructure
     public class LibGit2SharpGitRepoCrawlerTest: TestBase
     {
         [Fact]
+        [Obsolete]
         public void ThrowsExceptionWhenRepoPathNotConfigured()
         {
             _mocker.GetMock<IConfiguration>().Setup(c => c["repo"]).Returns((string?)null);
