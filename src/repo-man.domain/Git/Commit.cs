@@ -18,5 +18,5 @@ public class Commit
     public string Hash { get; set; }
     public DateTimeOffset? CommitDate { get; set; }
     public string? Author { get; set; }
-    public string? Message { get; set; }
+    public string Message { get; set; } = "";
 }
