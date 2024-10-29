@@ -42,9 +42,7 @@ Below are additional configuration values that can be passed at the command line
 
 ## TODO
 
-- feature: implement ignored file extensions for binary file types (png, jpg,
-  bmp, etc.)
-- performance: figure out how to crawl the repo for commits much faster than we're doing today (libgit2sharp crawls so slowly that we had to shut off commit gathering)
+- feature: implement ignored file extensions for binary file types (png, jpg, bmp, etc.)
 - feature: change the intensity of the file color based on how recently it was modified if option passed in
 - feature: change the intensity of the file color based on how many commits it has if option passed in
 
