@@ -23,6 +23,7 @@ namespace repo_man.infrastructure.Git
             var repoDir = _config["repo"]!;
             var gitLogCommand = "git log --name-status";
 
+            _logger.LogInformation($"Calling {gitLogCommand} on repo at {repoDir}");
             var processInfo = new ProcessStartInfo("cmd.exe", $"/c cd {repoDir} && {gitLogCommand}")
             {
                 RedirectStandardOutput = true,
@@ -37,7 +38,6 @@ namespace repo_man.infrastructure.Git
                     string? result = reader.ReadLine();
                     while (result != null)
                     {
-                        _logger.LogInformation(result);
                         _parser.Parse(result);
                         result = reader.ReadLine();
                     }
