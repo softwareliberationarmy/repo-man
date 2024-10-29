@@ -10,7 +10,7 @@ namespace repo_man.xunit.domain.Git
         [Fact]
         public void ReturnsAnEmptyTreeIfNoFiles()
         {
-            _mocker.GetMock<IGitRepoCrawler>().Setup(x => x.GitThemFiles(false))
+            _mocker.GetMock<IGitRepoCrawler>().Setup(x => x.GitThemFiles())
                 .Returns(Enumerable.Empty<(string, long, Commit[])>());
 
             var target = _mocker.CreateInstance<GitRepositoryTreeExtracter>();
@@ -25,7 +25,7 @@ namespace repo_man.xunit.domain.Git
         public void AllGitFilesReturnedAreStoredInTree()
         {
             var expectedLengths = _fixture.CreateMany<long>(2).ToArray();
-            _mocker.GetMock<IGitRepoCrawler>().Setup(x => x.GitThemFiles(false))
+            _mocker.GetMock<IGitRepoCrawler>().Setup(x => x.GitThemFiles())
                 .Returns(new[]
                 {
                     ("readme.md", expectedLengths[0], Array.Empty<Commit>()),
@@ -45,7 +45,7 @@ namespace repo_man.xunit.domain.Git
         [Fact]
         public void LogsInfoMessagesForEachFile()
         {
-            _mocker.GetMock<IGitRepoCrawler>().Setup(x => x.GitThemFiles(false))
+            _mocker.GetMock<IGitRepoCrawler>().Setup(x => x.GitThemFiles())
                 .Returns(new[]
                 {
                     ("readme.md", 200L, Array.Empty<Commit>()),

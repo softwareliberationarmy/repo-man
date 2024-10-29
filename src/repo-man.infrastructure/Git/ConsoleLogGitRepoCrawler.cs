@@ -18,7 +18,7 @@ namespace repo_man.infrastructure.Git
             _parser = parser;
         }
 
-        public IEnumerable<(string, long, Commit[])> GitThemFiles(bool includeCommits = false)
+        public IEnumerable<(string, long, Commit[])> GitThemFiles()
         {
             var repoDir = _config["repo"]!;
             var gitLogCommand = "git log --name-status";
