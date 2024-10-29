@@ -2,7 +2,7 @@
   "profiles": {
     "repo-man.console": {
       "commandName": "Project",
-      "commandLineArgs": "diagram --repo=../../../../../"
+      "commandLineArgs": "review --repo=../../../../../"
     }
   }
 }
