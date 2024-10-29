@@ -7,6 +7,7 @@ using Tree = LibGit2Sharp.Tree;
 
 namespace repo_man.infrastructure.Git
 {
+    [Obsolete("Replaced by more performant ConsoleLogGitRepoCrawler")]
     public class LibGit2SharpGitRepoCrawler : IGitRepoCrawler
     {
         private readonly ILogger<LibGit2SharpGitRepoCrawler> _logger;
