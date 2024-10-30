@@ -69,7 +69,7 @@ namespace repo_man.xunit.domain.Diagram.Legend
         {
             foreach (var mapping in mappings)
             {
-                _mocker.GetMock<IFileColorMapper>().Setup(x => x.Map(mapping.Item1)).Returns(mapping.Item2);
+                _mocker.GetMock<IFileColorMapper>().Setup(x => x.Map(mapping.Item1, 50)).Returns(mapping.Item2);
             }
         }
 

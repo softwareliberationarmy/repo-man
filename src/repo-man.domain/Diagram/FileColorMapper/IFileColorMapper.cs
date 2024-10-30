@@ -2,5 +2,5 @@
 
 public interface IFileColorMapper
 {
-    string Map(string fileExtension);
+    string Map(string fileExtension, byte intensity = 100);
 }

@@ -2,6 +2,7 @@
 using repo_man.domain.AI;
 using repo_man.domain.CodeQuality;
 using repo_man.domain.Diagram;
+using repo_man.domain.Diagram.Calculators;
 using repo_man.domain.Diagram.FileColorMapper;
 using repo_man.domain.Diagram.FileRadiusCalculator;
 using repo_man.domain.Diagram.Legend;
@@ -31,6 +32,7 @@ namespace repo_man.domain.DependencyInjection
             services.AddSingleton<ICodeQualityAnalyst, LlmCodeQualityAnalyst>();
             services.AddSingleton<IRagDataBuilder, JsonRagDataBuilder>();
             services.AddSingleton<RepositoryReviewer>();
+            services.AddTransient<BoundedIntCalculator>();
 
             //the cheese stands alone
             services.AddSingleton<RepoMan>();   

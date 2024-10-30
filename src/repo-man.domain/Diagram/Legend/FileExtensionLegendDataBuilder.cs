@@ -25,7 +25,7 @@ public class FileExtensionLegendDataBuilder
         var newExtensions = new Dictionary<string, string>();
         foreach (var extension in extensions)
         {
-            newExtensions.Add(extension, _colorMapper.Map(extension));
+            newExtensions.Add(extension, _colorMapper.Map(extension, 50));
         }
 
         return newExtensions;

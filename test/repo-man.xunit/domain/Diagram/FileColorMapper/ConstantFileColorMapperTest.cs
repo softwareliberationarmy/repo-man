@@ -74,5 +74,15 @@ namespace repo_man.xunit.domain.Diagram.FileColorMapper
                 target.Map(unknownExtension).Should().Be(expectedColor);
             }
         }
+
+        [Theory]
+        [InlineData(".md", 50, "#FFFFFF80")]
+        [InlineData(".md", 0, "#FFFFFF00")]
+        [InlineData(".md", 100, "#FFFFFF")]
+        public void Returns_Partially_Transparent_Color_For_Files_With_Less_Intensity(string extension, byte intensity, string expected)
+        {
+            var target = _mocker.CreateInstance<ConstantFileColorMapper>();
+            target.Map(extension, intensity).Should().Be(expected);
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using Microsoft.Extensions.Logging;
+using repo_man.domain.Diagram.Calculators;
 using repo_man.domain.Diagram.FileRadiusCalculator;
 using repo_man.domain.Git;
 
@@ -14,16 +15,19 @@ public class SvgBoxChartDataWriter : ISvgChartDataWriter
     private readonly SvgChartStringBuilder _stringBuilder;
     private readonly ILogger<SvgBoxChartDataWriter> _logger;
     private readonly IFileRadiusCalculator _fileRadiusCalculator;
+    private readonly BoundedIntCalculator _colorIntensityCalculator; 
 
-    public SvgBoxChartDataWriter(SvgChartStringBuilder stringBuilder, ILogger<SvgBoxChartDataWriter> logger, IFileRadiusCalculator fileRadiusCalculator)
+    public SvgBoxChartDataWriter(SvgChartStringBuilder stringBuilder, ILogger<SvgBoxChartDataWriter> logger, IFileRadiusCalculator fileRadiusCalculator, BoundedIntCalculator colorIntensityCalculator)
     {
         _stringBuilder = stringBuilder;
         _logger = logger;
         _fileRadiusCalculator = fileRadiusCalculator;
+        _colorIntensityCalculator = colorIntensityCalculator;
     }
 
     public ChartData WriteChartData(GitTree tree)
     {
+        SetColorIntensityBounds(tree);
         _logger.LogInformation("Writing top-level files");
         const int topLevelFilesBottomMargin = 10;
         var startAt = new Point(LeftMargin, TopMargin);
@@ -33,6 +37,19 @@ public class SvgBoxChartDataWriter : ISvgChartDataWriter
         var folderMaxPoint = WriteFolderFiles(tree.Folders, newMaxPoint with { X = LeftMargin }, startAt.X, tree);
 
         return new ChartData { Data = _stringBuilder.ToSvgString(), Size = folderMaxPoint with { X = Math.Max(folderMaxPoint.X, newMaxPoint.X) } };
+    }
+
+    private void SetColorIntensityBounds(GitTree tree)
+    {
+        if (tree.GetMinCommitCount() == 0 && tree.GetMaxCommitCount() == 0)
+        {
+            //no commits at all, so let all circles have the full intensity
+            _colorIntensityCalculator.SetBounds(0,0,100,100);
+        }
+        else
+        {
+            _colorIntensityCalculator.SetBounds(tree.GetMinCommitCount(), tree.GetMaxCommitCount(), 20, 100);
+        }
     }
 
     /// <summary>
@@ -129,8 +146,9 @@ public class SvgBoxChartDataWriter : ISvgChartDataWriter
             var radius = _fileRadiusCalculator.CalculateFileRadius(file, gitTree);
             var y = startingPoint.Y + radius;
             var x = startingPoint.X + radius;
+            var intensity = _colorIntensityCalculator.Calculate(file.Commits.Count);
 
-            _stringBuilder.AddFileCircle(x, y, radius, file.Name);
+            _stringBuilder.AddFileCircle(x, y, radius, file.Name, intensity);
 
             maxY = Math.Max(maxY, y + radius);
             startingPoint = startingPoint with { X = x + radius + InterFileMargin };

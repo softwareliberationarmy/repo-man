@@ -4,6 +4,8 @@ public class GitTree : GitFolder
 {
     private long _smallestFile; 
     private long _largestFile;
+    private int _minCommitCount;
+    private int _maxCommitCount;
 
     public GitTree() : base("")
     {
@@ -20,6 +22,17 @@ public class GitTree : GitFolder
         {
             _largestFile = fileSize;
         }
+
+        if (_minCommitCount == 0 || commits.Length < _minCommitCount)
+        {
+            _minCommitCount = commits.Length;
+        }
+
+        if (_maxCommitCount == 0 || commits.Length > _maxCommitCount)
+        {
+            _maxCommitCount = commits.Length;
+        }
+
         AddFile(filePath.Split('/'), fileSize, commits);
     }
 
@@ -31,5 +44,15 @@ public class GitTree : GitFolder
     public long GetMaxFileSize()
     {
         return _largestFile;
+    }
+
+    public int GetMinCommitCount()
+    {
+        return _minCommitCount;
+    }
+
+    public int GetMaxCommitCount()
+    {
+        return _maxCommitCount;
     }
 }

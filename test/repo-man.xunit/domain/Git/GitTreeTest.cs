@@ -75,5 +75,27 @@ namespace repo_man.xunit.domain.Git
 
             target.GetMaxFileSize().Should().Be(expectedSize);
         }
+
+        [Fact]
+        public void RemembersTheSmallestCommitCount()
+        {
+            var target = new GitTree();
+            target.AddFile("Program.cs", 500, new Commit[]{ new Commit("A")});
+            target.AddFile("src/ImportantFile.cs", 500, new Commit[] { new Commit("A"), new Commit("B") });
+            target.AddFile("test/Project.Test/MyTestFile.cs", 500, new Commit[] { new Commit("A"),  new Commit("B") });
+
+            target.GetMinCommitCount().Should().Be(1);
+        }
+
+        [Fact]
+        public void RemembersTheLargestCommitCount()
+        {
+            var target = new GitTree();
+            target.AddFile("Program.cs", 500, new Commit[] { new Commit("A") });
+            target.AddFile("src/ImportantFile.cs", 500, new Commit[] { new Commit("A"), new Commit("B") });
+            target.AddFile("test/Project.Test/MyTestFile.cs", 500, new Commit[] { new Commit("A"), new Commit("B") });
+
+            target.GetMaxCommitCount().Should().Be(2);
+        }
     }
 }

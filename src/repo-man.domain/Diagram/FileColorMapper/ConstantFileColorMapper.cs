@@ -1,7 +1,12 @@
-﻿namespace repo_man.domain.Diagram.FileColorMapper;
+﻿using repo_man.domain.Diagram.Calculators;
+
+namespace repo_man.domain.Diagram.FileColorMapper;
 
 public class ConstantFileColorMapper : IFileColorMapper
 {
+    private readonly BoundedIntCalculator _boundedIntCalculator;
+
+
     //TODO: curate this better
 
     private string[] _extraColors = new[]
@@ -64,12 +69,29 @@ public class ConstantFileColorMapper : IFileColorMapper
         {".gitattributes", "#F54D27"}   //git orange
     };
 
-    public string Map(string fileExtension)
+    public ConstantFileColorMapper(BoundedIntCalculator boundedIntCalculator)
+    {
+        _boundedIntCalculator = boundedIntCalculator;
+        _boundedIntCalculator.SetBounds(0, 100, 0, 255);
+    }
+
+    public string Map(string fileExtension, byte intensity = 100)
     {
         if (!_wellKnownFileTypes.ContainsKey(fileExtension.ToLowerInvariant()))
         {
-            _wellKnownFileTypes.Add(fileExtension.ToLowerInvariant(), _extraColors[Random.Shared.Next(1, _extraColors.Length)]);
+            _wellKnownFileTypes.Add(fileExtension.ToLowerInvariant(),
+                _extraColors[Random.Shared.Next(1, _extraColors.Length)]);
         }
-        return _wellKnownFileTypes[fileExtension.ToLowerInvariant()];
+
+        var baseResult = _wellKnownFileTypes[fileExtension.ToLowerInvariant()];
+        if (intensity == 100)
+        {
+            return baseResult;
+        }
+        else
+        {
+            var transparency = _boundedIntCalculator.Calculate(intensity);
+            return $"{baseResult}{transparency:X2}";
+        }
     }
 }

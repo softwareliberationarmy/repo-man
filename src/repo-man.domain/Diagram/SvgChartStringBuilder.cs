@@ -24,10 +24,10 @@ public class SvgChartStringBuilder
         _builder.Append("</g>");
     }
 
-    public void AddFileCircle(long x, long y, long radius, string fileName)
+    public void AddFileCircle(long x, long y, long radius, string fileName, int intensity)
     {
         var fileExtension = fileName.GetFileExtension();
-        var color = _colorMapper.Map(fileExtension);
+        var color = _colorMapper.Map(fileExtension, (byte)intensity);
 
         _builder.Append($"<g style=\"fill:{color}\" transform=\"translate({x},{y})\">");
         _builder.Append($"<title>{fileName}</title>");
