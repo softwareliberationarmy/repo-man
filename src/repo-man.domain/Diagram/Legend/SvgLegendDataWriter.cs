@@ -1,7 +1,5 @@
 ﻿using System.Drawing;
 using System.Text;
-using repo_man.domain.Diagram.FileColorMapper;
-using repo_man.domain.Git;
 
 namespace repo_man.domain.Diagram.Legend;
 
@@ -10,7 +8,7 @@ public class SvgLegendDataWriter : ISvgLegendDataWriter
     public LegendData WriteLegendData(Dictionary<string, string> extensions, Point startingPoint)
     {
         var builder = new StringBuilder();
-        builder.Append($"<g transform=\"translate({startingPoint.X}, {startingPoint.Y})\">");
+        builder.Append($"<g transform=\"translate({startingPoint.X + 20}, {startingPoint.Y - (15 * extensions.Count)})\">");
 
         var y = 0;
         foreach (var extension in extensions)

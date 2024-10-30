@@ -13,7 +13,7 @@ namespace repo_man.xunit.domain.Diagram.Legend
             var tree = GivenThisFileTree(new Tuple<string, long>("src/Program.cs", 1000L));
             var data = WhenIWriteLegendData(tree, new Point(100, 100));
 
-            data.Data.Should().Be("<g transform=\"translate(100, 100)\">" +
+            data.Data.Should().Be("<g transform=\"translate(120, 85)\">" +
                                   "<g transform=\"translate(0, 0)\">" +
                                   $"<circle r=\"5\" fill=\"red\"></circle>" +
                                   $"<text x=\"10\" style=\"font-size:14px;font-weight:300\" dominant-baseline=\"middle\">.cs</text>" +
@@ -30,7 +30,7 @@ namespace repo_man.xunit.domain.Diagram.Legend
                 new Tuple<string, long>("ReadMe.md", 200L));
             var data = WhenIWriteLegendData(tree, new Point(600, 400));
 
-            data.Data.Should().Be($"<g transform=\"translate(600, 400)\">" +
+            data.Data.Should().Be($"<g transform=\"translate(620, 370)\">" +
                                   "<g transform=\"translate(0, 0)\">" +
                                   $"<circle r=\"5\" fill=\"red\"></circle>" +
                                   $"<text x=\"10\" style=\"font-size:14px;font-weight:300\" dominant-baseline=\"middle\">.cs</text>" +
