@@ -7,19 +7,10 @@ namespace repo_man.domain.Diagram.Legend;
 
 public class SvgLegendDataWriter : ISvgLegendDataWriter
 {
-    private readonly FileExtensionLegendDataBuilder _fileExtensionLegendDataBuilder;
-
-    public SvgLegendDataWriter(FileExtensionLegendDataBuilder builder)
-    {
-        _fileExtensionLegendDataBuilder = builder;
-    }
-
-    public LegendData WriteLegendData(GitTree tree, Point startingPoint)
+    public LegendData WriteLegendData(Dictionary<string, string> extensions, Point startingPoint)
     {
         var builder = new StringBuilder();
         builder.Append($"<g transform=\"translate({startingPoint.X}, {startingPoint.Y})\">");
-
-        var extensions = _fileExtensionLegendDataBuilder.BuildLegendOptions(tree);
 
         var y = 0;
         foreach (var extension in extensions)

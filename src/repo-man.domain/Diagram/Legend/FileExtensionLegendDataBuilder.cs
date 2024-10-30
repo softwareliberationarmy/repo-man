@@ -12,7 +12,7 @@ public class FileExtensionLegendDataBuilder
         _colorMapper = colorMapper;
     }
 
-    public Dictionary<string, string> BuildLegendOptions(GitTree tree)
+    public virtual Dictionary<string, string> BuildLegendOptions(GitTree tree)
     {
         var extensions = new SortedSet<string>();
         foreach (var file in tree.Files)

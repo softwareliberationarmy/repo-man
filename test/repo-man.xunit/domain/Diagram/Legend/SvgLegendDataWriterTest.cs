@@ -75,8 +75,11 @@ namespace repo_man.xunit.domain.Diagram.Legend
 
         private LegendData WhenIWriteLegendData(GitTree tree, Point startingPoint)
         {
+            var builder = _mocker.CreateInstance<FileExtensionLegendDataBuilder>();
+            var legendDictionary = builder.BuildLegendOptions(tree);
+
             var target = _mocker.CreateInstance<SvgLegendDataWriter>();
-            var data = target.WriteLegendData(tree, startingPoint);
+            var data = target.WriteLegendData(legendDictionary, startingPoint);
             return data;
         }
     }
