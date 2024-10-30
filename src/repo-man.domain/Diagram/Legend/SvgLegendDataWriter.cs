@@ -7,11 +7,11 @@ namespace repo_man.domain.Diagram.Legend;
 
 public class SvgLegendDataWriter : ISvgLegendDataWriter
 {
-    private readonly IFileColorMapper _colorMapper;
+    private readonly FileExtensionLegendDataBuilder _fileExtensionLegendDataBuilder;
 
-    public SvgLegendDataWriter(IFileColorMapper colorMapper)
+    public SvgLegendDataWriter(FileExtensionLegendDataBuilder builder)
     {
-        _colorMapper = colorMapper;
+        _fileExtensionLegendDataBuilder = builder;
     }
 
     public LegendData WriteLegendData(GitTree tree, Point startingPoint)
@@ -19,21 +19,15 @@ public class SvgLegendDataWriter : ISvgLegendDataWriter
         var builder = new StringBuilder();
         builder.Append($"<g transform=\"translate({startingPoint.X}, {startingPoint.Y})\">");
 
-        var extensions = new SortedSet<string>();
-        foreach (var file in tree.Files)
-        {
-            CountFileExtension(file, extensions);
-        }
-
-        InspectFolders(tree.Folders, extensions);
+        var extensions = _fileExtensionLegendDataBuilder.BuildLegendOptions(tree);
 
         var y = 0;
         foreach (var extension in extensions)
         {
             builder.Append($"<g transform=\"translate(0, {y})\">");
-            builder.Append($"<circle r=\"5\" fill=\"{_colorMapper.Map(extension)}\"></circle>");
+            builder.Append($"<circle r=\"5\" fill=\"{extension.Value}\"></circle>");
             builder.Append(
-                $"<text x=\"10\" style=\"font-size:14px;font-weight:300\" dominant-baseline=\"middle\">{extension}</text>");
+                $"<text x=\"10\" style=\"font-size:14px;font-weight:300\" dominant-baseline=\"middle\">{extension.Key}</text>");
             builder.Append("</g>");
             y += 15;
         }
@@ -45,22 +39,4 @@ public class SvgLegendDataWriter : ISvgLegendDataWriter
             Size = new Point(100, y)
         };
     }
-
-    private static void InspectFolders(IReadOnlyCollection<GitFolder> readOnlyCollection, SortedSet<string> extensions)
-    {
-        foreach (var folder in readOnlyCollection)
-        {
-            foreach (var file in folder.Files)
-            {
-                CountFileExtension(file, extensions);
-            }
-            InspectFolders(folder.Folders, extensions);
-        }
-    }
-
-    private static void CountFileExtension(GitFile file, SortedSet<string> extensions)
-    {
-        extensions.Add(file.Name.GetFileExtension());
-    }
-
 }

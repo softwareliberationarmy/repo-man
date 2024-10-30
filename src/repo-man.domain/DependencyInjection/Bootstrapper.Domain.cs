@@ -13,18 +13,26 @@ namespace repo_man.domain.DependencyInjection
     {
         public static IServiceCollection AddDomainServices(this IServiceCollection services)
         {
+            //git
             services.AddTransient<ITreeExtracter, GitRepositoryTreeExtracter>();
+
+            //diagrams and svg
             services.AddSingleton<IDiagramRenderer, SvgDiagramRenderer>();
             services.AddSingleton<ISvgChartDataWriter, SvgBoxChartDataWriter>();
             services.AddSingleton<ISvgLegendDataWriter, SvgLegendDataWriter>();
             services.AddSingleton<IFileColorMapper, ConstantFileColorMapper>();
             services.AddSingleton<ISvgComposer, SvgFrugalComposer>();
             services.AddSingleton<IFileRadiusCalculator, BoundedFileRadiusCalculator>();
-            services.AddSingleton<ICodeQualityAnalyst, LlmCodeQualityAnalyst>();
-            services.AddSingleton<IRagDataBuilder, JsonRagDataBuilder>();
             services.AddSingleton<SvgChartStringBuilder>();
             services.AddSingleton<RepositoryVisualizer>();
+            services.AddSingleton<FileExtensionLegendDataBuilder>();
+
+            //code quality and ai
+            services.AddSingleton<ICodeQualityAnalyst, LlmCodeQualityAnalyst>();
+            services.AddSingleton<IRagDataBuilder, JsonRagDataBuilder>();
             services.AddSingleton<RepositoryReviewer>();
+
+            //the cheese stands alone
             services.AddSingleton<RepoMan>();   
 
             return services;
