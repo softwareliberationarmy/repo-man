@@ -8,7 +8,7 @@ public class BoundedIntCalculator
     private int? _maxOutput;
     public bool IsInitialized { get; set; }
 
-    public int Calculate(long input)
+    public virtual int Calculate(long input)
     {
         if (_minInput == null || _maxInput == null || _minOutput == null || _maxOutput == null)
         {
@@ -30,7 +30,7 @@ public class BoundedIntCalculator
         return _minOutput.Value + increment;
     }
 
-    public void SetBounds(long minInput, long maxInput, int minOutput, int maxOutput)
+    public virtual void SetBounds(long minInput, long maxInput, int minOutput, int maxOutput)
     {
         _minInput = minInput;
         _maxInput = maxInput;

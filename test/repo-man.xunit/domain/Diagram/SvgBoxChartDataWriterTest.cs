@@ -1,7 +1,9 @@
 ﻿using AutoFixture;
 using System.Drawing;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
+using repo_man.domain.Diagram.Calculators;
 using repo_man.xunit._extensions;
 using repo_man.domain.Diagram.FileRadiusCalculator;
 using repo_man.domain.Diagram.FileColorMapper;
@@ -61,6 +63,25 @@ namespace repo_man.xunit.domain.Diagram
             result.Data.Should().Be(
                 AFilledCircle("#001122", new Point(30,30), 20, "Program.cs") +
                 AFilledCircle("#001122", new Point(65,20), 10, "App.cs"));
+        }
+
+        [Fact]
+        public void Two_TopLevel_Files_Different_RiskIndexes()
+        {
+            _mocker.GetMock<IConfiguration>().Setup(c => c["type"]).Returns("risk");
+
+            GivenTheseColorMappings(new Tuple<string, string>(".cs", "#001122"));
+            var tree = GivenThisFileTree(
+                new Tuple<string, long>("Program.cs", 100),
+                new Tuple<string, long>("App.cs", 50));
+
+            tree.Files.First(x => x.Name == "Program.cs").RiskIndex = 50;
+            tree.Files.First(x => x.Name == "App.cs").RiskIndex = 100;
+
+            var result = WhenICreateChartData(tree);
+
+            _mocker.GetMock<IFileColorMapper>().Verify(x => x.Map(".cs", 60), Times.Once());
+            _mocker.GetMock<IFileColorMapper>().Verify(x => x.Map(".cs", 100), Times.Once());
         }
 
         [Fact]
@@ -333,6 +354,7 @@ namespace repo_man.xunit.domain.Diagram
         #region helper methods
         private ChartData WhenICreateChartData(GitTree tree)
         {
+            _mocker.Use(new BoundedIntCalculator());
             _mocker.Use<IFileRadiusCalculator>(new UnboundedFileRadiusCalculator());
             var target = _mocker.CreateInstance<SvgBoxChartDataWriter>();
             var result = target.WriteChartData(tree);
@@ -352,6 +374,7 @@ namespace repo_man.xunit.domain.Diagram
 
         private void GivenTheseColorMappings(params Tuple<string, string>[] mappings)
         {
+            _mocker.Use(new BoundedIntCalculator());
             foreach (var mapping in mappings)
             {
                 _mocker.GetMock<IFileColorMapper>().Setup(x => x.Map(mapping.Item1,100)).Returns(mapping.Item2);

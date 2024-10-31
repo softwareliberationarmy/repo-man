@@ -6,7 +6,6 @@ public class ConstantFileColorMapper : IFileColorMapper
 {
     private readonly BoundedIntCalculator _boundedIntCalculator;
 
-
     //TODO: curate this better
 
     private string[] _extraColors = new[]

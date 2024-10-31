@@ -1,4 +1,5 @@
-﻿using repo_man.domain.Diagram.FileColorMapper;
+﻿using repo_man.domain.Diagram.Calculators;
+using repo_man.domain.Diagram.FileColorMapper;
 
 namespace repo_man.xunit.domain.Diagram.FileColorMapper
 {
@@ -81,6 +82,7 @@ namespace repo_man.xunit.domain.Diagram.FileColorMapper
         [InlineData(".md", 100, "#FFFFFF")]
         public void Returns_Partially_Transparent_Color_For_Files_With_Less_Intensity(string extension, byte intensity, string expected)
         {
+            _mocker.Use(new BoundedIntCalculator());
             var target = _mocker.CreateInstance<ConstantFileColorMapper>();
             target.Map(extension, intensity).Should().Be(expected);
         }

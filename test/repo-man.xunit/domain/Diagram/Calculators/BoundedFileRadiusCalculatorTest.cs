@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using repo_man.domain.Diagram.Calculators;
 using repo_man.domain.Diagram.FileRadiusCalculator;
 
 namespace repo_man.xunit.domain.Diagram.FileRadiusCalculator
@@ -119,6 +120,7 @@ namespace repo_man.xunit.domain.Diagram.FileRadiusCalculator
 
         private int WhenICalculateTheFileRadius(GitFile gitFile, GitTree tree)
         {
+            _mocker.Use(new BoundedIntCalculator());
             IFileRadiusCalculator target = _mocker.CreateInstance<BoundedFileRadiusCalculator>();
             var radius = target.CalculateFileRadius(gitFile, tree);
             return radius;

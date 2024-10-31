@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using repo_man.domain.Diagram.Calculators;
 using repo_man.domain.Diagram.FileRadiusCalculator;
@@ -12,17 +13,22 @@ public class SvgBoxChartDataWriter : ISvgChartDataWriter
     private const int TopMargin = 10;
     private const int LeftMargin = 10;
 
+    private bool _isRiskChart;
+
     private readonly SvgChartStringBuilder _stringBuilder;
     private readonly ILogger<SvgBoxChartDataWriter> _logger;
     private readonly IFileRadiusCalculator _fileRadiusCalculator;
-    private readonly BoundedIntCalculator _colorIntensityCalculator; 
+    private readonly BoundedIntCalculator _colorIntensityCalculator;
 
-    public SvgBoxChartDataWriter(SvgChartStringBuilder stringBuilder, ILogger<SvgBoxChartDataWriter> logger, IFileRadiusCalculator fileRadiusCalculator, BoundedIntCalculator colorIntensityCalculator)
+    public SvgBoxChartDataWriter(SvgChartStringBuilder stringBuilder, ILogger<SvgBoxChartDataWriter> logger,
+        IFileRadiusCalculator fileRadiusCalculator, BoundedIntCalculator colorIntensityCalculator, IConfiguration config)
     {
         _stringBuilder = stringBuilder;
         _logger = logger;
         _fileRadiusCalculator = fileRadiusCalculator;
         _colorIntensityCalculator = colorIntensityCalculator;
+
+        _isRiskChart = config["type"] == "risk";
     }
 
     public ChartData WriteChartData(GitTree tree)
@@ -41,14 +47,22 @@ public class SvgBoxChartDataWriter : ISvgChartDataWriter
 
     private void SetColorIntensityBounds(GitTree tree)
     {
-        if (tree.GetMinCommitCount() == 0 && tree.GetMaxCommitCount() == 0)
+        if (_isRiskChart)
         {
-            //no commits at all, so let all circles have the full intensity
-            _colorIntensityCalculator.SetBounds(0,0,100,100);
+            _colorIntensityCalculator.SetBounds(0, 100, 20, 100);
         }
         else
         {
-            _colorIntensityCalculator.SetBounds(tree.GetMinCommitCount(), tree.GetMaxCommitCount(), 20, 100);
+            if (tree.GetMinCommitCount() == 0 && tree.GetMaxCommitCount() == 0)
+            {
+                //no commits at all, so let all circles have the full intensity
+                _colorIntensityCalculator.SetBounds(0, 0, 100, 100);
+            }
+            else
+            {
+                _colorIntensityCalculator.SetBounds(tree.GetMinCommitCount(), tree.GetMaxCommitCount(), 20, 100);
+            }
+
         }
     }
 
@@ -81,7 +95,7 @@ public class SvgBoxChartDataWriter : ISvgChartDataWriter
         {
             _logger.LogInformation("{folderName}/", folder.Name);
 
-            var folderFilesStartingPoint = 
+            var folderFilesStartingPoint =
                 new Point(folderStartAt.X + folderPadding, folderStartAt.Y + folderPadding);
             var newMaxPoint = WriteFiles(folder.Files, folderFilesStartingPoint, maxY, folderPadding, gitTree);
             if (folderFilesStartingPoint != newMaxPoint)
@@ -146,7 +160,8 @@ public class SvgBoxChartDataWriter : ISvgChartDataWriter
             var radius = _fileRadiusCalculator.CalculateFileRadius(file, gitTree);
             var y = startingPoint.Y + radius;
             var x = startingPoint.X + radius;
-            var intensity = _colorIntensityCalculator.Calculate(file.Commits.Count);
+
+            var intensity = _colorIntensityCalculator.Calculate(_isRiskChart ? file.RiskIndex : file.Commits.Count);
 
             _stringBuilder.AddFileCircle(x, y, radius, file.Name, intensity);
 
