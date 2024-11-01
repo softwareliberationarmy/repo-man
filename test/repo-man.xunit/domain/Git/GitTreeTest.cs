@@ -53,6 +53,14 @@ namespace repo_man.xunit.domain.Git
         }
 
         [Fact]
+        public void StoresTheFullFilePath()
+        {
+            var target = new GitTree();
+            target.AddFile("src/main/file1.cs", 1000, []);
+            target.Folders.Single().Folders.Single().Files.Single().FullPath.Should().Be("src/main/file1.cs");
+        }
+
+        [Fact]
         public void RemembersTheSmallestFileSize()
         {
             var expectedSize = 1024;
@@ -96,6 +104,17 @@ namespace repo_man.xunit.domain.Git
             target.AddFile("test/Project.Test/MyTestFile.cs", 500, new Commit[] { new Commit("A"), new Commit("B") });
 
             target.GetMaxCommitCount().Should().Be(2);
+        }
+
+        [Fact]
+        public void GetAllFilesDoesTheRecursingForYou()
+        {
+            var tree = new GitTree();
+            tree.AddFile("src/main/file1.txt", 10, []);
+            tree.AddFile("src/main/sub/file1.txt", 10, []);
+            tree.AddFile("src/main/sub/sub/sub/file1.txt", 10, []);
+
+            tree.GetAllFiles().Count().Should().Be(3);
         }
     }
 }

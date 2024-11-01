@@ -36,10 +36,10 @@ namespace repo_man.xunit.domain.Git
             var result = target.GetFileTree();
 
             result.Should().NotBeNull();
-            result.Files.Single().Should().BeEquivalentTo(new GitFile("readme.md", expectedLengths[0], Array.Empty<Commit>()));
+            result.Files.Single().Should().BeEquivalentTo(new GitFile("readme.md", expectedLengths[0], Array.Empty<Commit>(), "readme.md"));
             result.Folders.Single().Name.Should().Be("kung");
             result.Folders.Single().Files.Single().Should()
-                .BeEquivalentTo(new GitFile("fu.json", expectedLengths[1], Array.Empty<Commit>()));
+                .BeEquivalentTo(new GitFile("fu.json", expectedLengths[1], Array.Empty<Commit>(), "kung/fu.json"));
         }
 
         [Fact]

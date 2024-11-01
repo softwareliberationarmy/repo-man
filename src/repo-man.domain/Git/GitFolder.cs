@@ -15,22 +15,22 @@ public class GitFolder
     private readonly List<GitFolder> _folders = new List<GitFolder>();
     public IReadOnlyCollection<GitFolder> Folders => _folders.AsReadOnly();
 
-    public void AddFile(string[] segments, long fileSize, Commit[] commits)
+    public void AddFile(string[] segments, long fileSize, Commit[] commits, string fullPath)
     {
         if (segments.Length == 1)
         {
-            _files.Add(new GitFile(segments[0], fileSize, commits.AsReadOnly()));
+            _files.Add(new GitFile(segments[0], fileSize, commits.AsReadOnly(), fullPath));
         }
         else if (segments.Length > 1)
         {
-            AddToFolders(segments, fileSize, commits);
+            AddToFolders(segments, fileSize, commits, fullPath);
         }
     }
 
-    private void AddToFolders(string[] segments, long fileSize, Commit[] commits)
+    private void AddToFolders(string[] segments, long fileSize, Commit[] commits, string fullPath)
     {
         var gitFolder = GetGitFolder(segments[0]);
-        gitFolder.AddFile(segments.Skip(1).ToArray(), fileSize, commits);
+        gitFolder.AddFile(segments.Skip(1).ToArray(), fileSize, commits, fullPath);
     }
 
     private GitFolder GetGitFolder(string folderName)

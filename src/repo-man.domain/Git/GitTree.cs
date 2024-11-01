@@ -33,7 +33,7 @@ public class GitTree : GitFolder
             _maxCommitCount = commits.Length;
         }
 
-        AddFile(filePath.Split('/'), fileSize, commits);
+        AddFile(filePath.Split('/'), fileSize, commits, filePath);
     }
 
     public long GetMinFileSize()
@@ -54,5 +54,15 @@ public class GitTree : GitFolder
     public int GetMaxCommitCount()
     {
         return _maxCommitCount;
+    }
+
+    public IEnumerable<GitFile> GetAllFiles()
+    {
+        return Files.Concat(GetAllFiles(Folders));
+    }
+    
+    private IEnumerable<GitFile> GetAllFiles(IEnumerable<GitFolder> folders)
+    {
+        return folders.SelectMany(f => f.Files.Concat(GetAllFiles(f.Folders)));
     }
 }

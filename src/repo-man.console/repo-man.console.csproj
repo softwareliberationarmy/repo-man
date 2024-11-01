@@ -6,6 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <UserSecretsId>d27dd00c-343f-4189-9c5d-e6e0cc4c1127</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="appSettings.json" />

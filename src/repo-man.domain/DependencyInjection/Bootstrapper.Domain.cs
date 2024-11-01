@@ -33,9 +33,11 @@ namespace repo_man.domain.DependencyInjection
             services.AddSingleton<IRagDataBuilder, JsonRagDataBuilder>();
             services.AddSingleton<RepositoryReviewer>();
             services.AddTransient<BoundedIntCalculator>();
+            services.AddTransient<IRiskIndexer, SonarQubeRiskIndexer>();
+            services.AddTransient<RiskIndexCalculator<SonarQubeCodeQualityData>>();
 
             //the cheese stands alone
-            services.AddSingleton<RepoMan>();   
+            services.AddSingleton<RepoMan>();
 
             return services;
         }

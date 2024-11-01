@@ -1,6 +1,8 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.AutoMock;
+using repo_man.domain.CodeQuality;
 using repo_man.xunit._extensions;
 
 namespace repo_man.xunit.domain.Diagram
@@ -21,6 +23,7 @@ namespace repo_man.xunit.domain.Diagram
 
             //assert
             _mocker.Verify<IDiagramRenderer>(r => r.CreateDiagram(expected), Times.Once);
+            _mocker.Verify<IRiskIndexer>(r => r.DecorateTreeWithRiskIndex(expected), Times.Never);
         }
 
         [Fact]
@@ -36,6 +39,19 @@ namespace repo_man.xunit.domain.Diagram
                 .VerifyInfoWasCalled("Extracting files from repository", Times.Once())
                 .VerifyInfoWasCalled("Creating a diagram of the repository file tree", Times.Once())
                 .VerifyInfoWasCalled("Diagram creation complete!", Times.Once());
+        }
+
+        [Fact]
+        public async Task DecoratesTreeWithRiskIndexIfRiskDiagram()
+        {
+            _mocker.GetMock<IConfiguration>().Setup(c => c["type"]).Returns("risk");
+            var tree = new GitTree();
+
+            _mocker.GetMock<ITreeExtracter>().Setup(te => te.GetFileTree()).Returns(tree);
+
+            await WhenIGenerateADiagram();
+
+            _mocker.Verify<IRiskIndexer>(r => r.DecorateTreeWithRiskIndex(tree), Times.Once);
         }
 
         [Fact]

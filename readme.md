@@ -8,21 +8,35 @@ The first argument you pass to the executable should be the action you want to t
 
 ### diagram
 ```
-.\repo-man.exe diagram --repo "C:\path\to\your\git\repo" --maxRadius 100 --outputDir "C:\path\to\output\folder" --background "white" --fileName "diagram.svg" --ignoreFileTypes "png|jpg|bmp"
+.\repo-man.exe diagram --repo "C:\path\to\your\git\repo" --type="commits" --maxRadius 100 --outputDir "C:\path\to\output\folder" --background "white" --fileName "diagram.svg" --ignoreFileTypes "png|jpg|bmp"
 ```
 The diagram action generates an SVG file visually representing the files in your git repository. 
 Each circle represents a file, and the size of the circle is proportional to the size of the file. 
-The color of the circle is determined by the file extension. 
-Files are showing in the folder structure of the repository. Here is a diagram of this repository: 
+
+#### diagram types 
+There are two types of diagrams you can generate: "commits" and "risk". Here is how they differ: 
+if you select the "commits" diagram, you will see the intensity of the color deepen for files with more commits. 
+If you select the "risk" diagram, you will see the intensity of the color deepen for files with a higher ""risk index", 
+which is a weighted value that takes into account several different factors: 
+* the size of the file in bytes
+* the number of commits made against the file
+* the total (cyclomatic) complexity of the file (SonarQube)
+* the number of critical issues found in the file (SonarQube)
+* the number of major issues found in the file (SonarQube)
+* the number of code smells found in the file (SonarQube)
+
+* Files are shown in the folder structure of the repository. Here is a diagram of the repo-man repository: 
 
 ![Visualization of this repo](./diagram.svg)
 
 #### Config options
 
 When you wish to generate a diagram, your first argument should be "diagram".
-Below are additional configuration keys (case-sensitive) that can be passed at the command line:
+Below are additional configuration keys (case-sensitive) that can be passed at the command line (or included in the appSettings config):
 
 - **repo (required)** - relative or absolute folder path to the git repository you want to diagram (the folder containing the .git folder)
+- type - the type of diagram to generate. Defaults to "commits", which bases the color intensity on the number of commits. You can also specify "risk" which will gather SonarQube code quality metrics and base the color intensity on the file's risk index.
+- sqProjectKey - the SonarQube project key for the repository. If you are generating a "risk" diagram, you must provide this key so the tool can gather the necessary metrics.
 - maxRadius - by default, diagrammed files have a radius range of 10 to 100. All of the file sizes in your repo are charted on that scale. If you have a wide disparity in file sizes, you may want to set the maxRadius lower so you can see the very small files better. Setting the maxRadius to 10 will chart all files the same size.
 - outputDir - the directory to write the diagram.svg file. Defaults to the git repository root folder.
 - background - sets the background color of the svg file. Defaults to "blanchedalmond" 🐿️.
@@ -72,4 +86,4 @@ Other configuration options should follow in the form of key-value pairs.
 
 - feature: change the intensity of the file color based on how recently it was modified if option passed in
 - feature: change the intensity of the file color based on how many commits it has if option passed in
-
+- feature: incorporate some sentiment analysis for the commit messages to determine how many commits are bug commits, and use that in the risk index
