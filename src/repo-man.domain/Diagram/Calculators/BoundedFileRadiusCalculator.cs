@@ -28,11 +28,11 @@ public class BoundedFileRadiusCalculator : IFileRadiusCalculator
                 maxRadius = newMaxRadius;
             }
 
-            var minFileSize = gitTree.GetMinFileSize();
-            var maxFileSize = gitTree.GetMaxFileSize();
-            _innerCalculator.SetBounds(minFileSize, maxFileSize, minRadius, maxRadius);
+            var minFileRadius = (int)Math.Round(Math.Sqrt(gitTree.GetMinFileSize()));
+            var maxFileRadius = (int)Math.Round(Math.Sqrt(gitTree.GetMaxFileSize()));
+            _innerCalculator.SetBounds(minFileRadius, maxFileRadius, minRadius, maxRadius);
         }
 
-        return _innerCalculator.Calculate(file.FileSize);
+        return _innerCalculator.Calculate((int)Math.Round(Math.Sqrt(file.FileSize)));
     }
 }
