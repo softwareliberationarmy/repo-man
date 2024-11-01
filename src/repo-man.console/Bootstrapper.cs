@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using System.Reflection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
 using repo_man.domain.DependencyInjection;
 using repo_man.infrastructure.DependencyInjection;
@@ -28,6 +29,7 @@ public static class Bootstrapper
                 };
                 config.AddInMemoryCollection(actionConfig.AsEnumerable());
                 config.AddJsonFile("appSettings.json", optional:true, reloadOnChange:true);
+                config.AddUserSecrets(Assembly.GetExecutingAssembly());
             })
             .ConfigureServices((_, services) =>
             {

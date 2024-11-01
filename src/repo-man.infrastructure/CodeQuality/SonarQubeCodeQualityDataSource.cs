@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.Extensions.Configuration;
 using repo_man.domain.CodeQuality;
 
@@ -20,13 +21,14 @@ namespace repo_man.infrastructure.CodeQuality
         public async Task<List<SonarQubeCodeQualityData>> GetCodeQualityData()
         {
             var result = new List<SonarQubeCodeQualityData>();
-            var url = _config["sonarqube:url"];
+            var url = _config["sonarqube:endpoint"]!;
             var token = _config["sonarqube:token"];
             var project = _config["sqProjectKey"];
 
             // Example of using HttpClient to make a request
-            _client.BaseAddress = new Uri(url!);
+            //_client.BaseAddress = new Uri(url!);
             _client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+            _client.DefaultRequestHeaders.Add("Accept", "application/json");
 
             int page = 0;
 
@@ -34,11 +36,11 @@ namespace repo_man.infrastructure.CodeQuality
             do
             {
                 page++;
-                var requestUri = $"/api/measures/component_tree?component={project}&metricKeys=complexity,code_smells,critical_violations,major_violations,violations&p={page}&ps=500&qualifiers=FIL";
+                var requestUri = $"{url}/api/measures/component_tree?component={project}&metricKeys=complexity,code_smells,critical_violations,major_violations,violations&p={page}&ps=500&qualifiers=FIL";
                 var response = await _client.GetAsync(requestUri);
                 response.EnsureSuccessStatusCode();
-
-                data = await JsonSerializer.DeserializeAsync<SonarQubeResult>(await response.Content.ReadAsStreamAsync(CancellationToken.None));
+                var responseString = await response.Content.ReadAsStringAsync();
+                data = JsonSerializer.Deserialize<SonarQubeResult>(responseString, new JsonSerializerOptions{ PropertyNameCaseInsensitive = true, UnmappedMemberHandling = JsonUnmappedMemberHandling.Skip});
 
                 result.AddRange(ParseData(data!));
             }
