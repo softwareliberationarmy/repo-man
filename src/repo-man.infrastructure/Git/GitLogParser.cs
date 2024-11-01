@@ -38,15 +38,15 @@ public class GitLogParser
         {
             ProcessCommitMessage(text);
         }
-        else if (text.StartsWith("M"))
+        else if (text.StartsWith("M\t"))
         {
             ProcessModifiedFile(text);
         }
-        else if (text.StartsWith("A"))
+        else if (text.StartsWith("A\t"))
         {
             ProcessAddedFile(text);
         }
-        else if (text.StartsWith("D"))
+        else if (text.StartsWith("D\t"))
         {
             ProcessDeletedFile(text);
         }

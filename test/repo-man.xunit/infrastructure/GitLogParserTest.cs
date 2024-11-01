@@ -19,8 +19,35 @@ namespace repo_man.xunit.infrastructure
         {
             _mocker.GetMock<IFileSystem>().Setup(x => x.GetFileSize("C:\\Temp\\MyRepo\\src\\Program.cs")).Returns(1L);
             var target = _mocker.CreateInstance<GitLogParser>();
-            
+
             target.Parse("commit e026029a7e494fdcc54bc9d04efa40956f0d119a");
+            target.Parse("Author: kerry-patrick-il <146291855+kerry-patrick-il@users.noreply.github.com>");
+            target.Parse("Date:   Tue Oct 22 10:55:03 2024 -0500");
+            target.Parse("");
+            target.Parse("    IPS-778 setting the userId regardless of whether the avatar and background are in local storage. (#253)");
+            target.Parse("");
+            target.Parse("M\tsrc/Program.cs");
+            target.Parse("");
+
+            var result = target.GetGitFileData().Single();
+
+            result.Item1.Should().Be("src/Program.cs");
+            result.Item2.Should().Be(1L);
+            var commit = result.Item3.Single();
+            commit.Hash.Should().Be("e026029a7e494fdcc54bc9d04efa40956f0d119a");
+            commit.Author.Should().Be("kerry-patrick-il <146291855+kerry-patrick-il@users.noreply.github.com>");
+            commit.CommitDate.Should().Be(new DateTimeOffset(2024, 10, 22, 10, 55, 3, TimeSpan.FromHours(-5)));
+            commit.Message.Should().Be("IPS-778 setting the userId regardless of whether the avatar and background are in local storage. (#253)");
+        }
+
+        [Fact]
+        public void IgnoresMergeLines()
+        {
+            _mocker.GetMock<IFileSystem>().Setup(x => x.GetFileSize("C:\\Temp\\MyRepo\\src\\Program.cs")).Returns(1L);
+            var target = _mocker.CreateInstance<GitLogParser>();
+
+            target.Parse("commit e026029a7e494fdcc54bc9d04efa40956f0d119a");
+            target.Parse("Merge: 4efd5da13 26c06656f");
             target.Parse("Author: kerry-patrick-il <146291855+kerry-patrick-il@users.noreply.github.com>");
             target.Parse("Date:   Tue Oct 22 10:55:03 2024 -0500");
             target.Parse("");
