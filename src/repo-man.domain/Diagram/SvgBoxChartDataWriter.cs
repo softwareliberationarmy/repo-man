@@ -163,7 +163,7 @@ public class SvgBoxChartDataWriter : ISvgChartDataWriter
 
             var intensity = _colorIntensityCalculator.Calculate(_isRiskChart ? file.RiskIndex : file.Commits.Count);
 
-            _stringBuilder.AddFileCircle(x, y, radius, file.Name, intensity);
+            _stringBuilder.AddFileCircle(x, y, radius, file.Label, intensity, file.ToolTip);
 
             maxY = Math.Max(maxY, y + radius);
             startingPoint = startingPoint with { X = x + radius + InterFileMargin };

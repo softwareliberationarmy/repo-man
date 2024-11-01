@@ -36,6 +36,13 @@ public class SonarQubeRiskIndexer: IRiskIndexer
             {
                 var riskIndex = _riskIndexCalculator.CalculateRiskIndex(metrics, sonarQubeData);
                 file.RiskIndex = riskIndex;
+                file.ToolTip += "\r\n" +
+                                $"Risk index: {riskIndex}\r\n" +
+                                $"Cyclomatic complexity: {sonarQubeData.CyclomaticComplexity}\r\n" +
+                                $"Code smells: {sonarQubeData.CodeSmells}\r\n" +
+                                $"Critical violations: {sonarQubeData.CriticalViolations}\r\n" +
+                                $"Major violations: {sonarQubeData.MajorViolations}\r\n" +
+                                $"All violations: {sonarQubeData.AllViolations}\r\n";
             }
         }
     }

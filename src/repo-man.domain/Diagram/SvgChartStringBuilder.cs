@@ -24,13 +24,13 @@ public class SvgChartStringBuilder
         _builder.Append("</g>");
     }
 
-    public void AddFileCircle(long x, long y, long radius, string fileName, int intensity)
+    public void AddFileCircle(long x, long y, long radius, string fileName, int intensity, string fileToolTip)
     {
         var fileExtension = fileName.GetFileExtension();
         var color = _colorMapper.Map(fileExtension, (byte)intensity);
 
         _builder.Append($"<g style=\"fill:{color}\" transform=\"translate({x},{y})\">");
-        _builder.Append($"<title>{fileName}</title>");
+        _builder.Append($"<title>{fileToolTip}</title>");
         _builder.Append($"<circle r=\"{radius}\" />");
         _builder.Append(
             $"<text style=\"fill:black\" font-size=\"6\" alignment-baseline=\"middle\" text-anchor=\"middle\" >{fileName}</text>");

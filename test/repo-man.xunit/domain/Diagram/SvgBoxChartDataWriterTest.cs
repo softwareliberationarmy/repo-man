@@ -1,5 +1,6 @@
 ﻿using AutoFixture;
 using System.Drawing;
+using FluentAssertions.Equivalency.Steps;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -23,12 +24,13 @@ namespace repo_man.xunit.domain.Diagram
         {
             GivenTheseColorMappings(new Tuple<string, string>(fileExtension, color));
 
+            var fileSize = _fixture.Create<long>();
             var tree = GivenThisFileTree(
-                new Tuple<string, long>(fileName, _fixture.Create<long>()));
+                new Tuple<string, long>(fileName, fileSize));
 
             var result = WhenICreateChartData(tree);
 
-            result.Data.Should().Be(AFilledCircle(color, new Point(20,20), 10, fileName));
+            result.Data.Should().Be(AFilledCircle(color, new Point(20,20), 10, fileName, fileName, fileSize));
         }
 
         [Fact]
@@ -46,8 +48,8 @@ namespace repo_man.xunit.domain.Diagram
 
             var result = WhenICreateChartData(tree);
 
-            result.Data.Should().Be(AFilledCircle("pink", new Point(20,20), 10, "Program.cs") +
-                                    AFilledCircle("blue", new Point(45, 20), 10, "Readme.md"));
+            result.Data.Should().Be(AFilledCircle("pink", new Point(20,20), 10, "Program.cs", "Program.cs", 100) +
+                                    AFilledCircle("blue", new Point(45, 20), 10, "Readme.md", "Readme.md", 100));
         }
 
         [Fact]
@@ -61,8 +63,8 @@ namespace repo_man.xunit.domain.Diagram
             var result = WhenICreateChartData(tree);
 
             result.Data.Should().Be(
-                AFilledCircle("#001122", new Point(30,30), 20, "Program.cs") +
-                AFilledCircle("#001122", new Point(65,20), 10, "App.cs"));
+                AFilledCircle("#001122", new Point(30, 30), 20, "Program.cs", "Program.cs", 100) +
+                AFilledCircle("#001122", new Point(65, 20), 10, "App.cs", "App.cs", 50));
         }
 
         [Fact]
@@ -94,8 +96,8 @@ namespace repo_man.xunit.domain.Diagram
 
             var result = WhenICreateChartData(tree);
 
-            result.Data.Should().Be(AFilledCircle("#001122", new Point(30,30), 20, "Program.cs") +
-                                    AFilledCircle("#001122", new Point(65,20), 10, "App.cs"));
+            result.Data.Should().Be(AFilledCircle("#001122", new Point(30, 30), 20, "Program.cs", "Program.cs", 100) +
+                                    AFilledCircle("#001122", new Point(65,20), 10, "App.cs", "App.cs", 50));
         }
 
         [Fact]
@@ -103,12 +105,13 @@ namespace repo_man.xunit.domain.Diagram
         {
             GivenTheseColorMappings(new Tuple<string, string>(".cs", "fuschia"));
 
+            var fileSize = _fixture.Create<long>();
             var tree = GivenThisFileTree(
-                new Tuple<string, long>("src/Program.cs", _fixture.Create<long>()));
+                new Tuple<string, long>("src/Program.cs", fileSize));
 
             var result = WhenICreateChartData(tree);
 
-            result.Data.Should().Be(AFilledCircle("fuschia", new Point(25,25), 10, "Program.cs") +
+            result.Data.Should().Be(AFilledCircle("fuschia", new Point(25,25), 10, "Program.cs", "src/Program.cs", fileSize) +
                                     ARectangle(new Point(10, 10), 30, 30, "src"));
         }
 
@@ -123,8 +126,8 @@ namespace repo_man.xunit.domain.Diagram
 
             var result = WhenICreateChartData(tree);
 
-            result.Data.Should().Be(AFilledCircle("fuschia", new Point(25, 25), 10, "Program.cs") +
-                                    AFilledCircle("#001122", new Point(50, 25), 10, "App.xaml") +
+            result.Data.Should().Be(AFilledCircle("fuschia", new Point(25, 25), 10, "Program.cs", "src/Program.cs", 100) +
+                                    AFilledCircle("#001122", new Point(50, 25), 10, "App.xaml", "src/App.xaml", 100) +
                                     ARectangle(new Point(10, 10), 55, 30, "src"));
         }
 
@@ -141,8 +144,8 @@ namespace repo_man.xunit.domain.Diagram
 
             var result = WhenICreateChartData(tree);
 
-            result.Data.Should().Be(AFilledCircle("#001122", new Point(35,35), 20, "App.xaml") +
-                                    AFilledCircle("fuschia", new Point(70,25), 10, "Program.cs") +
+            result.Data.Should().Be(AFilledCircle("#001122", new Point(35,35), 20, "App.xaml", "src/App.xaml", 200) +
+                                    AFilledCircle("fuschia", new Point(70,25), 10, "Program.cs", "src/Program.cs", 100) +
                                     ARectangle(new Point(10, 10), 75, 50, "src"));
         }
 
@@ -161,11 +164,11 @@ namespace repo_man.xunit.domain.Diagram
 
             var result = WhenICreateChartData(tree);
 
-            result.Data.Should().Be(AFilledCircle("blue", new Point(45,45), 30, "Bootstrapper.cs") +
-                                    AFilledCircle("blue", new Point(90,25), 10, "Program.cs") +
+            result.Data.Should().Be(AFilledCircle("blue", new Point(45,45), 30, "Bootstrapper.cs", "src/Bootstrapper.cs", 300) +
+                                    AFilledCircle("blue", new Point(90,25), 10, "Program.cs", "src/Program.cs", 100L) +
                                     ARectangle(new Point(10,10), 95, 70, "src") +
-                                    AFilledCircle("pink", new Point(55,135), 40, "GettingStarted.md") +
-                                    AFilledCircle("pink", new Point(120,115), 20, "About.md") +
+                                    AFilledCircle("pink", new Point(55,135), 40, "GettingStarted.md", "docs/GettingStarted.md", 400) +
+                                    AFilledCircle("pink", new Point(120,115), 20, "About.md", "docs/About.md", 200) +
                                     ARectangle(new Point(10,90), 135, 90, "docs"));
         }
 
@@ -187,13 +190,13 @@ namespace repo_man.xunit.domain.Diagram
 
             var result = WhenICreateChartData(tree);
 
-            result.Data.Should().Be(AFilledCircle("white", new Point(110, 110), 100, ".gitignore") + 
-                                    AFilledCircle("pink", new Point(225, 20), 10, "README.md") +
-                                    AFilledCircle("blue", new Point(75, 285), 60, "Bootstrapper.cs") +
-                                    AFilledCircle("blue", new Point(160, 245), 20, "Program.cs") +
+            result.Data.Should().Be(AFilledCircle("white", new Point(110, 110), 100, ".gitignore", ".gitignore", 500) + 
+                                    AFilledCircle("pink", new Point(225, 20), 10, "README.md", "README.md", 50) +
+                                    AFilledCircle("blue", new Point(75, 285), 60, "Bootstrapper.cs", "src/Bootstrapper.cs", 300) +
+                                    AFilledCircle("blue", new Point(160, 245), 20, "Program.cs", "src/Program.cs", 100) +
                                     ARectangle(new Point(10, 220), 175, 130, "src") +
-                                    AFilledCircle("pink", new Point(95, 445), 80, "GettingStarted.md") +
-                                    AFilledCircle("pink", new Point(220, 405), 40, "About.md") +
+                                    AFilledCircle("pink", new Point(95, 445), 80, "GettingStarted.md", "docs/GettingStarted.md", 400) +
+                                    AFilledCircle("pink", new Point(220, 405), 40, "About.md", "docs/About.md", 200) +
                                     ARectangle(new Point(10, 360), 255, 170, "docs"));
         }
 
@@ -211,11 +214,11 @@ namespace repo_man.xunit.domain.Diagram
 
             var result = WhenICreateChartData(tree);
 
-            result.Data.Should().Be(AFilledCircle("blue", new Point(55, 55), 30, "Bootstrapper.cs") +
-                                    AFilledCircle("blue", new Point(100, 35), 10, "Program.cs") +
+            result.Data.Should().Be(AFilledCircle("blue", new Point(55, 55), 30, "Bootstrapper.cs", "src/console/Bootstrapper.cs", 300) +
+                                    AFilledCircle("blue", new Point(100, 35), 10, "Program.cs", "src/console/Program.cs", 100) +
                                     ARectangle(new Point(20, 20), 95, 70, "console") +
-                                    AFilledCircle("blue", new Point(65, 145), 40, "Model.cs") +
-                                    AFilledCircle("blue", new Point(130, 125), 20, "Context.cs") +
+                                    AFilledCircle("blue", new Point(65, 145), 40, "Model.cs", "src/domain/Model.cs", 400) +
+                                    AFilledCircle("blue", new Point(130, 125), 20, "Context.cs", "src/domain/Context.cs", 200) +
                                     ARectangle(new Point(20, 100), 135, 90, "domain") +
                                     ARectangle(new Point(10, 10), 155, 190, "src"));
         }
@@ -231,7 +234,7 @@ namespace repo_man.xunit.domain.Diagram
 
             var result = WhenICreateChartData(tree);
 
-            result.Data.Should().Be(AFilledCircle("blue", new Point(45, 45), 10, "Program.cs") +
+            result.Data.Should().Be(AFilledCircle("blue", new Point(45, 45), 10, "Program.cs", "src/domain/console/Program.cs", 60000) +
                                     ARectangle(new Point(30, 30), 30, 30, "console") +
                                     ARectangle(new Point(20, 20), 50, 50, "domain") +
                                     ARectangle(new Point(10, 10), 70, 70, "src"));
@@ -249,8 +252,8 @@ namespace repo_man.xunit.domain.Diagram
 
             var result = WhenICreateChartData(tree);
 
-            result.Data.Should().BeEquivalentTo(AFilledCircle("blue", new Point(35, 35), 10L, "RepositoryVisualizer.cs")
-                                                + AFilledCircle("blue", new Point(45, 70), 10L, "GitFolder.cs")
+            result.Data.Should().BeEquivalentTo(AFilledCircle("blue", new Point(35, 35), 10L, "RepositoryVisualizer.cs", "src/repo-man.domain/RepositoryVisualizer.cs", 100)
+                                                + AFilledCircle("blue", new Point(45, 70), 10L, "GitFolder.cs", "src/repo-man.domain/Git/GitFolder.cs", 100)
                                                 + ARectangle(new Point(30, 55), 30L, 30L, "Git")
                                                 + ARectangle(new Point(20, 20), 50L, 75L, "repo-man.domain")
                                                 + ARectangle(new Point(10, 10), 70L, 95L, "src"));
@@ -382,10 +385,10 @@ namespace repo_man.xunit.domain.Diagram
         }
 
         private static string AFilledCircle(string color, Point point, long expectedRadius,
-            string fileName)
+            string fileName, string fullPath, long fileSize)
         {
             return $"<g style=\"fill:{color}\" transform=\"translate({point.X},{point.Y})\">" +
-                   $"<title>{fileName}</title>" +
+                   $"<title>{fullPath}\r\n\r\nFile size (bytes): {fileSize}\r\n# of commits: 0</title>" +
                    $"<circle r=\"{expectedRadius}\" />" +
                    $"<text style=\"fill:black\" font-size=\"6\" alignment-baseline=\"middle\" text-anchor=\"middle\" >{fileName}</text>" +
                    "</g>";
