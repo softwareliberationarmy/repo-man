@@ -49,7 +49,7 @@ public class SvgBoxChartDataWriter : ISvgChartDataWriter
     {
         if (_isRiskChart)
         {
-            _colorIntensityCalculator.SetBounds(0, 100, 20, 100);
+            _colorIntensityCalculator.SetBounds(0, 100, 30, 100);
         }
         else
         {
@@ -60,7 +60,7 @@ public class SvgBoxChartDataWriter : ISvgChartDataWriter
             }
             else
             {
-                _colorIntensityCalculator.SetBounds(tree.GetMinCommitCount(), tree.GetMaxCommitCount(), 20, 100);
+                _colorIntensityCalculator.SetBounds(tree.GetMinCommitCount(), tree.GetMaxCommitCount(), 30, 100);
             }
 
         }

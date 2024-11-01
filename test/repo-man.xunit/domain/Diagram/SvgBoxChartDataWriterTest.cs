@@ -82,7 +82,7 @@ namespace repo_man.xunit.domain.Diagram
 
             var result = WhenICreateChartData(tree);
 
-            _mocker.GetMock<IFileColorMapper>().Verify(x => x.Map(".cs", 60), Times.Once());
+            _mocker.GetMock<IFileColorMapper>().Verify(x => x.Map(".cs", 65), Times.Once());
             _mocker.GetMock<IFileColorMapper>().Verify(x => x.Map(".cs", 100), Times.Once());
         }
 
