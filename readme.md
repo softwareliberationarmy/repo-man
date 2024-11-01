@@ -25,7 +25,11 @@ which is a weighted value that takes into account several different factors:
 * the number of major issues found in the file (SonarQube)
 * the number of code smells found in the file (SonarQube)
 
-* Files are shown in the folder structure of the repository. Here is a diagram of the repo-man repository: 
+To use the "risk" diagram, currently you must have a valid SonarQube project to point to. The appSettings.json file contains 
+the settings for the SonarQube endpoint (you can store this information in User Secrets). Additionally you must also provide 
+the project key, which is the unique identifier for the project in SonarQube. This can be passed in through the command line. 
+
+Files are shown in the folder structure of the repository. Here is a diagram of the repo-man repository: 
 
 ![Visualization of this repo](./diagram.svg)
 
