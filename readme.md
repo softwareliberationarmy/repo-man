@@ -81,3 +81,5 @@ In the future, this may be configured to be more LLM-agnostic and could point to
 - feature: change the intensity of the file color based on how many commits it has if option passed in
 - feature: incorporate some sentiment analysis for the commit messages to determine how many commits are bug commits, and use that in the risk index
 - bug: fix a spacing issue with the diagram when there are many directories in the repo
+- refactor: simplify the diagram generation code by using nested <g> elements for less offset calculation
+- feature: create an html file instead of an svg file where the info is stored in the file as JSON and the diagram is generated on the fly 
