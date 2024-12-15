@@ -2,9 +2,20 @@
 
 A console application that helps with understanding how healthy a codebase is. 
 
-## OVERVIEW
+## DEPENDENCIES
+
+- Visual Studio 2022
+- .NET 8
+- Nuget packages: libgit2sharp
+
+## GETTING STARTED
+
+The console project's launchSettings.json is configured to use its own git repo when you run the solution in debug mode, 
+so you should be able to clone the repo and run it immediately.
+
 repo-man contains several actions that can be run from the command line to help you understand the health of your codebase.
 The first argument you pass to the executable should be the action you want to take (similar to the dotnet CLI usage pattern).
+Other configuration options should follow in the form of key-value pairs.
 
 ### diagram
 ```
@@ -63,31 +74,10 @@ Right now you must have Ollama installed on your machine to run the analysis.
 The appSettings.json file contains settings for the local Ollama endpoint and the model to use for analysis.
 In the future, this may be configured to be more LLM-agnostic and could point to a remote LLM API for better analysis. 
 
-## DEPENDENCIES
-
-- Visual Studio 2022
-- .NET 8
-- Nuget packages: libgit2sharp
-
-## GETTING STARTED
-
-The console project's launchSettings.json is configured to use its own git repo when you run the solution in debug mode, 
-so you should be able to clone the repo and run it immediately.
-
-If you want to run it from the command line, navigate to the folder with the executable and run it like this: 
-
-## CONFIG OPTIONS
-
-Because the tool is meant to be run from a command line or batch script, 
-the primarily anticipated means of passing options is through command line args, 
-but the Microsoft default host builder does set you up with the rest of the typical configuration sources.
-
-When you call the tool from the command line, your first argument should always be the action you want to take, with no key.
-Other configuration options should follow in the form of key-value pairs.
-
 
 ## TODO
 
 - feature: change the intensity of the file color based on how recently it was modified if option passed in
 - feature: change the intensity of the file color based on how many commits it has if option passed in
 - feature: incorporate some sentiment analysis for the commit messages to determine how many commits are bug commits, and use that in the risk index
+- bug: fix a spacing issue with the diagram when there are many directories in the repo
